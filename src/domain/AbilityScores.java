@@ -1,7 +1,9 @@
 // src/domain/AbilityScores.java
 package domain;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,16 +35,39 @@ public class AbilityScores {
     private HashMap<Ability, Integer> scores;
     private int pointsLeft;
     
-    // Constructor
+    // --- Constructors ---
+    // Overloaded Default Constructor
     public AbilityScores() {
-        // Default ability score generation
-        this.scores = new HashMap<>();
-        for (Ability ability : Ability.values()) {
-            this.scores.put(ability, DEFAULT);
+        this(Collections.nCopies(Ability.values().length, DEFAULT));
+    }
+
+    // Constructor
+    public AbilityScores(List<Integer> scores) {
+        // Validate input length
+        if (scores == null || scores.size() != Ability.values().length) {
+            throw new IllegalArgumentException(
+                "AbilityScores constructor requires " + Ability.values().length + " or no scores"
+            );
         }
+        
+        // Assign scores to abilities
+        Ability[] abilities = Ability.values();
+        for (int i = 0; i < abilities.length; i++) {
+            int score = scores.get(i);
+            // Ensure change is within allowed range
+            if (!validScore(score)) { 
+                throw new IllegalArgumentException(
+                    "Invalid ability score allocation - score must fall within [" + MIN + "," + MAX + "] range"
+                );
+            }
+            this.scores.put(abilities[i], score);
+        }
+
         // Calculate points left over after default generation
         this.pointsLeft = pointsLeft();
-        assert (pointsLeft >= 0) : "Invalid default ability score allocation";
+        if (pointsLeft < 0) {
+            throw new IllegalArgumentException("Invalid ability score allocation - too many points spent");
+        }
     }
 
     /**
@@ -57,7 +82,7 @@ public class AbilityScores {
         int newScore = oldScore + change;
 
         // Ensure change is within allowed range
-        if (newScore < MIN || newScore > MAX) { return false; }
+        if (!validScore(newScore)) { return false; }
 
         // Ensure cost of change can be paid
         int cost = PB_COST.get(newScore) - PB_COST.get(oldScore);
@@ -80,5 +105,15 @@ public class AbilityScores {
         int cost = 0;
         for (int score : this.scores.values()) { cost += PB_COST.get(score); }
         return MAX_POINTS - cost;
+    }
+
+    /**
+     * Utility method to validate if an ability score is within allowed range.
+     *  
+     * @param score value validated
+     * @return true if in [MIN, MAX], false otherwise
+     */
+    private boolean validScore(int score) {
+        return (score >= MIN && score <= MAX);
     }
 }
