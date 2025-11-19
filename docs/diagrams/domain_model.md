@@ -18,7 +18,7 @@ classDiagram
   %% Assume all characters speak Common by default, thus 0-to-many fine
   Character "*" --> "*" Language : has
 
-  %% The following adjust the equipment, stats, and features of a character
+  %% The following adjust the equipment, stats, and feats of a character
   %% Race --|> CharacterModifier : is a
   %% Class --|> CharacterModifier : is a
   %% Background --|> CharacterModifier : is a
@@ -29,7 +29,8 @@ classDiagram
   Background "1" *-- "*" Detail : expanded by 
 
   Race "1" *-- "*" AbilityScoreModifier: supplies
-  Race "*" --> "*" Feature: supplies
+  Race "*" --> "*" Proficiency: supplies
+  Race "*" --> "*" Feat: supplies
   Race "*" --> "*" Language: knows
 
   Class "*" --> "*" Proficiency: supplies
@@ -41,11 +42,11 @@ classDiagram
   Background "*" --> "*" Language: supplies
   %% Equipment
 
-  Feature "1" *-- "*" AbilityScoreModifier: supplies
-  Feature "*" --> "*" Proficiency: supplies
+  Feat "1" *-- "*" AbilityScoreModifier: supplies
+  Feat "*" --> "*" Proficiency: supplies
 
   LevelReward "1" *-- "*" AbilityScoreModifier: includes
-  LevelReward "*" --> "*" Feature: includes
+  LevelReward "*" --> "*" Feat: includes
   %% TODO: Subclass unlock not included here for the time being
 
   Race "1" *-- "*" Race : sub-race 
@@ -58,6 +59,7 @@ classDiagram
   class Character {
     Name
     Level
+    Experience
     PlayerName
     %% Alignment is an Enum - {Lawful, Neutral, Chaotic} x {Good, Neutral, Evil}
     Alignment
@@ -126,7 +128,7 @@ classDiagram
   class Background {
     Name
     Description
-    %% TODO: Variants / Variant Features need to be added here
+    %% TODO: Variants / Variant Feats need to be added here
     %% Recommended, enumerated options for 'Additional details'
     %% Trait1
     %% Trait2
@@ -136,6 +138,13 @@ classDiagram
   }
 
   class Language {
+    Name
+    Description
+    Script
+    Exotic
+  }
+
+  class Feat {
     Name
     Description
   }
@@ -164,7 +173,7 @@ classDiagram
   class Detail {
     Title
     Description
-    %% Optional number field to hardcode cumulative detail ordering
+    %% Optional number field to hardcode cumulative detail ordering (desc)
     Order
   }
 
