@@ -7,19 +7,74 @@ import java.util.List;
 /**
  * The attributes a {@link Character} Background has and provides in D&D.
  * TODO: Implement Choice<> mechanism from #2 for proficiencies and languages
- * TODO: Implement Setters for CharacterModifier attributes
  */
 public class Background extends Detailed implements CharacterModifier {
 
     // --- Attributes ---
-    private ArrayList<Language> languages;
-    private ArrayList<Proficiency> proficiencies;
+    private List<Language> languages;
+    private List<Proficiency> proficiencies;
+
+    /* ======================================================================
+     * -------------------------- Builder  Pattern -------------------------- 
+     * ====================================================================== */
+
+    /**
+     * Builder pattern implementation for eased {@link Background} construction.
+     * Create a new {@code Builder} object, call the relevant
+     * construction methods upon it, then finalise the process with the 
+     * {@link #build()} method.
+     */
+    public static class Builder extends Detailed {
+
+        // --- Attributes ---
+        private List<Language> languages;
+        private List<Proficiency> proficiencies;
+
+        // Builder Constructor
+        public Builder(String name, String description) {
+            super(name, description);
+            this.languages = new ArrayList<>();
+            this.proficiencies = new ArrayList<>();
+        }
+        
+        /** 
+         * Replaces current {@link Language}s with provided list parameter.
+         */
+        public Builder languages(List<Language> languages) {
+            this.languages = languages; return this;
+        }
+
+        /** 
+         * Replaces current {@link Proficiency}s with provided list parameter.
+         */
+        public Builder proficiencies(List<Proficiency> proficiencies) {
+            this.proficiencies = proficiencies; return this;
+        }
+
+        /** 
+         * Appends all {@link Detail}s from provided parameter to current list.
+         */
+        public Builder details(List<Detail> details) {
+            this.setDetails(details); return this;
+        }
+
+        /** 
+         * Appends a {@link Detail} to current list.
+         */
+        public Builder detail(Detail detail) {
+            this.addDetail(detail); return this;
+        }
+
+        // Build method
+        public Background build() { return new Background(this); }
+    }
 
     // Constructor
-    public Background(String name, String description) {
-        super(name, description);
-        this.languages = new ArrayList<>();
-        this.proficiencies = new ArrayList<>();
+    private Background(Builder builder) {
+        // name, description & details copied from Detailed builder
+        super(builder);
+        this.languages = builder.languages;
+        this.proficiencies = builder.proficiencies;
     }
 
     /* ======================================================================

@@ -26,6 +26,13 @@ public class Detailed extends Described {
         this(name, null);
     }
 
+    // Overloaded Constructor (copy a Detailed object)
+    public Detailed(Detailed old) {
+        // TODO: Check if getter needed here
+        super(old);
+        this.details = new PriorityQueue<>(old.details);
+    }
+
     /* ======================================================================
      * ------------------------- Getters & Setters  ------------------------- 
      * ====================================================================== */

@@ -30,6 +30,12 @@ public abstract class Described implements Comparable<Described> {
         this(name, null);
     }
 
+    // Overloaded Constructor (copy a Described object)
+    public Described(Described old) {
+        // TODO: Check if getters needed here
+        this(old.name, old.description);
+    }
+
     /* ======================================================================
      * -------------------------- Comparison Logic -------------------------- 
      * ====================================================================== */
