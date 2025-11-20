@@ -1,11 +1,14 @@
 // src/domain/ChoiceOption.java
 package domain;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A record to wrap multiple {@link Character} {@link Choice} options under the
- * same type together. Does not require any methods to be implemented.
+ * same type together. Implements {@link CharacterModifier} methods.
  */
-public record ChoiceOption<T>(T value) { 
+public record ChoiceOption<T>(T value) implements CharacterModifier { 
 
     /**
      * A factory method to instantiate a {@link ChoiceOption} with payload 
@@ -25,7 +28,49 @@ public record ChoiceOption<T>(T value) {
      * 
      * @return Class of {@code value}
      */
-    public Class<? extends Object> getValueClass() {
+    public Class<?> getValueClass() {
         return this.value.getClass();
+    }
+
+     /* ======================================================================
+     * ------------------ CharacterModifier Implementation ------------------ 
+     * ====================================================================== */
+
+    @Override
+    public List<Language> getLanguages() { 
+        return match(Language.class); 
+    }
+    
+    @Override
+    public List<Proficiency> getProficiencies() { 
+        return match(Proficiency.class); 
+    }
+
+    @Override
+    public List<Feat> getFeats() { 
+        return match(Feat.class); 
+    }
+
+    @Override
+    public List<AbilityScoreModifier> getAbilityScoreModifiers() { 
+        return match(AbilityScoreModifier.class); 
+    }
+
+    /**
+     * Utility method to verify if {@link ChoiceOption} payload {@code value} is
+     * an instance of a particular {@link CharacterModifier}-supplied class. 
+     * 
+     * <p> Returns a list of this option's payload if type matches, or an empty 
+     * list if not.
+     *  
+     * @param <X> The type of class to check against
+     * @param type The {@link Class} object representing the type to match
+     * @return A {@link List} containing the payload if it matches {@code type},
+     *         {@link Collections#emptyList()} if otherwise
+     */
+    private <X> List<X> match(Class<X> type) {
+        return type.isInstance(value) 
+            ? List.of(type.cast(value))
+            : Collections.emptyList();
     }
 }
