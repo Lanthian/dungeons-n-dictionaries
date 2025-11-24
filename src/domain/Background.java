@@ -22,11 +22,11 @@ public class Background extends Detailed implements CharacterModifier {
 
     /**
      * Builder pattern implementation for eased {@link Background} construction.
-     * Create a new {@code Builder} object, call the relevant
-     * construction methods upon it, then finalise the process with the 
-     * {@link #build()} method.
+     * Create a new {@code Builder} object, call the relevant construction 
+     * methods upon it, then finalise the process with the {@link #build()} 
+     * method.
      */
-    public static class Builder extends Detailed {
+    public static class Builder extends DetailedBuilder<Background> {
 
         // --- Attributes ---
         private List<Language> languages;
@@ -59,28 +59,14 @@ public class Background extends Detailed implements CharacterModifier {
         public Builder proficiencies(List<Proficiency> proficiencies) {
             this.proficiencies = proficiencies; return this;
         }
-
-        /* --------------------------- Dependants --------------------------- */
-
-        /** 
-         * Appends all {@link Detail}s from provided parameter to current list.
-         */
-        public Builder details(List<Detail> details) {
-            this.setDetails(details); return this;
-        }
-
-        /** 
-         * Appends a {@link Detail} to current list.
-         */
-        public Builder detail(Detail detail) {
-            this.addDetail(detail); return this;
-        }
     }
 
     // Local Constructor
     private Background(Builder builder) {
-        // name, description & details copied from Detailed builder
-        super(builder);
+        // name, description & details copied from DetailedBuilder
+        super(builder.name, builder.description);
+        this.setDetails(builder.details);
+        
         this.languages = builder.languages;
         this.proficiencies = builder.proficiencies;
     }

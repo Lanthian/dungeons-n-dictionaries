@@ -15,8 +15,9 @@ public class Race extends Detailed implements CharacterModifier {
     private final String alignment;
     private final String size;
     private final int speed;
-    // Foreifinal gn associations
+    // Foreign associations
     private final Race parentRace;
+    private final List<Race> subraces;
     private final List<Language> languages;
     private final List<Proficiency> proficiencies;
     private final List<Feat> feats;
@@ -32,7 +33,7 @@ public class Race extends Detailed implements CharacterModifier {
      * construction methods upon it, then finalise the process with the 
      * {@link #build()} method.
      */
-    public static class Builder extends Detailed {
+    public static class Builder extends DetailedBuilder<Race> {
 
         // --- Constants ---
         private final static String UNDEFINED = null;
@@ -46,6 +47,7 @@ public class Race extends Detailed implements CharacterModifier {
         private int speed;
         // Foreign associations
         private Race parentRace;
+        private List<Race> subraces;
         private List<Language> languages;
         private List<Proficiency> proficiencies;
         private List<Feat> feats;
@@ -63,6 +65,7 @@ public class Race extends Detailed implements CharacterModifier {
             this.size = UNDEFINED;
             this.speed = DEFAULT_SPEED;
             this.parentRace = null;
+            this.subraces = new ArrayList<>();
             this.languages = new ArrayList<>();
             this.proficiencies = new ArrayList<>();
             this.feats = new ArrayList<>();
@@ -124,24 +127,25 @@ public class Race extends Detailed implements CharacterModifier {
         /* --------------------------- Dependants --------------------------- */
 
         /** 
-         * Appends all {@link Detail}s from provided parameter to current list.
+         * Appends all {@link Race} subraces from provided parameter to list.
          */
-        public Builder details(List<Detail> details) {
-            this.setDetails(details); return this;
+        public Builder subraces(List<Race> subraces) {
+            this.subraces.addAll(subraces); return this;
         }
 
         /** 
-         * Appends a {@link Detail} to current list.
+         * Appends a {@link Race} subrace to current list.
          */
-        public Builder detail(Detail detail) {
-            this.addDetail(detail); return this;
+        public Builder subrace(Race subrace) {
+            this.subraces.add(subrace); return this;
         }
     }
 
     // Local Constructor
     private Race(Builder builder) {
-        // name, description & details copied from Detailed builder
-        super(builder);
+        // name, description & details copied from DetailedBuilder
+        super(builder.name, builder.description);
+        this.setDetails(builder.details);
         
         this.age = builder.age;
         this.alignment = builder.alignment;
@@ -149,6 +153,7 @@ public class Race extends Detailed implements CharacterModifier {
         this.speed = builder.speed;
 
         this.parentRace = builder.parentRace;
+        this.subraces = builder.subraces;
         this.languages = builder.languages;
         this.proficiencies = builder.proficiencies;
         this.feats = builder.feats;
@@ -181,6 +186,7 @@ public class Race extends Detailed implements CharacterModifier {
     public String getSize() { return this.size; }
     public int getSpeed() { return this.speed; }
     public Race getParentRace() { return this.parentRace; }
+    public List<Race> getSubraces() { return this.subraces; }
 
     // --- Setters ---
     // public void setAge(String val) { this.age = val; }

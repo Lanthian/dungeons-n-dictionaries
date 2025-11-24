@@ -27,11 +27,11 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
 
     /**
      * Builder pattern implementation for {@link ClassTemplate} construction.
-     * Create a new {@code Builder} object, call the relevant
-     * construction methods upon it, then finalise the process with the 
-     * {@link #build()} method.
+     * Create a new {@code Builder} object, call the relevant construction 
+     * methods upon it, then finalise the process with the {@link #build()} 
+     * method.
      */
-    public static class Builder extends Detailed {
+    public static class Builder extends DetailedBuilder<ClassTemplate> {
 
         // --- Constants ---
         private final static String UNDEFINED = null;
@@ -89,28 +89,13 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
         public Builder levelReward(LevelReward levelReward) {
             this.levelRewards.put(levelReward.getLevel(), levelReward); return this;
         }
-
-        /* --------------------------- Dependants --------------------------- */
-
-        /** 
-         * Appends all {@link Detail}s from provided parameter to current list.
-         */
-        public Builder details(List<Detail> details) {
-            this.setDetails(details); return this;
-        }
-
-        /** 
-         * Appends a {@link Detail} to current list.
-         */
-        public Builder detail(Detail detail) {
-            this.addDetail(detail); return this;
-        }
     }
 
     // Local Constructor
     private ClassTemplate(Builder builder) {
-        // name, description & details copied from Detailed builder
-        super(builder);
+        // name, description & details copied from DetailedBuilder
+        super(builder.name, builder.description);
+        this.setDetails(builder.details);
         
         this.hitPoints = builder.hitPoints;
         this.hitDice = builder.hitDice;
@@ -158,6 +143,8 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
         return recursiveFilterRewards(reward -> reward.getLevel() == level);
     }
 
+    /* -------------------------- Utility  Methods -------------------------- */
+
     /**
      * Utility method to recursively retrieve a {@link Stream} of 
      * {@link LevelReward}s supplied by this class and parent class pathway.
@@ -191,5 +178,4 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
     private List<LevelReward> recursiveFilterRewards(Predicate<LevelReward> filter) {
         return recursiveFilterRewardsStream(filter).sorted().toList();
     }
-
 }
