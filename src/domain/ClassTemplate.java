@@ -4,6 +4,7 @@ package domain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -17,7 +18,7 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
     private final String hitPoints;
     private final String hitDice;
     // Foreign associations
-    private final ClassTemplate parentClassTemplate;
+    private final ClassTemplate parentClass;
     private final Map<Integer, LevelReward> levelRewards;
     
     /* ======================================================================
@@ -40,7 +41,7 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
         private String hitPoints;
         private String hitDice;
         // Foreign associations
-        private ClassTemplate parentClassTemplate;
+        private ClassTemplate parentClass;
         private Map<Integer, LevelReward> levelRewards;
 
         /* -------------------------- Construction -------------------------- */
@@ -52,7 +53,7 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
             // Defaults
             this.hitPoints = UNDEFINED;
             this.hitDice = UNDEFINED;
-            this.parentClassTemplate = null;
+            this.parentClass = null;
             this.levelRewards = new HashMap<>();
         }
 
@@ -69,8 +70,8 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
         /** 
          * Replaces current {@link Race} parentRace with provided parameter.
          */
-        public Builder parentClassTemplate(ClassTemplate parentClassTemplate) {
-            this.parentClassTemplate = parentClassTemplate; return this;
+        public Builder parentClass(ClassTemplate parentClass) {
+            this.parentClass = parentClass; return this;
         }
 
         /**
@@ -114,7 +115,7 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
         this.hitPoints = builder.hitPoints;
         this.hitDice = builder.hitDice;
 
-        this.parentClassTemplate = builder.parentClassTemplate;
+        this.parentClass = builder.parentClass;
         this.levelRewards = builder.levelRewards;
     }
 
@@ -125,20 +126,14 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
     // --- Getters ---
     public String getHitPoints() { return this.hitPoints; }
     public String getHitDice() { return this.hitDice; }
-    public ClassTemplate getParentClassTemplate() { return this.parentClassTemplate; }
+    public ClassTemplate getParentClass() { return this.parentClass; }
 
     /**
      * Returns all {@link LevelReward}s including those supplied by parent 
      * class. Sorted from lowest to highest level.
      */
     public List<LevelReward> getAllLevelRewards() {
-        return Stream.concat(
-            levelRewards.values().stream(),
-            // Parent class rewards if parent present
-            this.parentClassTemplate != null
-                ? this.parentClassTemplate.getAllLevelRewards().stream()
-                : Stream.empty()
-        ).sorted().toList();
+        return recursiveFilterRewards(reward -> true);
     }
 
     /**
@@ -149,15 +144,7 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
      * @return Sorted list of level rewards below level param
      */
     public List<LevelReward> getLesserLevelRewards(int level) {
-        return Stream.concat(
-            // Current class rewards filtered by level
-            levelRewards.values().stream()
-                .filter(reward -> reward.getLevel() <= level),
-            // Filtered parent class rewards if parent present
-            this.parentClassTemplate != null
-                ? this.parentClassTemplate.getLesserLevelRewards(level).stream()
-                : Stream.empty()
-        ).sorted().toList();
+        return recursiveFilterRewards(reward -> reward.getLevel() <= level);
     }
 
     /**
@@ -168,13 +155,41 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
      * @return Sorted list of level rewards at level param
      */
     public List<LevelReward> getLevelReward(int level) {
-        return Stream.concat(
-            // Level reward supplied by this class at provided level
-            Stream.of(levelRewards.get(level)),
-            // Parent class reward if parent present
-            this.parentClassTemplate != null
-                ? this.parentClassTemplate.getLevelReward(level).stream()
-                : Stream.empty()
-        ).sorted().toList();
+        return recursiveFilterRewards(reward -> reward.getLevel() == level);
     }
+
+    /**
+     * Utility method to recursively retrieve a {@link Stream} of 
+     * {@link LevelReward}s supplied by this class and parent class pathway.
+     * 
+     * @param filter A boolean-valued filter function evaluated on level rewards
+     * @return Stream of level rewards satisfying {@code filter}
+     */
+    private Stream<LevelReward> recursiveFilterRewardsStream(Predicate<LevelReward> filter) {
+        return Stream.concat(
+            // Current class rewards filtered
+            levelRewards.values().stream()
+                .filter(filter),
+
+            // Filtered parent class rewards if parent present
+            this.parentClass != null
+                ? this.parentClass.recursiveFilterRewardsStream(filter)
+                : Stream.empty()
+        );
+    }
+
+    /**
+     * Utility method to shorthand conversion from the following methods 
+     * {@link Stream} output to a sorted {@link List}: 
+     * {@link #recursiveFilterRewardsStream(Predicate)}
+     * 
+     * <p>Sorts list ascending on total {@link LevelReward} levels.
+     * 
+     * @param filter A boolean-valued filter function evaluated on level rewards
+     * @return Sorted list of level rewards satisfying {@code filter}
+     */
+    private List<LevelReward> recursiveFilterRewards(Predicate<LevelReward> filter) {
+        return recursiveFilterRewardsStream(filter).sorted().toList();
+    }
+
 }
