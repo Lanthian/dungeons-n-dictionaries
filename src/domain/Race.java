@@ -36,7 +36,6 @@ public class Race extends Detailed implements CharacterModifier {
     public static class Builder extends DetailedBuilder<Race> {
 
         // --- Constants ---
-        private final static String UNDEFINED = null;
         private final static int DEFAULT_SPEED = 30;
 
         // --- Attributes ---

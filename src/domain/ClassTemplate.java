@@ -33,9 +33,6 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
      */
     public static class Builder extends DetailedBuilder<ClassTemplate> {
 
-        // --- Constants ---
-        private final static String UNDEFINED = null;
-
         // --- Attributes ---
         // Simple attributes
         private String hitPoints;

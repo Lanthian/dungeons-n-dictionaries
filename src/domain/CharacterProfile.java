@@ -24,10 +24,7 @@ public class CharacterProfile {
      * construction methods upon it, then finalise the process with the 
      * {@link #build()} method.
      */
-    public static class Builder {
-
-        // --- Constants ---
-        private final static String UNDEFINED = null;
+    public static class Builder extends AbstractBuilder<CharacterProfile> {
 
         // --- Attributes ---
         // Simple attributes

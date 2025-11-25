@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
  * {@code Builder} object, call the relevant construction methods upon it, then 
  * finalise the process with the {@link #build()} method.
  */
-public abstract class DetailedBuilder<T extends Detailed> {
+public abstract class DetailedBuilder<T extends Detailed> extends AbstractBuilder<T> {
 
     /* ---------------------------- Construction ---------------------------- */
 
@@ -31,13 +31,13 @@ public abstract class DetailedBuilder<T extends Detailed> {
         this(name, null);
     }
 
-    /**
-     * {@link DetailedBuilder} extending Builders must implement the below 
-     * method. Constructs a concrete {@link Detailed} entity.
-     * 
-     * @return {@link Detailed} entity constructed by this builder
-     */
-    abstract public T build();
+    // /**
+    //  * {@link DetailedBuilder} extending Builders must implement the below 
+    //  * method. Constructs a concrete {@link Detailed} entity.
+    //  * 
+    //  * @return {@link Detailed} entity constructed by this builder
+    //  */
+    // abstract public T build();
 
     /* ------------------------- Simple  Attributes ------------------------- */
 
