@@ -32,7 +32,7 @@ public class AbilityScores {
     );
 
     // --- Attributes ---
-    private HashMap<Ability, Integer> scores;
+    private final HashMap<Ability, Integer> scores;
     private int pointsLeft;
     
     // --- Constructors ---
@@ -51,6 +51,7 @@ public class AbilityScores {
         }
         
         // Assign scores to abilities
+        this.scores = new HashMap<>();
         Ability[] abilities = Ability.values();
         for (int i = 0; i < abilities.length; i++) {
             int score = scores.get(i);
@@ -116,4 +117,8 @@ public class AbilityScores {
     private boolean validScore(int score) {
         return (score >= MIN && score <= MAX);
     }
+
+    // --- Getters ---
+    public Map<Ability, Integer> getScores() { return this.scores; }
+    public int getScore(Ability ability) { return this.scores.get(ability); }
 }
