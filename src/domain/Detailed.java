@@ -8,12 +8,12 @@ import java.util.PriorityQueue;
 /**
  * An abstract extension upon the already abstract class {@link Described} to 
  * define an entity that can have additional {@link Detail} information
- * attached.
+ * attached. Mutable.
  */
-public class Detailed extends Described {
+public abstract class Detailed extends Described {
 
     // --- Attributes ---
-    private PriorityQueue<Detail> details;
+    protected PriorityQueue<Detail> details;
 
     // Constructor
     public Detailed(String name, String description) {
@@ -63,4 +63,14 @@ public class Detailed extends Described {
      * @param details Details added to this entity.
      */
     public void setDetails(List<Detail> details) { this.details.addAll(details); }
+
+    /**
+     * Setter: Replace current {@link Detail}s {@link PriorityQueue} with 
+     * supplied parameter.
+     * 
+     * @param details Details overwriting current entity details.
+     */
+    public void setDetails(PriorityQueue<Detail> details) { 
+        this.details = new PriorityQueue<>(details);
+    }
 }

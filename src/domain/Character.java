@@ -39,10 +39,9 @@ public class Character {
      * methods upon it, then finalise the process with the {@link #build()} 
      * method.
      */
-    public static class Builder {
+    public static class Builder extends AbstractBuilder<Character> {
 
         // --- Constants ---
-        private final static String UNDEFINED = null;
         private static final int STARTING_LEVEL = 1;
         private static final int STARTING_XP = 0;
 
@@ -99,18 +98,14 @@ public class Character {
         // Visual descriptors
         public Builder physique(CharacterPhysique physique) { this.physique = physique; return this; }
         public Builder physique(Consumer<CharacterPhysique.Builder> consumer) {
-            CharacterPhysique.Builder builder = new CharacterPhysique.Builder();
-            consumer.accept(builder);
-            this.physique = builder.build(); 
+            this.physique = buildWith(CharacterPhysique.Builder::new, consumer);
             return this;
         }
 
         // Additional details
         public Builder profile(CharacterProfile profile) { this.profile = profile; return this; }
         public Builder profile(Consumer<CharacterProfile.Builder> consumer) {
-            CharacterProfile.Builder builder = new CharacterProfile.Builder();
-            consumer.accept(builder);
-            this.profile = builder.build(); 
+            this.profile = buildWith(CharacterProfile.Builder::new, consumer);
             return this;
         }
 
