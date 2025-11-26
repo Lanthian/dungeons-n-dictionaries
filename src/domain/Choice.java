@@ -29,6 +29,6 @@ public class Choice {
     }
 
     // --- Getters ---
-    public List<ChoiceOption<?>> getOptions() { return this.options; }
+    public List<ChoiceOption<?>> getOptions() { return List.copyOf(this.options); }
     public int getCount() { return this.count; }
 }

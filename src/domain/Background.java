@@ -76,8 +76,8 @@ public class Background extends Detailed implements CharacterModifier {
      * ====================================================================== */
 
     @Override
-    public List<Language> getLanguages() { return this.languages; }
+    public List<Language> getLanguages() { return List.copyOf(this.languages); }
     
     @Override
-    public List<Proficiency> getProficiencies() { return this.proficiencies; }
+    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
 }

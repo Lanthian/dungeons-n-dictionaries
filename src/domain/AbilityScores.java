@@ -119,6 +119,6 @@ public class AbilityScores {
     }
 
     // --- Getters ---
-    public Map<Ability, Integer> getScores() { return this.scores; }
+    public Map<Ability, Integer> getScores() { return Map.copyOf(this.scores); }
     public int getScore(Ability ability) { return this.scores.get(ability); }
 }

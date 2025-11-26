@@ -164,16 +164,16 @@ public class Race extends Detailed implements CharacterModifier {
      * ====================================================================== */
 
     @Override
-    public List<Language> getLanguages() { return this.languages; }
+    public List<Language> getLanguages() { return List.copyOf(this.languages); }
     
     @Override
-    public List<Proficiency> getProficiencies() { return this.proficiencies; }
+    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
 
     @Override
-    public List<Feat> getFeats() { return this.feats; }
+    public List<Feat> getFeats() { return List.copyOf(this.feats); }
 
     @Override
-    public List<AbilityScoreModifier> getAbilityScoreModifiers() { return this.abilityScoreModifiers; }
+    public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  ------------------------- 

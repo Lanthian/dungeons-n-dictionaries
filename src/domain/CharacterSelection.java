@@ -66,5 +66,5 @@ public class CharacterSelection<T extends CharacterModifier> implements Characte
 
     // --- Getters ---
     public T getTemplate() { return this.template; }
-    public List<ChoiceOption<?>> getChoices() { return this.choices; }
+    public List<ChoiceOption<?>> getChoices() { return List.copyOf(this.choices); }
 }

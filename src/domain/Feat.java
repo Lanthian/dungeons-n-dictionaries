@@ -26,8 +26,8 @@ public class Feat extends Described implements CharacterModifier {
      * ====================================================================== */
 
     @Override
-    public List<Proficiency> getProficiencies() { return this.proficiencies; }
+    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
 
     @Override
-    public List<AbilityScoreModifier> getAbilityScoreModifiers() { return this.abilityScoreModifiers; }
+    public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
 }

@@ -7,7 +7,8 @@ import java.util.function.Function;
 /**
  * A collection of {@link CharacterModifier} updates that a specific level in a 
  * {@link ClassTemplate} provides.
- * TODO: Subclass selection needs to be supported / offered as a reward
+ * TODO: Subclass selection needs to be supported / offered as a reward 
+ * - type of reward should perhaps be defined in this case
  */
 public class LevelReward implements CharacterModifier, Comparable<LevelReward> {
     
@@ -110,5 +111,5 @@ public class LevelReward implements CharacterModifier, Comparable<LevelReward> {
 
     // --- Getters ---
     public int getLevel() { return this.level; }
-    public List<CharacterModifier> getRewards() { return this.rewards; }
+    public List<CharacterModifier> getRewards() { return List.copyOf(this.rewards); }
 }
