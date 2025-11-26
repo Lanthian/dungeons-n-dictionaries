@@ -9,12 +9,13 @@ import java.util.List;
  * TODO: Implement Choice<> mechanism from #2 for proficiencies and languages
  * TODO: Implement background variants (choice?)
  */
-public class Background extends Detailed implements CharacterModifier {
+public class Background extends Detailed implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     // private final Background parentBackground;
     private final List<Language> languages;
     private final List<Proficiency> proficiencies;
+    private final List<Choice> choices;
 
     /* ======================================================================
      * -------------------------- Builder  Pattern -------------------------- 
@@ -31,6 +32,7 @@ public class Background extends Detailed implements CharacterModifier {
         // --- Attributes ---
         private List<Language> languages;
         private List<Proficiency> proficiencies;
+        private List<Choice> choices;
 
         /* -------------------------- Construction -------------------------- */
 
@@ -39,9 +41,11 @@ public class Background extends Detailed implements CharacterModifier {
             super(name, description);
             this.languages = new ArrayList<>();
             this.proficiencies = new ArrayList<>();
+            this.choices = new ArrayList<>();
         }
 
         // Build method
+        @Override
         public Background build() { return new Background(this); }
 
         /* ---------------------- Foreign Associations ---------------------- */
@@ -59,6 +63,22 @@ public class Background extends Detailed implements CharacterModifier {
         public Builder proficiencies(List<Proficiency> proficiencies) {
             this.proficiencies = proficiencies; return this;
         }
+
+        /* --------------------------- Dependants --------------------------- */
+
+        /** 
+         * Appends all {@link Choice}s from provided parameter to current list.
+         */
+        public Builder choices(List<Choice> choices) {
+            this.choices.addAll(choices); return this;
+        }
+
+        /** 
+         * Appends a {@link Choice} to current list.
+         */
+        public Builder choice(Choice choice) {
+            this.choices.add(choice); return this;
+        }
     }
 
     // Local Constructor
@@ -69,6 +89,7 @@ public class Background extends Detailed implements CharacterModifier {
         
         this.languages = builder.languages;
         this.proficiencies = builder.proficiencies;
+        this.choices = builder.choices;
     }
 
     /* ======================================================================
@@ -80,4 +101,11 @@ public class Background extends Detailed implements CharacterModifier {
     
     @Override
     public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
+
+    /* ======================================================================
+     * ------------------- ChoiceProvider  Implementation ------------------- 
+     * ====================================================================== */
+
+    @Override
+    public List<Choice> getChoices() { return List.copyOf(this.choices); }
 }

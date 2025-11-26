@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The attributes a {@link Character} Race has and provides in D&D.
  */
-public class Race extends Detailed implements CharacterModifier {
+public class Race extends Detailed implements CharacterModifier, ChoiceProvider {
     
     // --- Attributes ---
     // Simple attributes
@@ -22,6 +22,7 @@ public class Race extends Detailed implements CharacterModifier {
     private final List<Proficiency> proficiencies;
     private final List<Feat> feats;
     private final List<AbilityScoreModifier> abilityScoreModifiers;
+    private final List<Choice> choices;
     
     /* ======================================================================
      * -------------------------- Builder  Pattern -------------------------- 
@@ -51,6 +52,7 @@ public class Race extends Detailed implements CharacterModifier {
         private List<Proficiency> proficiencies;
         private List<Feat> feats;
         private List<AbilityScoreModifier> abilityScoreModifiers;
+        private List<Choice> choices;
 
         /* -------------------------- Construction -------------------------- */
 
@@ -69,9 +71,11 @@ public class Race extends Detailed implements CharacterModifier {
             this.proficiencies = new ArrayList<>();
             this.feats = new ArrayList<>();
             this.abilityScoreModifiers = new ArrayList<>();
+            this.choices = new ArrayList<>();
         }
 
         // Build method
+        @Override
         public Race build() { return new Race(this); }
 
         /* ----------------------- Simple  Attributes ----------------------- */
@@ -138,6 +142,20 @@ public class Race extends Detailed implements CharacterModifier {
         public Builder subrace(Race subrace) {
             this.subraces.add(subrace); return this;
         }
+
+        /** 
+         * Appends all {@link Choice}s from provided parameter to current list.
+         */
+        public Builder choices(List<Choice> choices) {
+            this.choices.addAll(choices); return this;
+        }
+
+        /** 
+         * Appends a {@link Choice} to current list.
+         */
+        public Builder choice(Choice choice) {
+            this.choices.add(choice); return this;
+        }
     }
 
     // Local Constructor
@@ -157,6 +175,7 @@ public class Race extends Detailed implements CharacterModifier {
         this.proficiencies = builder.proficiencies;
         this.feats = builder.feats;
         this.abilityScoreModifiers = builder.abilityScoreModifiers;
+        this.choices = builder.choices;
     }
 
     /* ======================================================================
@@ -174,6 +193,13 @@ public class Race extends Detailed implements CharacterModifier {
 
     @Override
     public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
+
+    /* ======================================================================
+     * ------------------- ChoiceProvider  Implementation ------------------- 
+     * ====================================================================== */
+
+    @Override
+    public List<Choice> getChoices() { return List.copyOf(this.choices); }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  ------------------------- 

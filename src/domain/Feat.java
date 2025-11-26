@@ -9,7 +9,7 @@ import java.util.Objects;
  * Implementation of {@link Described} for a Feat a Character posseses.
  * Can supply a character with AbilityScoreModifiers and Proficiencies.
  */
-public class Feat extends Described implements CharacterModifier {
+public class Feat extends Described implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     private final List<AbilityScoreModifier> abilityScoreModifiers;
@@ -123,6 +123,10 @@ public class Feat extends Described implements CharacterModifier {
     @Override
     public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
 
-    // --- Getter ---
+    /* ======================================================================
+     * ------------------- ChoiceProvider  Implementation ------------------- 
+     * ====================================================================== */
+
+    @Override
     public List<Choice> getChoices() { return List.copyOf(this.choices); }
 }
