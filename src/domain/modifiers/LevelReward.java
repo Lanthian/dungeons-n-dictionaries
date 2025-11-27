@@ -4,10 +4,9 @@ package domain.modifiers;
 import java.util.List;
 import java.util.function.Function;
 
-import domain.CharacterModifier;
-import domain.ClassTemplate;
-import domain.Feat;
+import domain.character.CharacterModifier;
 import domain.modifiers.proficiency.Proficiency;
+import domain.templates.ClassTemplate;
 
 /**
  * A collection of {@link CharacterModifier} updates that a specific level in a 

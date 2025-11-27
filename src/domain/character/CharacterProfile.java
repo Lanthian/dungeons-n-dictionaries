@@ -1,5 +1,7 @@
 // src/domain/CharacterProfile.java
-package domain;
+package domain.character;
+
+import domain.builders.AbstractBuilder;
 
 /**
  * Specialised data store for profile information (personality & story) of a

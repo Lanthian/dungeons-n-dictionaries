@@ -1,7 +1,7 @@
 // src/domain/modifiers/proficiency/ArmourProficiency.java
 package domain.modifiers.proficiency;
 
-import domain.Character;
+import domain.character.Character;
 import domain.types.ArmourType;
 
 /**

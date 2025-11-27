@@ -4,10 +4,10 @@ package domain.modifiers.choice;
 import java.util.Collections;
 import java.util.List;
 
-import domain.Character;
-import domain.CharacterModifier;
-import domain.Feat;
+import domain.character.Character;
+import domain.character.CharacterModifier;
 import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Feat;
 import domain.modifiers.Language;
 import domain.modifiers.proficiency.Proficiency;
 

@@ -1,5 +1,7 @@
 // src/domain/CharacterPhysique.java
-package domain;
+package domain.character;
+
+import domain.builders.AbstractBuilder;
 
 /**
  * Specialised data store for physical details and appearance information of a 

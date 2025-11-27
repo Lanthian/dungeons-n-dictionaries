@@ -1,9 +1,15 @@
 // src/domain/CharacterSelection.java
-package domain;
+package domain.character;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Feat;
+import domain.modifiers.Language;
+import domain.modifiers.choice.ChoiceOption;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * An explicit subscription of a {@link Character} to a particular 

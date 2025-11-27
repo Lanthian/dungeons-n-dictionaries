@@ -1,8 +1,13 @@
 // src/domain/CharacterModifier.java
-package domain;
+package domain.character;
 
 import java.util.Collections;
 import java.util.List;
+
+import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Feat;
+import domain.modifiers.Language;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * A contract {@link Character} components implement in order to be suppliers 

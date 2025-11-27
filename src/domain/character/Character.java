@@ -1,10 +1,18 @@
 // src/domain/Character.java
-package domain;
+package domain.character;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import domain.builders.AbstractBuilder;
+import domain.modifiers.choice.Choice;
+import domain.templates.Background;
+import domain.templates.ClassTemplate;
+import domain.templates.Race;
+import domain.types.Ability;
+import domain.types.Alignment;
 
 /**
  * The instantiation and accumulation of all D&D character required information.

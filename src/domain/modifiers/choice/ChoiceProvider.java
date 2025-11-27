@@ -3,7 +3,7 @@ package domain.modifiers.choice;
 
 import java.util.List;
 
-import domain.Character;
+import domain.character.Character;
 
 /**
  * A contract {@link Character} components implement in order to be suppliers 

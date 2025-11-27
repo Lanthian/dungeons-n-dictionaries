@@ -1,7 +1,7 @@
 // src/domain/modifiers/AbilityScoreModifier.java
 package domain.modifiers;
 
-import domain.Character;
+import domain.character.Character;
 import domain.types.Ability;
 
 /**

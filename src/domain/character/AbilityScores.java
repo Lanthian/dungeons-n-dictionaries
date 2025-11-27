@@ -1,10 +1,12 @@
 // src/domain/AbilityScores.java
-package domain;
+package domain.character;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import domain.types.Ability;
 
 /**
  * A mapping of Character abilities and their scorings. Rules sourced from point

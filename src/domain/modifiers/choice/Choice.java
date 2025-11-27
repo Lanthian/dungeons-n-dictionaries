@@ -3,7 +3,7 @@ package domain.modifiers.choice;
 
 import java.util.List;
 
-import domain.CharacterModifier;
+import domain.character.CharacterModifier;
 
 /**
  * A collection of {@link ChoiceOption}s with a prescribed {@code count} of the 
