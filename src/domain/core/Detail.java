@@ -1,5 +1,5 @@
-// src/domain/Detail.java
-package domain;
+// src/domain/core/Detail.java
+package domain.core;
 
 /**
  * Additional textual information that can be appended to any fixed entity.

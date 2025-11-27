@@ -1,8 +1,13 @@
-// src/domain/LevelReward.java
-package domain;
+// src/domain/modifiers/LevelReward.java
+package domain.modifiers;
 
 import java.util.List;
 import java.util.function.Function;
+
+import domain.CharacterModifier;
+import domain.ClassTemplate;
+import domain.Feat;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * A collection of {@link CharacterModifier} updates that a specific level in a 

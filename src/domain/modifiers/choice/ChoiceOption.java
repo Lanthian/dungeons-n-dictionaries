@@ -1,8 +1,15 @@
-// src/domain/ChoiceOption.java
-package domain;
+// src/domain/modifiers/choice/ChoiceOption.java
+package domain.modifiers.choice;
 
 import java.util.Collections;
 import java.util.List;
+
+import domain.Character;
+import domain.CharacterModifier;
+import domain.Feat;
+import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Language;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * A record to wrap multiple {@link Character} {@link Choice} options under the

@@ -1,5 +1,8 @@
-// src/domain/AbilityScoreModifier.java
-package domain;
+// src/domain/modifiers/AbilityScoreModifier.java
+package domain.modifiers;
+
+import domain.Character;
+import domain.types.Ability;
 
 /**
  * An Ability score increase or decrease provided to a {@link Character}.

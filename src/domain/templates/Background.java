@@ -1,18 +1,28 @@
-// src/domain/Feat.java
-package domain;
+// src/domain/templates/Background.java
+package domain.templates;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import domain.builders.DetailedBuilder;
+import domain.character.Character;
+import domain.character.CharacterModifier;
+import domain.core.Detailed;
+import domain.modifiers.Language;
+import domain.modifiers.choice.Choice;
+import domain.modifiers.choice.ChoiceProvider;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
- * Implementation of {@link Described} for a Feat a Character posseses.
- * Can supply a character with AbilityScoreModifiers and Proficiencies.
+ * The attributes a {@link Character} Background has and provides in D&D.
+ * TODO: Implement Choice<> mechanism from #2 for proficiencies and languages
+ * TODO: Implement background variants (choice?)
  */
-public class Feat extends Described implements CharacterModifier, ChoiceProvider {
+public class Background extends Detailed implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
-    private final List<AbilityScoreModifier> abilityScoreModifiers;
+    // private final Background parentBackground;
+    private final List<Language> languages;
     private final List<Proficiency> proficiencies;
     private final List<Choice> choices;
 
@@ -21,15 +31,15 @@ public class Feat extends Described implements CharacterModifier, ChoiceProvider
      * ====================================================================== */
 
     /**
-     * Builder pattern implementation for eased {@link Feat} construction.
+     * Builder pattern implementation for eased {@link Background} construction.
      * Create a new {@code Builder} object, call the relevant construction 
      * methods upon it, then finalise the process with the {@link #build()} 
      * method.
      */
-    public static class Builder extends DescribedBuilder<Feat> {
+    public static class Builder extends DetailedBuilder<Background> {
 
         // --- Attributes ---
-        private List<AbilityScoreModifier> abilityScoreModifiers;
+        private List<Language> languages;
         private List<Proficiency> proficiencies;
         private List<Choice> choices;
 
@@ -38,22 +48,22 @@ public class Feat extends Described implements CharacterModifier, ChoiceProvider
         // Builder Constructor
         public Builder(String name, String description) {
             super(name, description);
-            this.abilityScoreModifiers = new ArrayList<>();
+            this.languages = new ArrayList<>();
             this.proficiencies = new ArrayList<>();
             this.choices = new ArrayList<>();
         }
 
         // Build method
         @Override
-        public Feat build() { return new Feat(this); }
+        public Background build() { return new Background(this); }
 
         /* ---------------------- Foreign Associations ---------------------- */
         
         /** 
-         * Replaces current {@link AbilityScoreModifier}s with provided list.
+         * Replaces current {@link Language}s with provided list parameter.
          */
-        public Builder abilityScoreModifiers(List<AbilityScoreModifier> abilityScoreModifiers) {
-            this.abilityScoreModifiers = abilityScoreModifiers; return this;
+        public Builder languages(List<Language> languages) {
+            this.languages = languages; return this;
         }
 
         /** 
@@ -80,37 +90,15 @@ public class Feat extends Described implements CharacterModifier, ChoiceProvider
         }
     }
 
-    /* ---------------------------- Constructors ---------------------------- */
-
     // Local Constructor
-    private Feat(Builder builder)  {
-        // name & description copied from DescribedBuilder
-        super(builder.name, builder.description);
-
-        this.abilityScoreModifiers = builder.abilityScoreModifiers; 
-        this.proficiencies = builder.proficiencies; 
-        this.choices = builder.choices; 
-    }
-
-    /**
-     * Publicly assessable constructor for simple Feats that do not require
-     * {@link Feat.Builder} construction or provide {@link CharacterModifier}s. 
-     * Description attribute must not be null or blank.
-     * 
-     * @param name Name of the Feat
-     * @param description Description of the Feat - what it does
-     */
-    public Feat(String name, String description) {
-        // Validate that description is both not null and also not blank
-        super(name, Objects.requireNonNull(description, 
-            "Constructed Feat must present a non-null description"));
-        if (description.isBlank()) {
-            throw new IllegalArgumentException("Constructed Feat must present a non-blank description");
-        }
-
-        this.abilityScoreModifiers = new ArrayList<>();
-        this.proficiencies = new ArrayList<>();
-        this.choices = new ArrayList<>();
+    private Background(Builder builder) {
+        // name, description & details copied from DetailedBuilder
+        super(builder.getName(), builder.getDescription());
+        this.setDetails(builder.getDetails());
+        
+        this.languages = builder.languages;
+        this.proficiencies = builder.proficiencies;
+        this.choices = builder.choices;
     }
 
     /* ======================================================================
@@ -118,10 +106,10 @@ public class Feat extends Described implements CharacterModifier, ChoiceProvider
      * ====================================================================== */
 
     @Override
-    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
-
+    public List<Language> getLanguages() { return List.copyOf(this.languages); }
+    
     @Override
-    public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
+    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
 
     /* ======================================================================
      * ------------------- ChoiceProvider  Implementation ------------------- 

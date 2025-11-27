@@ -1,5 +1,5 @@
-// src/domain/Detailed.java
-package domain;
+// src/domain/core/Detailed.java
+package domain.core;
 
 import java.util.ArrayList;
 import java.util.List;

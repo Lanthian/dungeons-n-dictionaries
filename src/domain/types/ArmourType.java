@@ -1,5 +1,5 @@
-// src/domain/ArmourType.java
-package domain;
+// src/domain/types/ArmourType.java
+package domain.types;
 
 /**
  * An enum for the different armour subtypes available in D&D. 

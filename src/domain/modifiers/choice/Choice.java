@@ -1,7 +1,9 @@
-// src/domain/Choice.java
-package domain;
+// src/domain/modifiers/choice/Choice.java
+package domain.modifiers.choice;
 
 import java.util.List;
+
+import domain.CharacterModifier;
 
 /**
  * A collection of {@link ChoiceOption}s with a prescribed {@code count} of the 

@@ -1,5 +1,8 @@
-// src/domain/ArmourProficiency.java
-package domain;
+// src/domain/modifiers/proficiency/ArmourProficiency.java
+package domain.modifiers.proficiency;
+
+import domain.Character;
+import domain.types.ArmourType;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding

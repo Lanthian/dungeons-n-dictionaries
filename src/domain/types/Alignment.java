@@ -1,5 +1,5 @@
-// src/domain/Alignment.java
-package domain;
+// src/domain/types/Alignment.java
+package domain.types;
 
 /**
  * An enum for recommended character/creature alignment within the D&D mythos.

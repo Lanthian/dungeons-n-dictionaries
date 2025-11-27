@@ -1,5 +1,9 @@
-// src/domain/ToolProficiency.java
-package domain;
+// src/domain/modifiers/proficiency/ToolProficiency.java
+package domain.modifiers.proficiency;
+
+import domain.Character;
+import domain.core.Described;
+import domain.types.ToolType;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding

@@ -1,5 +1,7 @@
-// src/domain/Language.java
-package domain;
+// src/domain/modifiers/Language.java
+package domain.modifiers;
+
+import domain.core.Described;
 
 /**
  * Basic implementation of {@link Described} for a Language a Character knows.

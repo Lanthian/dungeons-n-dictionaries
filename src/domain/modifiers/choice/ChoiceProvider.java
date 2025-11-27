@@ -1,7 +1,9 @@
-// src/domain/ChoiceProvider.java
-package domain;
+// src/domain/modifiers/choice/ChoiceProvider.java
+package domain.modifiers.choice;
 
 import java.util.List;
+
+import domain.Character;
 
 /**
  * A contract {@link Character} components implement in order to be suppliers 

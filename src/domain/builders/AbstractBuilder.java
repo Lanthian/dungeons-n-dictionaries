@@ -1,5 +1,5 @@
-// src/domain/AbstractBuilder.java
-package domain;
+// src/domain/builders/AbstractBuilder.java
+package domain.builders;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

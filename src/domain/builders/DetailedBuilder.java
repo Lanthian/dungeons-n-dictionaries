@@ -1,8 +1,11 @@
-// src/domain/DetailedBuilder.java
-package domain;
+// src/domain/builders/DetailedBuilder.java
+package domain.builders;
 
 import java.util.List;
 import java.util.PriorityQueue;
+
+import domain.core.Detail;
+import domain.core.Detailed;
 
 /**
  * Abstract builder to be extended by other builder patterns for eased 
@@ -43,4 +46,8 @@ public abstract class DetailedBuilder<T extends Detailed> extends DescribedBuild
     public DetailedBuilder<T> detail(Detail detail) {
         this.details.add(detail); return this;
     }
+
+    /* ------------------------------- Getter ------------------------------- */
+
+    public PriorityQueue<Detail> getDetails() { return this.details; }
 }

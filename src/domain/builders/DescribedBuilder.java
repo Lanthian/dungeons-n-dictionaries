@@ -1,5 +1,7 @@
-// src/domain/DescribedBuilder.java
-package domain;
+// src/domain/builders/DescribedBuilder.java
+package domain.builders;
+
+import domain.core.Described;
 
 /**
  * Abstract builder to be extended by other builder patterns for eased 
@@ -29,4 +31,9 @@ public abstract class DescribedBuilder<T extends Described> extends AbstractBuil
     /* ------------------------- Simple  Attributes ------------------------- */
 
     public DescribedBuilder<T> description(String description) { this.description = description; return this; }
+
+    /* ------------------------------ Getters  ------------------------------ */
+
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
 }

@@ -1,5 +1,5 @@
-// src/domain/Skill.java
-package domain;
+// src/domain/types/Skill.java
+package domain.types;
 
 /**
  * An enum for the different character skills available in D&D.

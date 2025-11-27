@@ -1,5 +1,5 @@
-// src/domain/ToolType.java
-package domain;
+// src/domain/types/ToolType.java
+package domain.types;
 
 /**
  * An enum for the different tool subtypes available in D&D. 

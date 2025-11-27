@@ -1,5 +1,5 @@
-// src/domain/Ability.java
-package domain;
+// src/domain/types/Ability.java
+package domain.types;
 
 import java.util.HashMap;
 

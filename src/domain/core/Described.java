@@ -1,5 +1,5 @@
-// src/domain/Described.java
-package domain;
+// src/domain/core/Described.java
+package domain.core;
 
 /**
  * An abstract class extended by entities that exist with two key attributes:

@@ -1,11 +1,17 @@
-// src/domain/ClassTemplate.java
-package domain;
+// src/domain/templates/ClassTemplate.java
+package domain.templates;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import domain.builders.DetailedBuilder;
+import domain.character.Character;
+import domain.character.CharacterModifier;
+import domain.core.Detailed;
+import domain.modifiers.LevelReward;
 
 /**
  * The attributes a {@link Character} Class has in D&D. 
@@ -91,8 +97,8 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
     // Local Constructor
     private ClassTemplate(Builder builder) {
         // name, description & details copied from DetailedBuilder
-        super(builder.name, builder.description);
-        this.setDetails(builder.details);
+        super(builder.getName(), builder.getDescription());
+        this.setDetails(builder.getDetails());
         
         this.hitPoints = builder.hitPoints;
         this.hitDice = builder.hitDice;

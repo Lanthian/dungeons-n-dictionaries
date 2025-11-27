@@ -1,5 +1,8 @@
-// src/domain/SkillProficiency.java
-package domain;
+// src/domain/modifiers/proficiency/SkillProficiency.java
+package domain.modifiers.proficiency;
+
+import domain.Character;
+import domain.types.Skill;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding

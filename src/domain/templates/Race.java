@@ -1,8 +1,19 @@
-// src/domain/Race.java
-package domain;
+// src/domain/templates/Race.java
+package domain.templates;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import domain.builders.DetailedBuilder;
+import domain.character.Character;
+import domain.character.CharacterModifier;
+import domain.core.Detailed;
+import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Feat;
+import domain.modifiers.Language;
+import domain.modifiers.choice.Choice;
+import domain.modifiers.choice.ChoiceProvider;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * The attributes a {@link Character} Race has and provides in D&D.
@@ -161,8 +172,8 @@ public class Race extends Detailed implements CharacterModifier, ChoiceProvider 
     // Local Constructor
     private Race(Builder builder) {
         // name, description & details copied from DetailedBuilder
-        super(builder.name, builder.description);
-        this.setDetails(builder.details);
+        super(builder.getName(), builder.getDescription());
+        this.setDetails(builder.getDetails());
         
         this.age = builder.age;
         this.alignment = builder.alignment;
