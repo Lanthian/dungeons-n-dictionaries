@@ -1,4 +1,4 @@
-// src/domain/Character.java
+// src/domain/character/Character.java
 package domain.character;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class Character {
     // Foreign associations
     private CharacterSelection<Race> raceSelection;
     private CharacterSelection<Background> backgroundSelection;
-    private List<CharacterSelection<ClassTemplate>> classSelections;
+    private List<ClassSelection> classSelections;
     private AbilityScores abilityScores;
     
     /* ======================================================================
@@ -66,7 +66,7 @@ public class Character {
         // Foreign associations
         private CharacterSelection<Race> raceSelection;
         private CharacterSelection<Background> backgroundSelection;
-        private List<CharacterSelection<ClassTemplate>> classSelections;
+        private List<ClassSelection> classSelections;
         private AbilityScores abilityScores;
 
         /* -------------------------- Construction -------------------------- */
@@ -91,7 +91,11 @@ public class Character {
         }
 
         // Build method
-        public Character build() { return new Character(this); }
+        public Character build() { 
+            // Verify construction constraints
+            validate();
+            return new Character(this); 
+        }
 
         /* ----------------------- Simple  Attributes ----------------------- */
 
@@ -136,18 +140,17 @@ public class Character {
         }
 
         /** 
-         * Appends all {@link ClassTemplate} {@link CharacterSelection}s from 
-         * provided {@link List} parameter to current list.
+         * Appends all {@link ClassSelection}s from provided {@link List} 
+         * parameter to current list.
          */
-        public Builder classSelections(List<CharacterSelection<ClassTemplate>> classSelections) {
+        public Builder classSelections(List<ClassSelection> classSelections) {
             this.classSelections.addAll(classSelections); return this;
         }
 
         /** 
-         * Appends a provided {@link ClassTemplate} {@link CharacterSelection} 
-         * to current classes list.
+         * Appends a provided {@link ClassSelection} to current classes list.
          */
-        public Builder classSelection(CharacterSelection<ClassTemplate> classSelection) {
+        public Builder classSelection(ClassSelection classSelection) {
             this.classSelections.add(classSelection); return this;
         }
 
@@ -161,12 +164,35 @@ public class Character {
         public Builder abilityScores(List<Integer> scores) { 
             this.abilityScores = new AbilityScores(scores); return this; 
         }
+
+        /* ==================================================================
+         * --------------------------- Validation --------------------------- 
+         * ================================================================== */
+
+        /**
+         * Check that the builder is currently in a state where a Character 
+         * built is considered valid. Throws an {@link IllegalStateException} if
+         * incomplete or illegal.
+         */
+        private void validate() {
+            // Verify key selections have not been left empty
+            if (this.raceSelection == null) 
+                throw new IllegalStateException("Character Race must be specified");
+            if (this.backgroundSelection == null) 
+                throw new IllegalStateException("Character Background must be specified");
+            if (this.classSelections.size() != 0) 
+                throw new IllegalStateException("Character must possess at least 1 Class");
+
+            // Verify total class levels match character level
+            int totalClassLevels = classSelections.stream().mapToInt(c -> c.getLevel()).sum();
+            if (totalClassLevels != this.level)
+                throw new IllegalStateException("Class level allocations must equate Character level");
+        }
     }
 
     // Local Constructor
     private Character(Builder builder) {
         this.name = builder.name;
-        // TODO: Add verification that level == sum of classes levels
         this.level = builder.level;
         // TODO: Add verification that XP matches level threshold
         this.experience = builder.experience;
@@ -176,7 +202,6 @@ public class Character {
         this.physique = builder.physique;
         this.profile = builder.profile;
 
-        // TODO: Add verification that these are selected before building
         this.raceSelection = builder.raceSelection;
         this.backgroundSelection = builder.backgroundSelection;
         this.classSelections = builder.classSelections;
