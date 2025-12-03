@@ -1,4 +1,4 @@
-// src/domain/CharacterModifier.java
+// src/domain/character/CharacterModifier.java
 package domain.character;
 
 import java.util.Collections;

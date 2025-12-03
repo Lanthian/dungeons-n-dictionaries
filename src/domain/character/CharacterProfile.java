@@ -1,4 +1,4 @@
-// src/domain/CharacterProfile.java
+// src/domain/character/CharacterProfile.java
 package domain.character;
 
 import domain.builders.AbstractBuilder;

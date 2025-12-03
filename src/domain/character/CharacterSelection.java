@@ -1,4 +1,4 @@
-// src/domain/CharacterSelection.java
+// src/domain/character/CharacterSelection.java
 package domain.character;
 
 import java.util.List;

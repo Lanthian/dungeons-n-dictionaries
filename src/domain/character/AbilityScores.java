@@ -1,4 +1,4 @@
-// src/domain/AbilityScores.java
+// src/domain/character/AbilityScores.java
 package domain.character;
 
 import java.util.Collections;
