@@ -2,6 +2,7 @@
 package domain.character;
 
 import domain.builders.AbstractBuilder;
+import domain.utils.StringUtils;
 
 /**
  * Specialised data store for profile information (personality & story) of a
@@ -109,4 +110,23 @@ public class CharacterProfile {
     public void setDeity(String deity) { this.deity = deity; }
     public void setTrinket(String trinket) { this.trinket = trinket; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("CharacterProfile")
+            .add("backstory=" + StringUtils.quote(backstory))
+            .add("traits=" + StringUtils.quote(traits))
+            .add("ideals=" + StringUtils.quote(ideals))
+            .add("bonds=" + StringUtils.quote(bonds))
+            .add("flaws=" + StringUtils.quote(flaws))
+            .add("allies=" + StringUtils.quote(allies))
+            .add("deity=" + StringUtils.quote(deity))
+            .add("trinket=" + StringUtils.quote(trinket))
+            .add("notes=" + StringUtils.quote(notes))
+            .toString();
+    }
 }

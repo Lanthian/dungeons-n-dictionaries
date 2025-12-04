@@ -1,6 +1,8 @@
 // src/domain/core/Detail.java
 package domain.core;
 
+import domain.utils.StringUtils;
+
 /**
  * Additional textual information that can be appended to any fixed entity.
  * Details are sorted by descending {@code order}, then default 
@@ -39,5 +41,18 @@ public class Detail extends Described {
 
         // Compare ordering (descending)
         return ((Integer) cast.order).compareTo(this.order);
+    }
+
+    /* ======================================================================
+     * --------------------------- Object Methods --------------------------- 
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Detail")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("order=" + order)
+            .toString();
     }
 }

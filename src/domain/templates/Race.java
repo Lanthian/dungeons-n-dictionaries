@@ -14,6 +14,7 @@ import domain.modifiers.Language;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
+import domain.utils.StringUtils;
 
 /**
  * The attributes a {@link Character} Race has and provides in D&D.
@@ -27,6 +28,7 @@ public class Race extends Detailed implements CharacterModifier, ChoiceProvider 
     private final String size;
     private final int speed;
     // Foreign associations
+    // TODO: Only one of the below attributes regarding subrace is necessary
     private final Race parentRace;
     private final List<Race> subraces;
     private final List<Language> languages;
@@ -230,4 +232,29 @@ public class Race extends Detailed implements CharacterModifier, ChoiceProvider 
     // public void setSize(String val) { this.size = val; }
     // public void setSpeed(int val) { this.speed = val; }
     // public void setParentRace(Race val) { this.parentRace = val; }
+
+    /* ======================================================================
+     * --------------------------- Object Methods --------------------------- 
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Race")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("details=" + details)
+            .add("age=" + StringUtils.quote(age))
+            .add("alignment=" + StringUtils.quote(alignment))
+            .add("size=" + StringUtils.quote(size))
+            .add("speed=" + speed)
+            // TODO: Only one of the below (parentRace / subraces) should be kept
+            .add("parentRace=" + parentRace)
+            .add("subraces=" + subraces)
+            .add("proficiencies=" + proficiencies)
+            .add("languages=" + languages)
+            .add("feats=" + feats)
+            .add("abilityScoreModifiers=" + abilityScoreModifiers)
+            .add("choices=" + choices)
+            .toString();
+    }
 }

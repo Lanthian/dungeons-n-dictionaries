@@ -3,6 +3,7 @@ package domain.modifiers.proficiency;
 
 import domain.character.Character;
 import domain.types.ArmourType;
+import domain.utils.StringUtils;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding
@@ -20,4 +21,12 @@ public class ArmourProficiency implements Proficiency {
 
     // --- Getter ---
     public ArmourType getType() { return this.type; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ArmourProficiency")
+            .add("type=" + type)
+            .toString();
+    }
 }

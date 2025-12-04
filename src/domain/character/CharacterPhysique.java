@@ -2,6 +2,7 @@
 package domain.character;
 
 import domain.builders.AbstractBuilder;
+import domain.utils.StringUtils;
 
 /**
  * Specialised data store for physical details and appearance information of a 
@@ -99,4 +100,21 @@ public class CharacterPhysique {
     public void setEyes(String eyes) { this.eyes = eyes; }
     public void setSkin(String skin) { this.skin = skin; }
     public void setHair(String hair) { this.hair = hair; }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("CharacterPhysique")
+            .add("gender=" + StringUtils.quote(gender))
+            .add("age=" + StringUtils.quote(age))
+            .add("height=" + StringUtils.quote(height))
+            .add("weight=" + StringUtils.quote(weight))
+            .add("eyes=" + StringUtils.quote(eyes))
+            .add("skin=" + StringUtils.quote(skin))
+            .add("hair=" + StringUtils.quote(hair))
+            .toString();
+    }
 }

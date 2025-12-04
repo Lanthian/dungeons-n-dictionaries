@@ -12,6 +12,7 @@ import domain.modifiers.Language;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
+import domain.utils.StringUtils;
 
 /**
  * The attributes a {@link Character} Background has and provides in D&D.
@@ -27,7 +28,7 @@ public class Background extends Detailed implements CharacterModifier, ChoicePro
     private final List<Choice> choices;
 
     /* ======================================================================
-     * -------------------------- Builder  Pattern -------------------------- 
+     * -------------------------- Builder  Pattern --------------------------
      * ====================================================================== */
 
     /**
@@ -102,7 +103,7 @@ public class Background extends Detailed implements CharacterModifier, ChoicePro
     }
 
     /* ======================================================================
-     * ------------------ CharacterModifier Implementation ------------------ 
+     * ------------------ CharacterModifier Implementation ------------------
      * ====================================================================== */
 
     @Override
@@ -112,9 +113,25 @@ public class Background extends Detailed implements CharacterModifier, ChoicePro
     public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
 
     /* ======================================================================
-     * ------------------- ChoiceProvider  Implementation ------------------- 
+     * ------------------- ChoiceProvider  Implementation -------------------
      * ====================================================================== */
 
     @Override
     public List<Choice> getChoices() { return List.copyOf(this.choices); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods --------------------------- 
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Background")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("details=" + details)
+            .add("languages=" + languages)
+            .add("proficiences=" + proficiencies)
+            .add("choices=" + choices)
+            .toString();
+    }
 }

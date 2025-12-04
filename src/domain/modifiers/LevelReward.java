@@ -7,6 +7,7 @@ import java.util.function.Function;
 import domain.character.CharacterModifier;
 import domain.modifiers.proficiency.Proficiency;
 import domain.templates.ClassTemplate;
+import domain.utils.StringUtils;
 
 /**
  * A collection of {@link CharacterModifier} updates that a specific level in a 
@@ -116,4 +117,16 @@ public class LevelReward implements CharacterModifier, Comparable<LevelReward> {
     // --- Getters ---
     public int getLevel() { return this.level; }
     public List<CharacterModifier> getRewards() { return List.copyOf(this.rewards); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods --------------------------- 
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("LevelReward")
+            .add("level=" + level)
+            .add("rewards=" + rewards)
+            .toString();
+    }
 }

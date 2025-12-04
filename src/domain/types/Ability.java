@@ -49,4 +49,7 @@ public enum Ability {
         if (ability != null) return ability;
         throw new IllegalArgumentException("Unknown Ability: " + value);
     }
+
+    // --- Getter ---
+    public String getShorthand() { return this.shorthand; }
 }

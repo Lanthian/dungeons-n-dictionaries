@@ -5,6 +5,7 @@ import java.util.List;
 
 import domain.modifiers.choice.ChoiceOption;
 import domain.templates.ClassTemplate;
+import domain.utils.StringUtils;
 
 /**
  * An explicit subscription of a {@link Character} to a particular 
@@ -29,6 +30,16 @@ public class ClassSelection extends CharacterSelection<ClassTemplate> {
         this(template, choices, DEFAULT_LEVEL);
     }
 
-    // Getter
+    // --- Getter ---
     public int getLevel() { return this.level; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ClassSelection")
+            .add("level=" + level)
+            .add("template=" + template)
+            .add("choices=" + choices)
+            .toString();
+    }
 }

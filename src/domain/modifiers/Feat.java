@@ -11,6 +11,7 @@ import domain.core.Described;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
+import domain.utils.StringUtils;
 
 /**
  * Implementation of {@link Described} for a Feat a Character posseses.
@@ -136,4 +137,19 @@ public class Feat extends Described implements CharacterModifier, ChoiceProvider
 
     @Override
     public List<Choice> getChoices() { return List.copyOf(this.choices); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods --------------------------- 
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Feat")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("abilityScoreModifiers=" + abilityScoreModifiers)
+            .add("proficiences=" + proficiencies)
+            .add("choices=" + choices)
+            .toString();
+    }
 }

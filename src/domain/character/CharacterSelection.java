@@ -10,6 +10,7 @@ import domain.modifiers.Feat;
 import domain.modifiers.Language;
 import domain.modifiers.choice.ChoiceOption;
 import domain.modifiers.proficiency.Proficiency;
+import domain.utils.StringUtils;
 
 /**
  * An explicit subscription of a {@link Character} to a particular 
@@ -18,8 +19,8 @@ import domain.modifiers.proficiency.Proficiency;
 public class CharacterSelection<T extends CharacterModifier> implements CharacterModifier {
     
     // --- Attributes ---
-    private final T template;
-    private final List<ChoiceOption<?>> choices;
+    protected final T template;
+    protected final List<ChoiceOption<?>> choices;
 
     // Constructor
     public CharacterSelection(T template, List<ChoiceOption<?>> choices) {
@@ -73,4 +74,16 @@ public class CharacterSelection<T extends CharacterModifier> implements Characte
     // --- Getters ---
     public T getTemplate() { return this.template; }
     public List<ChoiceOption<?>> getChoices() { return List.copyOf(this.choices); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ClassSelection")
+            .add("template=" + template)
+            .add("choices=" + choices)
+            .toString();
+    }
 }

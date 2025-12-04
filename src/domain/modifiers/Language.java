@@ -2,6 +2,7 @@
 package domain.modifiers;
 
 import domain.core.Described;
+import domain.utils.StringUtils;
 
 /**
  * Basic implementation of {@link Described} for a Language a Character knows.
@@ -19,6 +20,7 @@ public class Language extends Described {
     // Constructor
     public Language(String name, String description, String script, boolean exotic) {
         super(name, description);
+        this.script = script;
         this.exotic = exotic;
     }
 
@@ -30,4 +32,15 @@ public class Language extends Described {
     // --- Getters ---
     public boolean isExotic() { return this.exotic; }
     public String getScript() { return this.script; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Language")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("script=" + StringUtils.quote(script))
+            .add("exotic=" + exotic)
+            .toString();
+    }
 }
