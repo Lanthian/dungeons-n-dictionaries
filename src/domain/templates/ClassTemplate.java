@@ -12,6 +12,7 @@ import domain.character.Character;
 import domain.character.CharacterModifier;
 import domain.core.Detailed;
 import domain.modifiers.LevelReward;
+import domain.utils.StringUtils;
 
 /**
  * The attributes a {@link Character} Class has in D&D. 
@@ -180,5 +181,22 @@ public class ClassTemplate extends Detailed implements CharacterModifier {
      */
     private List<LevelReward> recursiveFilterRewards(Predicate<LevelReward> filter) {
         return recursiveFilterRewardsStream(filter).sorted().toList();
+    }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ClassTemplate")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("details=" + details)
+            .add("hitPoints=" + StringUtils.quote(hitPoints))
+            .add("hitDice=" + StringUtils.quote(hitDice))
+            .add("parentClass=" + parentClass)
+            .add("levelRewards=" + levelRewards)
+            .toString();
     }
 }

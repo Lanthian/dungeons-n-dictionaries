@@ -4,6 +4,7 @@ package domain.modifiers.proficiency;
 import domain.character.Character;
 import domain.core.Described;
 import domain.types.ToolType;
+import domain.utils.StringUtils;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding
@@ -30,4 +31,14 @@ public class ToolProficiency extends Described implements Proficiency {
 
     // --- Getter ---
     public ToolType getType() { return this.type; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ToolProficiency")
+            .add("name=" + StringUtils.quote(name))
+            .add("description=" + StringUtils.quote(description))
+            .add("type=" + type)
+            .toString();
+    }
 }

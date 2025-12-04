@@ -4,6 +4,7 @@ package domain.modifiers.choice;
 import java.util.List;
 
 import domain.character.CharacterModifier;
+import domain.utils.StringUtils;
 
 /**
  * A collection of {@link ChoiceOption}s with a prescribed {@code count} of the 
@@ -33,4 +34,13 @@ public class Choice {
     // --- Getters ---
     public List<ChoiceOption<?>> getOptions() { return List.copyOf(this.options); }
     public int getCount() { return this.count; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Choice")
+            .add("options=" + options)
+            .add("count=" + count)
+            .toString();
+    }
 }

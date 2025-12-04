@@ -10,6 +10,7 @@ import domain.modifiers.AbilityScoreModifier;
 import domain.modifiers.Feat;
 import domain.modifiers.Language;
 import domain.modifiers.proficiency.Proficiency;
+import domain.utils.StringUtils;
 
 /**
  * A record to wrap multiple {@link Character} {@link Choice} options under the
@@ -79,5 +80,16 @@ public record ChoiceOption<T>(T value) implements CharacterModifier {
         return type.isInstance(value) 
             ? List.of(type.cast(value))
             : Collections.emptyList();
+    }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("ChoiceOption")
+            .add("value=" + value)
+            .toString();
     }
 }

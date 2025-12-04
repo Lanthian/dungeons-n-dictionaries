@@ -128,6 +128,7 @@ public class Background extends Detailed implements CharacterModifier, ChoicePro
         return StringUtils.toStringJoiner("Background")
             .add("name=" + StringUtils.quote(name))
             .add("description=" + StringUtils.quote(description))
+            .add("details=" + details)
             .add("languages=" + languages)
             .add("proficiences=" + proficiencies)
             .add("choices=" + choices)

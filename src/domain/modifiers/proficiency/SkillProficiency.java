@@ -3,6 +3,7 @@ package domain.modifiers.proficiency;
 
 import domain.character.Character;
 import domain.types.Skill;
+import domain.utils.StringUtils;
 
 /**
  * A {@link Proficiency} providing a {@link Character} with expertise regarding
@@ -33,4 +34,12 @@ public class SkillProficiency implements Proficiency {
 
     // --- Getter ---
     public Skill getSkill() { return this.skill; }
+
+    // To String
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("SkillProficiency")
+            .add("skill=" + skill)
+            .toString();
+    }
 }

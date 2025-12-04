@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import domain.types.Ability;
+import domain.utils.StringUtils;
 
 /**
  * A mapping of Character abilities and their scorings. Rules sourced from point
@@ -123,4 +124,16 @@ public class AbilityScores {
     // --- Getters ---
     public Map<Ability, Integer> getScores() { return Map.copyOf(this.scores); }
     public int getScore(Ability ability) { return this.scores.get(ability); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("AbilityScores")
+            .add("scores=" + scores)
+            .add("pointsLeft=" + pointsLeft)
+            .toString();
+    }
 }

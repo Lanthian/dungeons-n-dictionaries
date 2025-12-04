@@ -13,6 +13,7 @@ import domain.templates.ClassTemplate;
 import domain.templates.Race;
 import domain.types.Ability;
 import domain.types.Alignment;
+import domain.utils.StringUtils;
 
 /**
  * The instantiation and accumulation of all D&D character required information.
@@ -266,5 +267,26 @@ public class Character {
     // TODO: WARNING: Overwrite existing info
     public void setPhysique(CharacterPhysique physique) { this.physique = physique; }
     public void setProfile(CharacterProfile profile) { this.profile = profile; }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("Character")
+            .add("name=" + StringUtils.quote(name))
+            .add("level=" + level)
+            .add("experience=" + experience)
+            .add("playerName=" + StringUtils.quote(playerName))
+            .add("alignment=" + alignment)
+            .add("physique=" + physique)
+            .add("profile=" + profile)
+            .add("raceSelection=" + raceSelection)
+            .add("backgroundSelection=" + backgroundSelection)
+            .add("classSelections=" + classSelections)
+            .add("abilityScores=" + abilityScores)
+            .toString();
+    }
 }
  
