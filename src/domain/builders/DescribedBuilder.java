@@ -18,13 +18,13 @@ public abstract class DescribedBuilder<T extends Described> extends AbstractBuil
     protected String description;
 
     // Builder Constructor
-    public DescribedBuilder(String name, String description) {
+    protected DescribedBuilder(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     // Overloaded Constructor (optional description)
-    public DescribedBuilder(String name) {
+    protected DescribedBuilder(String name) {
         this(name, null);
     }
 

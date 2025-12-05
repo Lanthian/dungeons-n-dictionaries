@@ -20,18 +20,18 @@ public abstract class Described implements Comparable<Described> {
     protected String description;
 
     // Constructor
-    public Described(String name, String description) {
+    protected Described(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     // Overloaded Constructor (optional description)
-    public Described(String name) {
+    protected Described(String name) {
         this(name, null);
     }
 
     // Overloaded Constructor (copy a Described object)
-    public Described(Described old) {
+    protected Described(Described old) {
         // TODO: Check if getters needed here
         this(old.name, old.description);
     }
