@@ -13,7 +13,7 @@ package domain.core;
  * overriding {@link #compareBefore(Described)} and/or
  * {@link #compareAfter(Described)} methods.
  */
-public abstract class Described implements Comparable<Described> {
+public abstract class Described<T> extends Entity<T> implements Comparable<Described<T>> {
     
     // --- Attributes ---
     protected String name;
@@ -31,7 +31,7 @@ public abstract class Described implements Comparable<Described> {
     }
 
     // Overloaded Constructor (copy a Described object)
-    protected Described(Described old) {
+    protected Described(Described<T> old) {
         // TODO: Check if getters needed here
         this(old.name, old.description);
     }
@@ -42,7 +42,7 @@ public abstract class Described implements Comparable<Described> {
 
     // Overriden Ordering
     @Override
-    public final int compareTo(Described o) {
+    public final int compareTo(Described<T> o) {
         // Compare using 'before' extended logic
         int res = compareBefore(o);
         if (res != 0) return res;
@@ -87,7 +87,7 @@ public abstract class Described implements Comparable<Described> {
      * @return a negative integer, zero or positive integer if {@code this} is 
      *         less than, equal to, or greater than {@code o}
      */
-    protected int compareBefore(Described o) { return 0; }
+    protected int compareBefore(Described<T> o) { return 0; }
 
     /**
      * Extendable comparison injected after default 
@@ -97,7 +97,7 @@ public abstract class Described implements Comparable<Described> {
      * @return a negative integer, zero or positive integer if {@code this} is 
      *         less than, equal to, or greater than {@code o}
      */
-    protected int compareAfter(Described o) { return 0; }
+    protected int compareAfter(Described<T> o) { return 0; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  ------------------------- 
