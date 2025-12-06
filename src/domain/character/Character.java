@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import domain.builders.AbstractBuilder;
+import domain.core.Entity;
 import domain.modifiers.choice.Choice;
 import domain.templates.Background;
 import domain.templates.ClassTemplate;
@@ -19,7 +20,7 @@ import domain.utils.StringUtils;
  * The instantiation and accumulation of all D&D character required information.
  * Constructed by utilising internal {@link Character.Builder} class.
  */
-public class Character {
+public class Character extends Entity<Character> {
 
     // --- Attributes ---
     // Simple attributes

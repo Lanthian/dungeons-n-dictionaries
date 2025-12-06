@@ -18,7 +18,7 @@ import domain.utils.StringUtils;
  * The attributes a {@link Character} Class has in D&D. 
  * Named `CharacterTemplate` to avoid clashing Java keyword `Class`.
  */
-public class ClassTemplate extends Detailed implements CharacterModifier {
+public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterModifier {
     
     // --- Attributes ---
     // Simple attributes

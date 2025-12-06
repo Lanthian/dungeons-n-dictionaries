@@ -13,7 +13,7 @@ import domain.utils.StringUtils;
  * <p> ToolProficiency {@code name} is the relevant tool's name, 
  * {@code description} describes the tool.
  */
-public class ToolProficiency extends Described implements Proficiency {
+public class ToolProficiency extends Described<ToolProficiency> implements Proficiency {
 
     // --- Attributes ---
     private ToolType type;

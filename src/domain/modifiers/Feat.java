@@ -17,7 +17,7 @@ import domain.utils.StringUtils;
  * Implementation of {@link Described} for a Feat a Character posseses.
  * Can supply a character with AbilityScoreModifiers and Proficiencies.
  */
-public class Feat extends Described implements CharacterModifier, ChoiceProvider {
+public class Feat extends Described<Feat> implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     private final List<AbilityScoreModifier> abilityScoreModifiers;

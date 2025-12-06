@@ -19,7 +19,7 @@ import domain.utils.StringUtils;
 /**
  * The attributes a {@link Character} Race has and provides in D&D.
  */
-public class Race extends Detailed implements CharacterModifier, ChoiceProvider {
+public class Race extends Detailed<Race> implements CharacterModifier, ChoiceProvider {
     
     // --- Attributes ---
     // Simple attributes
