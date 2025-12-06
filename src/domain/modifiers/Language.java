@@ -11,7 +11,7 @@ import domain.utils.StringUtils;
  * <p> Language {@code description} describes typical speakers of the language.
  * {@code script} defines the written script of the language.
  */
-public class Language extends Described {
+public class Language extends Described<Language> {
 
     // --- Attributes ---
     private String script;
