@@ -9,7 +9,7 @@ import domain.core.Described;
  * {@code Builder} object, call the relevant construction methods upon it, then 
  * finalise the process with the {@link #build()} method.
  */
-public abstract class DescribedBuilder<T extends Described> extends AbstractBuilder<T> {
+public abstract class DescribedBuilder<T extends Described<T>> extends AbstractBuilder<T> {
 
     /* ---------------------------- Construction ---------------------------- */
 
@@ -18,13 +18,13 @@ public abstract class DescribedBuilder<T extends Described> extends AbstractBuil
     protected String description;
 
     // Builder Constructor
-    public DescribedBuilder(String name, String description) {
+    protected DescribedBuilder(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     // Overloaded Constructor (optional description)
-    public DescribedBuilder(String name) {
+    protected DescribedBuilder(String name) {
         this(name, null);
     }
 

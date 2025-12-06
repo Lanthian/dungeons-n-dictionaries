@@ -2,6 +2,7 @@
 package domain.modifiers;
 
 import domain.character.Character;
+import domain.core.Entity;
 import domain.types.Ability;
 import domain.utils.StringUtils;
 
@@ -9,7 +10,7 @@ import domain.utils.StringUtils;
  * An Ability score increase or decrease provided to a {@link Character}.
  * Immutable once created.
  */
-public class AbilityScoreModifier {
+public class AbilityScoreModifier extends Entity<AbilityScoreModifier> {
 
     // --- Attributes ---
     private final Ability ability;

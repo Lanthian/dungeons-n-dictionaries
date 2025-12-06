@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import domain.character.CharacterModifier;
+import domain.core.Entity;
 import domain.modifiers.proficiency.Proficiency;
 import domain.templates.ClassTemplate;
 import domain.utils.StringUtils;
@@ -15,7 +16,7 @@ import domain.utils.StringUtils;
  * TODO: Subclass selection needs to be supported / offered as a reward 
  * - type of reward should perhaps be defined in this case
  */
-public class LevelReward implements CharacterModifier, Comparable<LevelReward> {
+public class LevelReward extends Entity<LevelReward> implements CharacterModifier, Comparable<LevelReward> {
     
     // --- Constants ---
     private static final int DEFAULT_LEVEL = 1;

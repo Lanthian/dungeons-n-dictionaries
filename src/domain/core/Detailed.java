@@ -10,24 +10,24 @@ import java.util.PriorityQueue;
  * define an entity that can have additional {@link Detail} information
  * attached. Mutable.
  */
-public abstract class Detailed extends Described {
+public abstract class Detailed<T> extends Described<T> {
 
     // --- Attributes ---
     protected PriorityQueue<Detail> details;
 
     // Constructor
-    public Detailed(String name, String description) {
+    protected Detailed(String name, String description) {
         super(name, description);
         this.details = new PriorityQueue<Detail>();
     }
 
     // Overloaded Constructor (optional description)
-    public Detailed(String name) {
+    protected Detailed(String name) {
         this(name, null);
     }
 
     // Overloaded Constructor (copy a Detailed object)
-    public Detailed(Detailed old) {
+    protected Detailed(Detailed<T> old) {
         // TODO: Check if getter needed here
         super(old);
         this.details = new PriorityQueue<>(old.details);

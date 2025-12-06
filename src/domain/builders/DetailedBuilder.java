@@ -13,7 +13,7 @@ import domain.core.Detailed;
  * {@code Builder} object, call the relevant construction methods upon it, then 
  * finalise the process with the {@link #build()} method.
  */
-public abstract class DetailedBuilder<T extends Detailed> extends DescribedBuilder<T> {
+public abstract class DetailedBuilder<T extends Detailed<T>> extends DescribedBuilder<T> {
 
     /* ---------------------------- Construction ---------------------------- */
 
@@ -21,13 +21,13 @@ public abstract class DetailedBuilder<T extends Detailed> extends DescribedBuild
     protected PriorityQueue<Detail> details;
 
     // Builder Constructor
-    public DetailedBuilder(String name, String description) {
+    protected DetailedBuilder(String name, String description) {
         super(name, description);
         this.details = new PriorityQueue<Detail>();
     }
 
     // Overloaded Constructor (optional description)
-    public DetailedBuilder(String name) {
+    protected DetailedBuilder(String name) {
         this(name, null);
     }
 

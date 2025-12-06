@@ -4,6 +4,7 @@ package domain.modifiers.choice;
 import java.util.List;
 
 import domain.character.CharacterModifier;
+import domain.core.Entity;
 import domain.utils.StringUtils;
 
 /**
@@ -11,7 +12,7 @@ import domain.utils.StringUtils;
  * number of valid choices allowed. Used to mark decision points, primarily in 
  * {@link CharacterModifier}-ing classes.
  */
-public class Choice {
+public class Choice extends Entity<Choice> {
 
     // --- Constants ---
     private static final int DEFAULT_CHOICE_COUNT = 1;

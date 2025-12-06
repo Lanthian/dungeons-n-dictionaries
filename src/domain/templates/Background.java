@@ -19,7 +19,7 @@ import domain.utils.StringUtils;
  * TODO: Implement Choice<> mechanism from #2 for proficiencies and languages
  * TODO: Implement background variants (choice?)
  */
-public class Background extends Detailed implements CharacterModifier, ChoiceProvider {
+public class Background extends Detailed<Background> implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     // private final Background parentBackground;
