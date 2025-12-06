@@ -1,3 +1,9 @@
+### Secret environment variables
+.env
+.env.*
+!.env.example
+
+### Maven compiled ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
