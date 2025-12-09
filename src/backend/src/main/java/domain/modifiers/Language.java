@@ -25,7 +25,7 @@ public class Language extends Described<Language> {
     }
 
     // Overloaded Constructor (defaults standard)
-    public Language(String name, String script, String description) {
+    public Language(String name, String description, String script) {
         this(name, description, script, false);
     }
 
