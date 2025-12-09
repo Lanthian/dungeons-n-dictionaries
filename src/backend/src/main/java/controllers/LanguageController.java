@@ -37,4 +37,100 @@ public class LanguageController extends Controller {
             throw new ServletException("Unexpected error", e);
         }
     }
+
+    @Override
+    protected void handlePost(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            // Read Json input into DTO (domain object in this case)
+            Language language = new GsonBuilder().create().fromJson(req.getReader(), Language.class);
+
+            // Do operation
+            LanguageService.OperationResult result;
+            result = LanguageService.createLanguage(language);
+
+            // Interpret service method result
+            String msg = "Unknown operation result";
+            switch (result) {
+                case SUCCESS:
+                    msg = "Inserted new language";
+                    break;
+                case ILLEGAL_ENTITY:
+                    msg = "Cannot insert new language - ID should not be attached";
+                    break;
+                case DB_FAILURE:
+                    msg = "Failed to insert new language";
+            }
+            writeResponse(resp, result.isSuccess(), msg);
+
+        } catch (SQLException e) {
+            throw new ServletException("Database error", e);
+        } catch (Exception e) {
+            // Catch potential input IllegalState or NumberFormat exceptions
+            throw new ServletException("Unexpected error", e);
+        }
+    }
+
+    @Override
+    protected void handlePut(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            // Read Json input into DTO (domain object in this case)
+            Language language = new GsonBuilder().create().fromJson(req.getReader(), Language.class);
+
+            // Do operation
+            LanguageService.OperationResult result;
+            result = LanguageService.updateLanguage(language);
+
+            // Interpret service method result
+            String msg = "Unknown operation result";
+            switch (result) {
+                case SUCCESS:
+                    msg = "Updated language";
+                    break;
+                case ILLEGAL_ENTITY:
+                    msg = "Cannot update language - ID should be attached";
+                    break;
+                case DB_FAILURE:
+                    msg = "Failed to update language";
+            }
+            writeResponse(resp, result.isSuccess(), msg);
+
+        } catch (SQLException e) {
+            throw new ServletException("Database error", e);
+        } catch (Exception e) {
+            // Catch potential input IllegalState or NumberFormat exceptions
+            throw new ServletException("Unexpected error", e);
+        }
+    }
+
+    @Override
+    protected void handleDelete(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            // Read Json input into DTO (domain object in this case)
+            Language language = new GsonBuilder().create().fromJson(req.getReader(), Language.class);
+
+            // Do operation
+            LanguageService.OperationResult result;
+            result = LanguageService.deleteLanguage(language);
+
+            // Interpret service method result
+            String msg = "Unknown operation result";
+            switch (result) {
+                case SUCCESS:
+                    msg = "Deleted language";
+                    break;
+                case ILLEGAL_ENTITY:
+                    msg = "Cannot delete language - ID should be attached";
+                    break;
+                case DB_FAILURE:
+                    msg = "Failed to delete language";
+            }
+            writeResponse(resp, result.isSuccess(), msg);
+
+        } catch (SQLException e) {
+            throw new ServletException("Database error", e);
+        } catch (Exception e) {
+            // Catch potential IllegalState or NumberFormat exceptions from id
+            throw new ServletException("Unexpected error", e);
+        }
+    }
 }
