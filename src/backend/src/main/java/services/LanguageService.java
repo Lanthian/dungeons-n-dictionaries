@@ -4,6 +4,7 @@ package services;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import datasource.Database;
 import datasource.UnitOfWork;
@@ -40,6 +41,23 @@ public class LanguageService {
     }
 
     /* ------------------------ Business  Operations ------------------------ */
+
+    /**
+     * Returns a {@link Language} persisted in the database with the passed ID.
+     *
+     * @param id uniquely identifying PK of language in the database
+     * @return {@link Language} object if found, {@code null} if otherwise
+     * @throws SQLException if an unexpected database SQL exception occurs or
+     *         if {@link Database#getConnection()} is interupted
+     */
+    public static Language getById(long id) throws SQLException {
+        // TODO: Delegate this operation to a repository
+        Connection conn = Database.getConnection();
+        Optional<Language> found = MapperRegistry.getMapper(Language.class).findById(id, conn);
+        // Return null or found language
+        if (found.isEmpty()) return null;
+        else return found.get();
+    }
 
     /**
      * Return all {@link Language}s persisted in the database.

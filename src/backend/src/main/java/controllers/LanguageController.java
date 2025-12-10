@@ -25,10 +25,21 @@ public class LanguageController extends Controller {
         resp.setContentType("application/json");
 
         try {
-            List<Language> languages = LanguageService.getAll();
+            // Convert retrieved data into a Json text
+            String json;
 
-            // Convert retrieved data into a Json object array
-            String json = new GsonBuilder().create().toJson(languages);
+            // Identify endpoint
+            if (parts.length > 0) {
+                // Get a specific Language
+                long id = Long.parseLong(parts[0]);
+                Language language = LanguageService.getById(id);
+                json = new GsonBuilder().create().toJson(language);
+            } else {
+                // Return all Languages
+                List<Language> languages = LanguageService.getAll();
+                json = new GsonBuilder().create().toJson(languages);
+            }
+
             resp.getWriter().write(json);
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
