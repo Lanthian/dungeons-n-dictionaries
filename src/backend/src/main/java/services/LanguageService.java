@@ -52,11 +52,10 @@ public class LanguageService {
      */
     public static Language getById(long id) throws SQLException {
         // TODO: Delegate this operation to a repository
-        Connection conn = Database.getConnection();
-        Optional<Language> found = MapperRegistry.getMapper(Language.class).findById(id, conn);
-        // Return null or found language
-        if (found.isEmpty()) return null;
-        else return found.get();
+        try (Connection conn = Database.getConnection()) {
+            Optional<Language> found = MapperRegistry.getMapper(Language.class).findById(id, conn);
+            return found.orElse(null);
+        }
     }
 
     /**
@@ -68,8 +67,9 @@ public class LanguageService {
      */
     public static List<Language> getAll() throws SQLException {
         // TODO: Delegate this operation to a repository
-        Connection conn = Database.getConnection();
-        return MapperRegistry.getMapper(Language.class).findAll(conn);
+        try (Connection conn = Database.getConnection()) {
+            return MapperRegistry.getMapper(Language.class).findAll(conn);
+        }
     }
 
     /**
