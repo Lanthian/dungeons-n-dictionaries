@@ -3,7 +3,7 @@ import type { Language } from '../features/language/types/Language';
 import axiosInstance from './axiosInstance';
 import { handleAPI } from './utils';
 
-const BASE_URL = '/language';
+const BASE_URL = 'language';
 
 /**
  * API class to make backend calls regarding Languages.
