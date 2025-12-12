@@ -1,5 +1,5 @@
-// java/controllers/FrontController.java
-package controllers;
+// java/api/controllers/FrontController.java
+package api.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

@@ -1,5 +1,5 @@
-// java/controllers/PingServer.java
-package controllers;
+// java/api/controllers/PingServer.java
+package api.controllers;
 
 import java.io.IOException;
 

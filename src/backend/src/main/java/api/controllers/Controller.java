@@ -1,5 +1,5 @@
-// java/controllers/Controller.java
-package controllers;
+// java/api/controllers/Controller.java
+package api.controllers;
 
 import java.io.IOException;
 

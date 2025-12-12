@@ -1,5 +1,5 @@
-// java/controllers/ControllerRegistry.java
-package controllers;
+// java/api/controllers/ControllerRegistry.java
+package api.controllers;
 
 import java.util.HashMap;
 import java.util.Map;

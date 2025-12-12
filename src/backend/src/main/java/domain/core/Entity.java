@@ -1,8 +1,6 @@
 // java/domain/core/Entity.java
 package domain.core;
 
-import com.google.gson.annotations.JsonAdapter;
-
 /**
  * Declaration that a domain model object is an entity and stores a database
  * level unique identifier. Contains a type safe ID via the Curiously Recurring
@@ -12,7 +10,6 @@ import com.google.gson.annotations.JsonAdapter;
 public abstract class Entity<T> {
 
     // --- Attributes ---
-    @JsonAdapter(EntityIdAdapter.class)
     protected EntityId<T> id;
 
     // Constructor
