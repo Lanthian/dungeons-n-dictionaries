@@ -83,3 +83,14 @@ function processAPIError({
   // Return message in priority order
   return dataMessage || statusMap[status] || defaultMessage;
 }
+
+/**
+ * Utility method to decode api status response format from the backend, for
+ * standardised boolean response interpretation.
+ *
+ * @param res response from an axios call
+ * @returns true iff res.data.status === "success", false otherwise
+ */
+export function successAPI(res: AxiosResponse): boolean {
+  return res?.data?.status === "success";
+}
