@@ -1,5 +1,5 @@
 // api/language.ts
-import type { Language } from '../features/language/types/Language';
+import type { Language } from '../features/language/types/language';
 import axiosInstance from './axiosInstance';
 import { handleAPI } from './utils';
 
