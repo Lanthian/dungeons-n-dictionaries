@@ -1,17 +1,17 @@
 /** java/security/WebSecurityConfig.java
- * 
- * @author School of Computing and Information Systems, The University of 
- *         Melbourne 
- * 
- * The following code has been taken from the steps outlined in CIS Unimelb's 
+ *
+ * @author School of Computing and Information Systems, The University of
+ *         Melbourne
+ *
+ * The following code has been taken from the steps outlined in CIS Unimelb's
  * "Milestone 0: Hello World" within their "React Project Development Setup", as
  * of 2025.12.06.
- * 
+ *
  * <p> Notes: {@link https://cis-projects.github.io/swen90007_course_notes/}
- * 
+ *
  * <p> Code Source:
  * {@link https://cis-projects.github.io/swen90007_course_notes/react-example/swen90007-react-example-primer-milestone-0.html#presentation-layer}
- */ 
+ */
 package security;
 
 import org.springframework.context.annotation.Bean;
@@ -35,6 +35,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
+                .csrf().disable()
                 .build();
     }
 
@@ -42,7 +43,8 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(System.getProperty(PROPERTY_CORS_ORIGINS_UI)));
-        configuration.setAllowedMethods(Arrays.asList("GET"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -66,15 +66,30 @@ public class EntityIdAdapterFactory implements TypeAdapterFactory {
 
         @Override
         public EntityId<T> read(JsonReader in) throws IOException {
-            // If no ID included, do not set EntityId
-            if (in.peek() == JsonToken.NULL) {
-                in.nextNull();
-                return null;
-            }
+            // Validate and decipher EntityId shipped type
+            JsonToken token = in.peek();
+            switch (token) {
 
-            // Otherwise, interpret it as a long
-            long value = in.nextLong();
-            return new EntityId<T>(value);
+                // If no ID included, do not set EntityId
+                case NULL:
+                    in.nextNull();
+                    return null;
+
+                // If a valid number, read as ID
+                case NUMBER:
+                    return new EntityId<T>(in.nextLong());
+
+                // If a String, try to interpret as numeric ID
+                case STRING:
+                    String s = in.nextString();
+                    try { return new EntityId<T>(Long.parseLong(s)); }
+                    catch (NumberFormatException invalid) { return null; }
+
+                // Skip unrecognised value format
+                default:
+                    in.skipValue();
+                    return null;
+            }
         }
     }
 }
