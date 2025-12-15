@@ -10,7 +10,7 @@ import {
 
 // Input parameters for LanguageForm
 type Props = {
-  initial?: Language;
+  initial: Language | null;
   onSubmit: (data: Language) => void;
   onCancel: () => void;
 };
