@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import domain.core.EntityId;
 import domain.modifiers.Language;
@@ -15,9 +19,40 @@ import domain.modifiers.Language;
  */
 public class LanguageMapper implements Mapper<Language> {
 
-    /* ======================================================================
-     * --------------------- CUD Mapper Implementation  ---------------------
-     * ====================================================================== */
+    /* -------------------------- Read  Operations -------------------------- */
+
+    @Override
+    public Optional<Language> findById(long id, Connection conn) throws SQLException {
+        String sql = """
+            SELECT *
+            FROM language
+            WHERE id = ?
+            """;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (!rs.next()) return Optional.empty();
+                return Optional.of(mapRow(rs));
+            }
+        }
+    }
+
+    @Override
+    public List<Language> findAll(Connection conn) throws SQLException {
+        List<Language> list = new ArrayList<>();
+        String sql = """
+            SELECT *
+            FROM language
+            """;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            // Instantiate objects from all entries in queried ResultSet
+            while (rs.next()) { list.add(mapRow(rs)); }
+        }
+        return list;
+    }
+
+    /* ----------------------- Insert, Update, Delete ----------------------- */
 
     @Override
     public boolean insert(Language obj, Connection conn) throws SQLException {
@@ -62,6 +97,8 @@ public class LanguageMapper implements Mapper<Language> {
             return pstmt.executeUpdate() == 1;
         }
     }
+
+    /* -------------------------- Row  Translation -------------------------- */
 
     @Override
     public Language mapRow(ResultSet rs) throws SQLException {

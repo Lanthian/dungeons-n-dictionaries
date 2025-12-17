@@ -1,0 +1,19 @@
+/* components/Modal.css */
+.modal-backdrop {
+  /* Dead centre alignment */
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* At the very top of all HTML elements, with dimmed backdrop */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal {
+  /* TODO: Take this colour value from an index.css variable */
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+}

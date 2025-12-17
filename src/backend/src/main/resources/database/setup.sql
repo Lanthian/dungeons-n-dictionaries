@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS language CASCADE;
+
+CREATE TABLE IF NOT EXISTS language (
+	id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+	description VARCHAR(255),
+	script VARCHAR(255),
+	exotic BOOLEAN NOT NULL DEFAULT false
+);
