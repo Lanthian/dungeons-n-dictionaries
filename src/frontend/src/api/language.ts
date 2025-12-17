@@ -15,6 +15,7 @@ class LanguageAPI {
   async fetchLanguages(): Promise<ApiResponse<Language[]>> {
     return handleAPI({
       request: () => axiosInstance.get(BASE_URL),
+      successMessage: "Languages retrieved",
       errorMessage: "Get languages failed"
     });
   }
@@ -23,6 +24,7 @@ class LanguageAPI {
   async createLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.post(BASE_URL, language),
+      successMessage: "Language created",
       errorMessage: "Create language failed",
     });
   }
@@ -31,6 +33,7 @@ class LanguageAPI {
   async updateLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.put(BASE_URL, language),
+      successMessage: "Language updated",
       errorMessage: "Update language failed"
     });
   }
@@ -39,6 +42,7 @@ class LanguageAPI {
   async deleteLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.delete(BASE_URL, { data: language }),
+      successMessage: "Language deleted",
       errorMessage: "Delete language failed"
     });
   }

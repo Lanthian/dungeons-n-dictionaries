@@ -19,6 +19,6 @@ export function getData<T>(res: ApiResponse<T>): T | undefined {
   return isSuccess(res) ? res.data : undefined;
 }
 
-export function getMesage<T>(res: ApiResponse<T>): string | undefined {
+export function getMessage<T>(res: ApiResponse<T>): string | undefined {
   return res.message;
 }

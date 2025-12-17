@@ -6,6 +6,7 @@ import type { Language } from '../types/language';
 import LanguageItem from '../components/LanguageItem';
 import LanguageForm from '../components/LanguageForm';
 import Modal from '../../../components/Modal';
+import { toastApiResponse } from '../../../utils/toastApiResponse';
 
 export default function LanguagePage() {
   const [languages, setLanguages] = useState<Language[] | null>([]);
@@ -15,6 +16,7 @@ export default function LanguagePage() {
   async function refreshLanguages() {
     // Fetch current languages
     const res = await LanguageAPI.fetchLanguages();
+    // If refresh fetch fails, set languages to [] to avoid viewing stale data
     setLanguages(getData(res) || []);
   }
 
@@ -23,14 +25,14 @@ export default function LanguagePage() {
     async function load() {
       // Redeclared `refreshLanguages()` to avoid cascading render warning
       const res = await LanguageAPI.fetchLanguages();
-      setLanguages(getData(res) || []);
+      if (toastApiResponse(res)) { setLanguages(getData(res) || []) };
     }
     load();
   }, [])
 
   async function onDelete(language: Language) {
     const res = await LanguageAPI.deleteLanguage(language);
-    await refreshLanguages();
+    if (toastApiResponse(res)) { await refreshLanguages(); }
   }
 
   async function onSubmit(language: Language) {
@@ -38,9 +40,11 @@ export default function LanguagePage() {
     const res = editing
       ? await LanguageAPI.updateLanguage(language)
       : await LanguageAPI.createLanguage(language);
-    setShowModal(false);
-    setEditing(null);
-    await refreshLanguages();
+    if (toastApiResponse(res)) {
+      setShowModal(false);
+      setEditing(null);
+      await refreshLanguages();
+    }
   }
 
   return (
