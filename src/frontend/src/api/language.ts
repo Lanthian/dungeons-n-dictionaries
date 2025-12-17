@@ -1,7 +1,8 @@
 // api/language.ts
 import type { Language } from '../features/language/types/language';
+import type { ApiResponse } from './apiResponse';
 import axiosInstance from './axiosInstance';
-import { handleAPI, successAPI } from './utils';
+import { handleAPI } from './utils';
 
 const BASE_URL = 'language';
 
@@ -11,7 +12,7 @@ const BASE_URL = 'language';
 class LanguageAPI {
 
   /** GET /lanugage */
-  async fetchLanguages(): Promise<Language[]> {
+  async fetchLanguages(): Promise<ApiResponse<Language[]>> {
     return handleAPI({
       request: () => axiosInstance.get(BASE_URL),
       errorMessage: "Get languages failed"
@@ -19,28 +20,25 @@ class LanguageAPI {
   }
 
   /** POST /lanugage */
-  async createLanguage(language: Language): Promise<boolean> {
+  async createLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.post(BASE_URL, language),
-      handler: (res) => successAPI(res),
       errorMessage: "Create language failed",
     });
   }
 
   /** PUT /lanugage */
-  async updateLanguage(language: Language): Promise<boolean> {
+  async updateLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.put(BASE_URL, language),
-      handler: (res) => successAPI(res),
       errorMessage: "Update language failed"
     });
   }
 
   /** DELETE /lanugage */
-  async deleteLanguage(language: Language): Promise<boolean> {
+  async deleteLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({
       request: () => axiosInstance.delete(BASE_URL, { data: language }),
-      handler: (res) => successAPI(res),
       errorMessage: "Delete language failed"
     });
   }

@@ -1,6 +1,7 @@
 // features/language/pages/LanguagePage.tsx
 import { useEffect, useState } from 'react';
 import LanguageAPI from '../../../api/language'
+import { getData } from '../../../api/apiResponse';
 import type { Language } from '../types/language';
 import LanguageItem from '../components/LanguageItem';
 import LanguageForm from '../components/LanguageForm';
@@ -13,16 +14,16 @@ export default function LanguagePage() {
 
   async function refreshLanguages() {
     // Fetch current languages
-    const data = await LanguageAPI.fetchLanguages();
-    setLanguages(data);
+    const res = await LanguageAPI.fetchLanguages();
+    setLanguages(getData(res) || []);
   }
 
   // Fetch languages upon navigating to this page
   useEffect(() => {
     async function load() {
       // Redeclared `refreshLanguages()` to avoid cascading render warning
-      const data = await LanguageAPI.fetchLanguages();
-      setLanguages(data);
+      const res = await LanguageAPI.fetchLanguages();
+      setLanguages(getData(res) || []);
     }
     load();
   }, [])

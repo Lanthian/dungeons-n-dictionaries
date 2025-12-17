@@ -1,60 +1,82 @@
 // api/utils.ts
-import type { AxiosResponse } from "axios";
+import { isAxiosError, type AxiosResponse } from "axios";
+import type { ApiResponse } from "./apiResponse";
 
 /* GPT generated section: Pattern matching overloads for type inference...... */
 // Overload #1 - with handler
 export async function handleAPI<T, R>(opts: {
   request: () => Promise<AxiosResponse<T>>;
   handler: (res: AxiosResponse<T>) => R;
+  successMessage?: string,
   errorMessage: string;
-}): Promise<R>;
+}): Promise<ApiResponse<R>>;
 
 // Overload #2 - without handler
 export async function handleAPI<T>(opts: {
   request: () => Promise<AxiosResponse<T>>;
+  successMessage?: string,
   errorMessage: string;
-}): Promise<T>;
+}): Promise<ApiResponse<T>>;
 /* ....................................................... End GPT disclaimer */
 
 /**
  * Helper method intended to make an asynchronous axios request, then wrap
- * the output in a handler of some kind. Returns the response .data by default
- * if no handler provided. Displays a custom error message on response failure.
+ * the output in a handler of some kind. Returns an ApiResponse with
+ * .data by default if no handler provided.
+ * Displays a custom error message on response failure.
  *
  * @param request asynchronous axios call returning Promise<{data: T, status:
  *        number}> on success
- * @param handler optional handler to validate/transform axios response
- * @param errorMessage custom message to throw if no error message returned
- * @returns res.data from axios request by default, handled if handler provided
+ * @param handler optional handler to validate/transform axios data response
+ * @param successMessage optional message included if no message with success
+ * @param errorMessage custom message to include if no error message returned
+ * @returns ApiResponse with .data from axios request by default, handled .data
+ *          if handler provided
  */
 export async function handleAPI<T, R = T>({
   request,
   handler = undefined,
+  successMessage = "Action succeeded",
   errorMessage = "An error occurred",
 }: {
   request: () => Promise<AxiosResponse<T>>,
   handler?: (res: AxiosResponse<T>) => R,
+  successMessage?: string,
   errorMessage: string
-}): Promise<R> {
+}): Promise<ApiResponse<R>> {
   try {
     const res = await request();
-    // Use custom handler to validate/transform response if provided
+    // Use custom handler to validate/transform response data if provided
     // Otherwise, just return the data
-    return handler ? handler(res) : (res.data as unknown as R);
+    return {
+      status: "success",
+      message: successMessage,
+      data: handler ? handler(res) : (res.data as unknown as R)
+    }
+  } catch (err: unknown) {
+    // Catch non-Axios / programming errors (potentially from handler used)
+    if (!isAxiosError(err)) {
+      return {
+        status: "error",
+        message: "Unexpected error occured"
+      }
+    }
 
-  } catch (err: any) {
     if (err.response) {
       // Determine most specific error message applicable
-      const message = processAPIError({
-        status: err.response.status,
-        dataMessage: err.response.data?.message,
-        defaultMessage: errorMessage,
-      });
-      throw new Error(message);
-    } else if (err.request) {
-      throw new Error("No response from server");
+      return {
+        status: "error",
+        message: processAPIError({
+          status: err.response.status,
+          dataMessage: err.response.data?.message,
+          defaultMessage: errorMessage,
+        })
+      }
     } else {
-      throw new Error(err.message);
+      return {
+        status: "error",
+        message: "No response from server"
+      }
     }
   }
 }
@@ -82,15 +104,4 @@ function processAPIError({
 
   // Return message in priority order
   return dataMessage || statusMap[status] || defaultMessage;
-}
-
-/**
- * Utility method to decode api status response format from the backend, for
- * standardised boolean response interpretation.
- *
- * @param res response from an axios call
- * @returns true iff res.data.status === "success", false otherwise
- */
-export function successAPI(res: AxiosResponse): boolean {
-  return res?.data?.status === "success";
 }
