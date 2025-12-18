@@ -40,11 +40,13 @@ public class Database {
     private static final int TRANSACTION_ISOLATION = Connection.TRANSACTION_READ_COMMITTED;
     private static final int POOL_SIZE = 10;
     private static final String SCHEMA_FILE = "database/setup.sql";
+    private static final String POPULATE_FILE = "database/load.sql";
     // Database .env settings
     private static final String URI = Env.get("JDBC_URI");
     private static final String USER = Env.get("JDBC_USERNAME");
     private static final String PASSWORD = Env.get("JDBC_PASSWORD");
     private static final boolean RESET_DB = Boolean.parseBoolean(Env.get("RESET_DATABASE"));
+    private static final boolean POPULATE_DB = Boolean.parseBoolean(Env.get("POPULATE_DATABASE"));
 
     // --- Attributes ---
     private static final ArrayBlockingQueue<Connection> pool = new ArrayBlockingQueue<>(POOL_SIZE);
@@ -89,34 +91,50 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(URI, USER, PASSWORD);
             Statement stmt = conn.createStatement()) {
 
-            InputStream in = Database.class.getClassLoader().getResourceAsStream(SCHEMA_FILE);
-            // Throw a specific error if database file cannot be located
-            if (in == null) {
-                System.err.println("Could not find database schema file: resources/" + SCHEMA_FILE);
-                throw new RuntimeException("Database schema file is missing");
-            }
+            // Setup schema
+            runSQL(SCHEMA_FILE, stmt);
 
-            // Execute SQL statements one by one
-            String sql = readInputStream(in);
-            String[] statements = sanitiseSQL(sql);
-            for (String statement : statements) {
-                // Skip table dropping statements if RESET flag isn't true
-                if (!RESET_DB && statement.toUpperCase().startsWith("DROP")) {
-                    continue;
-                }
-                stmt.execute(statement);
-            }
+            // Initialize test data - do not shut down on failure
+            if (POPULATE_DB) try { runSQL(POPULATE_FILE, stmt); }
+            catch (IOException | SQLException ignored) {}
 
-            // Initialize test data
-            if (RESET_DB) {
-                // TODO:
-            }
-
-        } catch (Exception e) {
-            System.err.println("Failed to initialize database schema and data: " + e.getMessage());
+        } catch (IOException | SQLException e) {
+            System.err.println("Failed to initialize database schema: " + e.getMessage());
             shutdown();
-            throw new RuntimeException("Failed to initialize database schema and data", e);
+            throw new RuntimeException("Failed to initialize database schema", e);
         }
+    }
+
+    /* -------------------------- Utility  Methods -------------------------- */
+
+    /**
+     * Private utility method to execute all SQL statements found within a
+     * particular {@code resources/} file.
+     *
+     * @param resourceFile a particular SQL file read and executed
+     * @param stmt an active, SQL {@link Statement} object for sending
+     *         statements to the database
+     * @throws IOException on failure to read from specified file
+     * @throws SQLException on failure to execute SQL statement
+     */
+    private static void runSQL(String resourceFile, Statement stmt) throws IOException, SQLException {
+        System.out.println("Executing " + resourceFile + "...");
+        InputStream in = Database.class.getClassLoader().getResourceAsStream(resourceFile);
+        // Throw a specific error if database file cannot be located
+        if (in == null) {
+            System.err.println("Could not find database schema file: resources/" + resourceFile);
+            throw new RuntimeException("Database schema file is missing");
+        }
+
+        // Execute SQL statements one by one
+        String sql = readInputStream(in);
+        String[] statements = sanitiseSQL(sql);
+        for (String statement : statements) {
+            // Skip table dropping statements if RESET flag isn't true
+            if (!RESET_DB && statement.toUpperCase().startsWith("DROP")) continue;
+            stmt.execute(statement);
+        }
+        System.out.println("Execution finished.");
     }
 
     /**
