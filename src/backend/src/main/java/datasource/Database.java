@@ -13,6 +13,8 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import config.Env;
+
 /**
  * A class to manage the formation of database connections, connection pool
  * management, and database initialisation as necessary.
@@ -39,10 +41,10 @@ public class Database {
     private static final int POOL_SIZE = 10;
     private static final String SCHEMA_FILE = "database/setup.sql";
     // Database .env settings
-    private static final String URI = System.getProperty("JDBC_URI");
-    private static final String USER = System.getProperty("JDBC_USERNAME");
-    private static final String PASSWORD = System.getProperty("JDBC_PASSWORD");
-    private static final boolean RESET_DB = Boolean.parseBoolean(System.getProperty("RESET_DATABASE"));
+    private static final String URI = Env.get("JDBC_URI");
+    private static final String USER = Env.get("JDBC_USERNAME");
+    private static final String PASSWORD = Env.get("JDBC_PASSWORD");
+    private static final boolean RESET_DB = Boolean.parseBoolean(Env.get("RESET_DATABASE"));
 
     // --- Attributes ---
     private static final ArrayBlockingQueue<Connection> pool = new ArrayBlockingQueue<>(POOL_SIZE);
@@ -111,7 +113,8 @@ public class Database {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to initialize database schema and data: " + e.getMessage());
+            shutdown();
             throw new RuntimeException("Failed to initialize database schema and data", e);
         }
     }
