@@ -17,26 +17,6 @@ DROP TABLE IF EXISTS supply_proficiency CASCADE;
 DROP TABLE IF EXISTS supply_feat CASCADE;
 DROP TABLE IF EXISTS supply_asm CASCADE;
 
-DROP TYPE IF EXISTS modifier_type;
-DROP TYPE IF EXISTS proficiency_type;
-DROP TYPE IF EXISTS ability_type;
-DROP TYPE IF EXISTS skill_type;
-DROP TYPE IF EXISTS armour_type;
-DROP TYPE IF EXISTS tool_type;
-
-/* ================================= Types  ================================= */
-
-CREATE TYPE modifier_type as ENUM ('background', 'race', 'level_reward', 'feat');
-CREATE TYPE proficiency_type as ENUM ('skill', 'tool', 'armour');
-CREATE TYPE ability_type as ENUM ('STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA');
-CREATE TYPE skill_type as ENUM (
-	'ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION',
-	'HISTORY', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE',
-	'NATURE', 'PERCEPTION', 'PERFORMANCE', 'PERSUASION', 'RELIGION',
-	'SLEIGHT_OF_HAND', 'STEALTH', 'SURVIVAL');
-CREATE TYPE armour_type as ENUM ('LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD');
-CREATE TYPE tool_type as ENUM ('ARTISAN_TOOLS', 'GAMING_SET', 'MUSICAL_INSTRUMENT', 'MISCELLANEOUS');
-
 /* ================================= Tables ================================= */
 
 CREATE TABLE IF NOT EXISTS background (
@@ -85,30 +65,37 @@ CREATE TABLE IF NOT EXISTS language (
 
 CREATE TABLE IF NOT EXISTS proficiency (
 	id SERIAL PRIMARY KEY,
-	kind proficiency_type NOT NULL,
+	kind TEXT NOT NULL CHECK (kind in (
+		'skill', 'tool', 'armour')),
 	ref_id INT NOT NULL, -- Tables referenced
 	UNIQUE (kind, ref_id)
 );
 
-	CREATE TABLE IF NOT EXISTS skill (
-		id SERIAL PRIMARY KEY,
-		kind skill_type NOT NULL,
-		UNIQUE (kind)
-	);
+CREATE TABLE IF NOT EXISTS skill (
+	id SERIAL PRIMARY KEY,
+	kind TEXT NOT NULL CHECK (kind in (
+		'ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION',
+		'HISTORY', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE',
+		'NATURE', 'PERCEPTION', 'PERFORMANCE', 'PERSUASION', 'RELIGION',
+		'SLEIGHT_OF_HAND', 'STEALTH', 'SURVIVAL')),
+	UNIQUE (kind)
+);
 
-	CREATE TABLE IF NOT EXISTS armour (
-		id SERIAL PRIMARY KEY,
-		kind armour_type NOT NULL,
-		UNIQUE (kind)
-	);
+CREATE TABLE IF NOT EXISTS armour (
+	id SERIAL PRIMARY KEY,
+	kind TEXT NOT NULL CHECK (kind in (
+		'LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD')),
+	UNIQUE (kind)
+);
 
-	CREATE TABLE IF NOT EXISTS tool (
-		id SERIAL PRIMARY KEY,
-		name VARCHAR(255) NOT NULL,
-		description VARCHAR(255),
-		kind tool_type NOT NULL
-		-- UNIQUE (name, kind)
-	);
+CREATE TABLE IF NOT EXISTS tool (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	description VARCHAR(255),
+	kind TEXT NOT NULL CHECK (kind in (
+		'ARTISAN_TOOLS', 'GAMING_SET', 'MUSICAL_INSTRUMENT', 'MISCELLANEOUS'))
+	-- UNIQUE (name, kind)
+);
 
 CREATE TABLE IF NOT EXISTS feat (
 	id SERIAL PRIMARY KEY,
@@ -119,7 +106,8 @@ CREATE TABLE IF NOT EXISTS feat (
 
 CREATE TABLE IF NOT EXISTS asm (
 	id SERIAL PRIMARY KEY,
-	ability ability_type NOT NULL,
+	ability TEXT NOT NULL CHECK (ability in (
+		'STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA')),
 	value INT NOT NULL CHECK (value <> 0)
 );
 
@@ -127,7 +115,8 @@ CREATE TABLE IF NOT EXISTS asm (
 
 CREATE TABLE IF NOT EXISTS modifier_source (
 	id SERIAL PRIMARY KEY,
-	kind modifier_type NOT NULL,
+	kind TEXT NOT NULL CHECK (kind in (
+		'background', 'race', 'level_reward', 'feat')),
 	ref_id INT NOT NULL,
 	UNIQUE (kind, ref_id)
 );
