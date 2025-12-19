@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import datasource.Database;
-import domain.modifiers.Language;
 
 /**
  * DataMapper interface - mappers implementing this connect domain models to
@@ -42,7 +41,7 @@ public interface Mapper<T> {
      * @return Optional wrapped {@code T} depending on presence in database
      * @throws SQLException if an unexpected database SQL exception occurs
      */
-    Optional<Language> findById(long id, Connection conn) throws SQLException;
+    Optional<T> findById(long id, Connection conn) throws SQLException;
 
     /**
      * Reads and returns a {@link List} of all {@code T} database entries.
@@ -51,7 +50,7 @@ public interface Mapper<T> {
      * @return List of all {@code T}s in the database
      * @throws SQLException if an unexpected database SQL exception occurs
      */
-    List<Language> findAll(Connection conn) throws SQLException;
+    List<T> findAll(Connection conn) throws SQLException;
 
     /* ======================================================================
      * ----------------------- Insert, Update, Delete -----------------------

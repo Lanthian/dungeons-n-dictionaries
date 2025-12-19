@@ -4,6 +4,7 @@ package datasource.mappers;
 import java.util.HashMap;
 import java.util.Map;
 
+import domain.modifiers.AbilityScoreModifier;
 import domain.modifiers.Language;
 
 /**
@@ -15,6 +16,7 @@ public class MapperRegistry {
     private final static Map<Class<?>, Mapper<?>> REGISTRY = new HashMap<>();
     static {
         // Register all Mappers here
+        REGISTRY.put(AbilityScoreModifier.class, new AsmMapper());
         REGISTRY.put(Language.class, new LanguageMapper());
     }
 
