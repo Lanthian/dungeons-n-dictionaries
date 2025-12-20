@@ -2,7 +2,6 @@
 package datasource.mappers;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -85,18 +84,4 @@ public interface Mapper<T> {
      * @throws SQLException if an unexpected database SQL exception occurs
      */
     boolean delete(T obj, Connection conn) throws SQLException;
-
-    /* ======================================================================
-     * -------------------------- Row  Translation --------------------------
-     * ====================================================================== */
-
-    /**
-     * Maps an SQL statement returned {@link ResultSet} back to a domain object
-     * of type {@code T}.
-     *
-     * @param rs ResultSet row returned by executed statement
-     * @return Domain entity of type {@code T} if successful in translation
-     * @throws SQLException if ResultSet does not correctly translate to domain
-     */
-    T mapRow(ResultSet rs) throws SQLException;
 }
