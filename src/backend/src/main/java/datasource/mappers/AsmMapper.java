@@ -38,28 +38,38 @@ public class AsmMapper extends AbstractMapper<AbilityScoreModifier> {
     /* -------------------------- Insert &  Update -------------------------- */
 
     @Override
-    public PreparedStatement insertStatement(AbilityScoreModifier obj, Connection conn) throws SQLException {
+    public boolean insert(AbilityScoreModifier obj, Connection conn) throws SQLException {
         String sql = sql("""
             INSERT INTO %TABLE% (ability, value)
             VALUES (?, ?)
+            RETURNING id
             """);
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, obj.getAbility().getShorthand());
-        pstmt.setInt(2, obj.getValue());
-        return pstmt;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, obj.getAbility().getShorthand());
+            pstmt.setInt(2, obj.getValue());
+
+            // Set ID of object from returned value
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Throw error if insertion failed (no ID returned)
+                if (!rs.next()) throw new SQLException("Table `" + tableName() + "` insertion failed");
+                obj.setId(new EntityId<>(rs.getLong(1)));
+            }
+            return true;
+        }
     }
 
     @Override
-    public PreparedStatement updateStatement(AbilityScoreModifier obj, Connection conn) throws SQLException {
+    public boolean update(AbilityScoreModifier obj, Connection conn) throws SQLException {
         String sql = sql("""
             UPDATE %TABLE%
             SET ability = ?, value = ?
             WHERE id = ?
             """);
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, obj.getAbility().getShorthand());
-        pstmt.setInt(2, obj.getValue());
-        pstmt.setLong(3, getId(obj));
-        return pstmt;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, obj.getAbility().getShorthand());
+            pstmt.setInt(2, obj.getValue());
+            pstmt.setLong(3, getId(obj));
+            return pstmt.executeUpdate() == 1;
+        }
     }
 }

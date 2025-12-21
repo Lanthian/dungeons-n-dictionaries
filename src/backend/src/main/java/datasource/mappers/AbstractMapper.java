@@ -33,10 +33,8 @@ public abstract class AbstractMapper<T> implements Mapper<T> {
     private final static String TABLE_NAME = "%TABLE%";
 
     /* ======================================================================
-     * -------------------- Subclass Hooks  to Implement --------------------
+     * -------------------- Subclass Relational Mapping  --------------------
      * ====================================================================== */
-
-    /* ------------------------- Relational Mapping ------------------------- */
 
     /**
      * Getter: Standardised retrieval of the tablename this mapper maps to
@@ -63,28 +61,6 @@ public abstract class AbstractMapper<T> implements Mapper<T> {
      * @throws SQLException if ResultSet does not correctly translate to domain
      */
     protected abstract T mapRow(ResultSet rs) throws SQLException;
-
-    /* -------------------------- Insert &  Update -------------------------- */
-
-    /**
-     * See {@link Mapper#insert(Object, Connection)} - this method shorthands.
-     *
-     * @param obj Domain object of type {@code T} to insert into the database
-     * @param conn An open DB connection to generate statements from
-     * @return PreparedStatement with filled {@code obj} fields
-     * @throws SQLException if an unexpected database SQL exception occurs
-     */
-    protected abstract PreparedStatement insertStatement(T obj, Connection conn) throws SQLException;
-
-    /**
-     * See {@link Mapper#update(Object, Connection)} - this method shorthands.
-     *
-     * @param obj Domain object of type {@code T} to update in the database
-     * @param conn An open DB connection to generate statements from
-     * @return PreparedStatement with filled {@code obj} fields
-     * @throws SQLException if an unexpected database SQL exception occurs
-     */
-    protected abstract PreparedStatement updateStatement(T obj, Connection conn) throws SQLException;
 
     /* ======================================================================
      * ----------------------- Mapper  Implementation -----------------------
@@ -115,23 +91,7 @@ public abstract class AbstractMapper<T> implements Mapper<T> {
         return list;
     }
 
-    /* ----------------------- Insert, Update, Delete ----------------------- */
-
-    @Override
-    public boolean insert(T obj, Connection conn) throws SQLException {
-        // Utilse implemented method
-        try (PreparedStatement pstmt = insertStatement(obj, conn)) {
-            return pstmt.executeUpdate() == 1;
-        }
-    }
-
-    @Override
-    public boolean update(T obj, Connection conn) throws SQLException {
-        // Utilse implemented method
-        try (PreparedStatement pstmt = updateStatement(obj, conn)) {
-            return pstmt.executeUpdate() == 1;
-        }
-    }
+    /* ------------------------------- Delete ------------------------------- */
 
     @Override
     public boolean delete(T obj, Connection conn) throws SQLException {
