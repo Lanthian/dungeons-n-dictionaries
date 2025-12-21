@@ -1,3 +1,4 @@
+-- resources/database/setup.sql
 /* ================================ Clean up ================================ */
 
 DROP TABLE IF EXISTS background CASCADE;
@@ -123,24 +124,24 @@ CREATE TABLE IF NOT EXISTS modifier_source (
 
 CREATE TABLE IF NOT EXISTS supply_language (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	language_id INT NOT NULL REFERENCES language(id),
-	PRIMARY KEY(source_id, language_id)
+	supply_id INT NOT NULL REFERENCES language(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_proficiency (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	proficiency_id INT NOT NULL REFERENCES proficiency(id),
-	PRIMARY KEY(source_id, proficiency_id)
+	supply_id INT NOT NULL REFERENCES proficiency(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_feat (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	feat_id INT NOT NULL REFERENCES feat(id),
-	PRIMARY KEY(source_id, feat_id)
+	supply_id INT NOT NULL REFERENCES feat(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_asm (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	asm_id INT NOT NULL REFERENCES asm(id),
-	PRIMARY KEY(source_id, asm_id)
+	supply_id INT NOT NULL REFERENCES asm(id),
+	PRIMARY KEY(source_id, supply_id)
 );
