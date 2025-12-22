@@ -34,7 +34,7 @@ public interface CharacterModifier {
      * @return A potentially empty {@code List} if implemented,
      *         {@code Collections.emptyList()} if unimplemented.
      */
-    default List<Proficiency> getProficiencies() { return Collections.emptyList(); }
+    default List<Proficiency<?>> getProficiencies() { return Collections.emptyList(); }
 
     /**
      * Getter for a CharacterModifier's supplied {@link Feat}s.

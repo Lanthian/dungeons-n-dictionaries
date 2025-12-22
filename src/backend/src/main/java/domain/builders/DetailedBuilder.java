@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import domain.core.Detail;
-import domain.core.Detailed;
+import domain.core.DetailSet;
 
 /**
  * Abstract builder to be extended by other builder patterns for eased
- * {@link Detailed} entity construction. When extended, create a new
+ * {@link DetailSet} entity construction. When extended, create a new
  * {@code Builder} object, call the relevant construction methods upon it, then
  * finalise the process with the {@link #build()} method.
  */
-public abstract class DetailedBuilder<T extends Detailed<T>> extends DescribedBuilder<T> {
+public abstract class DetailedBuilder<T extends DetailSet<T>> extends DescribedBuilder<T> {
 
     /* ---------------------------- Construction ---------------------------- */
 

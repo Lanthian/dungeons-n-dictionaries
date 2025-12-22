@@ -38,7 +38,7 @@ public class CharacterSelection<T extends CharacterModifier> implements Characte
     }
 
     @Override
-    public List<Proficiency> getProficiencies() {
+    public List<Proficiency<?>> getProficiencies() {
         return all(CharacterModifier::getProficiencies);
     }
 

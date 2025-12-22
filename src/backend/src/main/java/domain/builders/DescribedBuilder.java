@@ -1,7 +1,8 @@
 // java/domain/builders/DescribedBuilder.java
 package domain.builders;
 
-import domain.core.Described;
+import domain.core.Describable;
+import domain.core.Description;
 
 /**
  * Abstract builder to be extended by other builder patterns for eased
@@ -9,18 +10,16 @@ import domain.core.Described;
  * {@code Builder} object, call the relevant construction methods upon it, then
  * finalise the process with the {@link #build()} method.
  */
-public abstract class DescribedBuilder<T extends Described<T>> extends AbstractBuilder<T> {
+public abstract class DescribedBuilder<T extends Describable> extends AbstractBuilder<T> {
 
     /* ---------------------------- Construction ---------------------------- */
 
     // --- Attributes ---
-    protected String name;
-    protected String description;
+    protected Description description;
 
     // Builder Constructor
     protected DescribedBuilder(String name, String description) {
-        this.name = name;
-        this.description = description;
+        this.description = new Description(name, description);
     }
 
     // Overloaded Constructor (optional description)
@@ -30,10 +29,13 @@ public abstract class DescribedBuilder<T extends Described<T>> extends AbstractB
 
     /* ------------------------- Simple  Attributes ------------------------- */
 
-    public DescribedBuilder<T> description(String description) { this.description = description; return this; }
+    public DescribedBuilder<T> description(String description) {
+        this.description.setDescription(description);
+        return this;
+    }
 
     /* ------------------------------ Getters  ------------------------------ */
 
-    public String getName() { return this.name; }
-    public String getDescription() { return this.description; }
+    public String getName() { return this.description.getName(); }
+    public String getDescription() { return this.description.getDescription(); }
 }

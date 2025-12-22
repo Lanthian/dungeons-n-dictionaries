@@ -50,7 +50,7 @@ public record ChoiceOption<T>(T value) implements CharacterModifier {
     }
 
     @Override
-    public List<Proficiency> getProficiencies() {
+    public List<Proficiency<?>> getProficiencies() {
         return match(Proficiency.class);
     }
 
