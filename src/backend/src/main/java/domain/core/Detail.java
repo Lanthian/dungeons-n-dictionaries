@@ -8,7 +8,7 @@ import domain.utils.StringUtils;
  * Details are sorted by descending {@code order}, then default
  * {@link Described} sorting.
  */
-public class Detail extends Described<Detail> {
+public class Detail extends Description {
 
     // --- Constants ---
     private static final int DEFAULT_ORDER = 0;
@@ -32,15 +32,12 @@ public class Detail extends Described<Detail> {
      * ====================================================================== */
 
     @Override
-    protected int compareBefore(Described<Detail> o) {
+    protected int compareBefore(Description o) {
         // Cast `Described` object to class `Detail`
-        if (o.getClass() != this.getClass()) {
-            throw new ClassCastException("Class mismatch - Described objects cannot be differentiated on order");
-        }
-        Detail cast = (Detail) o;
+        if (!(o instanceof Detail cast)) return 0;
 
         // Compare ordering (descending)
-        return ((Integer) cast.order).compareTo(this.order);
+        return Integer.compare(cast.order, this.order);
     }
 
     /* ======================================================================

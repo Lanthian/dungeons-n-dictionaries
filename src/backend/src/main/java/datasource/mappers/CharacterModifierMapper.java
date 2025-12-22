@@ -62,7 +62,6 @@ public class CharacterModifierMapper {
         insertSupplies(sourceId, cm.getAbilityScoreModifiers(), conn);
         insertSupplies(sourceId, cm.getFeats(), conn);
         insertSupplies(sourceId, cm.getLanguages(), conn);
-        // TODO: fix proficiency ID retrieval
         // insertSupplies(sourceId, cm.getProficiencies(), conn);
     }
 

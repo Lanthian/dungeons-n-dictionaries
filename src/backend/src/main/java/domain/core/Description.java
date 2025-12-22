@@ -1,38 +1,37 @@
-// java/domain/core/Described.java
+// java/domain/core/Description.java
 package domain.core;
 
 /**
- * An abstract class extended by entities that exist with two key attributes:
+ * A small data class that contains two key attributes:
  * <ul>
  *   <li>{@code name}, &
  *   <li>{@code description}
  * </ul>
  *
- * <p> Described objects are sorted by ascending {@code name} first, and then
+ * <p> Description objects are sorted by ascending {@code name} first, and then
  * {@code description} if name matches. This comparison can be adjusted by
- * overriding {@link #compareBefore(Described)} and/or
- * {@link #compareAfter(Described)} methods.
+ * overriding {@link #compareBefore(Description)} and/or {@link
+ * #compareAfter(Description)} methods.
  */
-public abstract class Described<T> extends Entity<T> implements Comparable<Described<T>> {
+public class Description implements Comparable<Description> {
 
     // --- Attributes ---
     protected String name;
     protected String description;
 
     // Constructor
-    protected Described(String name, String description) {
+    public Description(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     // Overloaded Constructor (optional description)
-    protected Described(String name) {
+    public Description(String name) {
         this(name, null);
     }
 
     // Overloaded Constructor (copy a Described object)
-    protected Described(Described<T> old) {
-        // TODO: Check if getters needed here
+    public Description(Description old) {
         this(old.name, old.description);
     }
 
@@ -42,7 +41,7 @@ public abstract class Described<T> extends Entity<T> implements Comparable<Descr
 
     // Overriden Ordering
     @Override
-    public final int compareTo(Described<T> o) {
+    public final int compareTo(Description o) {
         // Compare using 'before' extended logic
         int res = compareBefore(o);
         if (res != 0) return res;
@@ -87,7 +86,7 @@ public abstract class Described<T> extends Entity<T> implements Comparable<Descr
      * @return a negative integer, zero or positive integer if {@code this} is
      *         less than, equal to, or greater than {@code o}
      */
-    protected int compareBefore(Described<T> o) { return 0; }
+    protected int compareBefore(Description o) { return 0; }
 
     /**
      * Extendable comparison injected after default
@@ -97,7 +96,7 @@ public abstract class Described<T> extends Entity<T> implements Comparable<Descr
      * @return a negative integer, zero or positive integer if {@code this} is
      *         less than, equal to, or greater than {@code o}
      */
-    protected int compareAfter(Described<T> o) { return 0; }
+    protected int compareAfter(Description o) { return 0; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  -------------------------

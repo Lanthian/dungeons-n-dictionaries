@@ -7,7 +7,7 @@ package domain.core;
  * Template Pattern. ID does not need to be set on entity creation, but once
  * set, is fixed.
  */
-public abstract class Entity<T> {
+public abstract class Entity<T extends Entity<T>> {
 
     // --- Attributes ---
     protected EntityId<T> id;

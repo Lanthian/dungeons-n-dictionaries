@@ -7,7 +7,9 @@ import java.util.Objects;
 
 import domain.builders.DescribedBuilder;
 import domain.character.CharacterModifier;
-import domain.core.Described;
+import domain.core.Describable;
+import domain.core.Description;
+import domain.core.Entity;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
@@ -17,11 +19,12 @@ import domain.utils.StringUtils;
  * Implementation of {@link Described} for a Feat a Character posseses.
  * Can supply a character with AbilityScoreModifiers and Proficiencies.
  */
-public class Feat extends Described<Feat> implements CharacterModifier, ChoiceProvider {
+public class Feat extends Entity<Feat> implements CharacterModifier, ChoiceProvider, Describable {
 
     // --- Attributes ---
+    private final Description description;
     private final List<AbilityScoreModifier> abilityScoreModifiers;
-    private final List<Proficiency> proficiencies;
+    private final List<Proficiency<?>> proficiencies;
     private final List<Choice> choices;
 
     /* ======================================================================
@@ -37,8 +40,9 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
     public static class Builder extends DescribedBuilder<Feat> {
 
         // --- Attributes ---
+        private Description description;
         private List<AbilityScoreModifier> abilityScoreModifiers;
-        private List<Proficiency> proficiencies;
+        private List<Proficiency<?>> proficiencies;
         private List<Choice> choices;
 
         /* -------------------------- Construction -------------------------- */
@@ -67,7 +71,7 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
         /**
          * Replaces current {@link Proficiency}s with provided list parameter.
          */
-        public Builder proficiencies(List<Proficiency> proficiencies) {
+        public Builder proficiencies(List<Proficiency<?>> proficiencies) {
             this.proficiencies = proficiencies; return this;
         }
 
@@ -93,7 +97,7 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
     // Local Constructor
     private Feat(Builder builder)  {
         // name & description copied from DescribedBuilder
-        super(builder.getName(), builder.getDescription());
+        this.description = new Description(builder.getName(), builder.getDescription());
 
         this.abilityScoreModifiers = builder.abilityScoreModifiers;
         this.proficiencies = builder.proficiencies;
@@ -110,7 +114,7 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
      */
     public Feat(String name, String description) {
         // Validate that description is both not null and also not blank
-        super(name, Objects.requireNonNull(description,
+        this.description = new Description(name, Objects.requireNonNull(description,
             "Constructed Feat must present a non-null description"));
         if (description.isBlank()) {
             throw new IllegalArgumentException("Constructed Feat must present a non-blank description");
@@ -126,7 +130,7 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
      * ====================================================================== */
 
     @Override
-    public List<Proficiency> getProficiencies() { return List.copyOf(this.proficiencies); }
+    public List<Proficiency<?>> getProficiencies() { return List.copyOf(this.proficiencies); }
 
     @Override
     public List<AbilityScoreModifier> getAbilityScoreModifiers() { return List.copyOf(this.abilityScoreModifiers); }
@@ -151,5 +155,10 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
             .add("proficiences=" + proficiencies)
             .add("choices=" + choices)
             .toString();
+    }
+
+    @Override
+    public Description description() {
+        return this.description;
     }
 }

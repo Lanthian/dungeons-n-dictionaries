@@ -2,9 +2,10 @@
 package domain.modifiers.proficiency;
 
 import domain.character.Character;
+import domain.core.Entity;
 
 /**
  * An interface to group multiple {@link Character} proficiencies together.
  * Does not require any methods to be implemented.
  */
-public interface Proficiency { }
+public abstract class Proficiency<T> extends Entity<T> { }
