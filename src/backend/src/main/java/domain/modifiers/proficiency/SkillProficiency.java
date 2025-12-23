@@ -9,7 +9,7 @@ import domain.utils.StringUtils;
  * A {@link Proficiency} providing a {@link Character} with expertise regarding
  * a {@link Skill}.
  */
-public class SkillProficiency implements Proficiency {
+public class SkillProficiency extends Proficiency {
 
     // --- Attributes ---
     private final Skill skill;

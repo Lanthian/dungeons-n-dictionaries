@@ -2,7 +2,6 @@
 package domain.modifiers.proficiency;
 
 import domain.character.Character;
-import domain.core.Entity;
 import domain.types.ToolType;
 import domain.utils.StringUtils;
 
@@ -13,7 +12,7 @@ import domain.utils.StringUtils;
  * <p> ToolProficiency {@code name} is the relevant tool's name,
  * {@code description} describes the tool.
  */
-public class ToolProficiency extends Entity<ToolProficiency> implements Proficiency {
+public class ToolProficiency extends Proficiency {
 
     // --- Attributes ---
     private final String name;

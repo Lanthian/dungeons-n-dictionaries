@@ -33,22 +33,22 @@ public class CharacterSelection<T extends CharacterModifier> implements Characte
      * ====================================================================== */
 
     @Override
-    public List<Language> getLanguages() {
+    public List<? extends Language> getLanguages() {
         return all(CharacterModifier::getLanguages);
     }
 
     @Override
-    public List<Proficiency> getProficiencies() {
+    public List<? extends Proficiency> getProficiencies() {
         return all(CharacterModifier::getProficiencies);
     }
 
     @Override
-    public List<Feat> getFeats() {
+    public List<? extends Feat> getFeats() {
         return all(CharacterModifier::getFeats);
     }
 
     @Override
-    public List<AbilityScoreModifier> getAbilityScoreModifiers() {
+    public List<? extends AbilityScoreModifier> getAbilityScoreModifiers() {
         return all(CharacterModifier::getAbilityScoreModifiers);
     }
 
