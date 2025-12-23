@@ -62,8 +62,7 @@ public class CharacterModifierMapper {
         insertSupplies(sourceId, cm.getAbilityScoreModifiers(), conn);
         insertSupplies(sourceId, cm.getFeats(), conn);
         insertSupplies(sourceId, cm.getLanguages(), conn);
-        // TODO: fix proficiency ID retrieval
-        // insertSupplies(sourceId, cm.getProficiencies(), conn);
+        insertSupplies(sourceId, cm.getProficiencies(), conn);
     }
 
     /* -------------------- Thin Exposed  Supply Finders -------------------- */
@@ -168,8 +167,8 @@ public class CharacterModifierMapper {
      * @param conn An open {@link Database} connection to queue transactions on
      * @throws SQLException if an unexpected database SQL exception occurs
      */
-    private <T extends Entity<T>> void insertSupplies(
-        long sourceId, List<T> list, Connection conn
+    private void insertSupplies(
+        long sourceId, List<? extends Entity<?>> list, Connection conn
     ) throws SQLException {
         // Exit early on an empty list
         if (list == null || list.isEmpty()) return;
@@ -182,7 +181,7 @@ public class CharacterModifierMapper {
         String sql = "INSERT INTO " + tableName + "(source_id, supply_id) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             // Stack up batch commands
-            for (T t : list) {
+            for (Entity<?> t : list) {
                 long supplyId = t.getId().value();
                 pstmt.setLong(1, sourceId);
                 pstmt.setLong(2, supplyId);

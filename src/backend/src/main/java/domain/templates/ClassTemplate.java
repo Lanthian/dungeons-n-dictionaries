@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import domain.builders.DetailedBuilder;
+import domain.builders.AbstractBuilder;
 import domain.character.Character;
 import domain.character.CharacterModifier;
-import domain.core.Detailed;
+import domain.core.Detail;
+import domain.core.DetailSet;
+import domain.core.Entity;
 import domain.modifiers.LevelReward;
 import domain.utils.StringUtils;
 
@@ -18,13 +20,16 @@ import domain.utils.StringUtils;
  * The attributes a {@link Character} Class has in D&D.
  * Named `CharacterTemplate` to avoid clashing Java keyword `Class`.
  */
-public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterModifier {
+public class ClassTemplate extends Entity<ClassTemplate> implements CharacterModifier {
 
     // --- Attributes ---
     // Simple attributes
+    private final String name;
+    private final String description;
     private final String hitPoints;
     private final String hitDice;
     // Foreign associations
+    private final DetailSet details;
     private final ClassTemplate parentClass;
     private final Map<Integer, LevelReward> levelRewards;
 
@@ -38,13 +43,16 @@ public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterM
      * methods upon it, then finalise the process with the {@link #build()}
      * method.
      */
-    public static class Builder extends DetailedBuilder<ClassTemplate> {
+    public static class Builder extends AbstractBuilder<ClassTemplate> {
 
         // --- Attributes ---
         // Simple attributes
+        private String name;
+        private String description;
         private String hitPoints;
         private String hitDice;
         // Foreign associations
+        private DetailSet details;
         private ClassTemplate parentClass;
         private Map<Integer, LevelReward> levelRewards;
 
@@ -52,9 +60,10 @@ public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterM
 
         // Builder Constructor
         public Builder(String name, String description) {
-            super(name, description);
-
+            this.name = name;
+            this.description = description;
             // Defaults
+            this.details = new DetailSet();
             this.hitPoints = UNDEFINED;
             this.hitDice = UNDEFINED;
             this.parentClass = null;
@@ -93,17 +102,32 @@ public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterM
         public Builder levelReward(LevelReward levelReward) {
             this.levelRewards.put(levelReward.getLevel(), levelReward); return this;
         }
+
+        /* --------------------------- Dependants --------------------------- */
+
+        /**
+         * Appends all {@link Detail}s from provided parameter to current list.
+         */
+        public Builder details(List<Detail> details) {
+            this.details.addAll(details); return this;
+        }
+
+        /**
+         * Appends a {@link Detail} to current list.
+         */
+        public Builder detail(Detail detail) {
+            this.details.add(detail); return this;
+        }
     }
 
     // Local Constructor
     private ClassTemplate(Builder builder) {
-        // name, description & details copied from DetailedBuilder
-        super(builder.getName(), builder.getDescription());
-        this.setDetails(builder.getDetails());
-
+        this.name = builder.name;
+        this.description = builder.description;
         this.hitPoints = builder.hitPoints;
         this.hitDice = builder.hitDice;
 
+        this.details = builder.details;
         this.parentClass = builder.parentClass;
         this.levelRewards = builder.levelRewards;
     }
@@ -113,6 +137,9 @@ public class ClassTemplate extends Detailed<ClassTemplate> implements CharacterM
      * ====================================================================== */
 
     // --- Getters ---
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
+    public List<Detail> getDetails() { return this.details.getDetails(); }
     public String getHitPoints() { return this.hitPoints; }
     public String getHitDice() { return this.hitDice; }
     public ClassTemplate getParentClass() { return this.parentClass; }
