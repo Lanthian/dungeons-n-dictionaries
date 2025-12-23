@@ -1,35 +1,35 @@
-// java/domain/core/Detailed.java
+// java/domain/core/DetailSet.java
 package domain.core;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import domain.utils.StringUtils;
+
 /**
- * An abstract extension upon the already abstract class {@link Described} to
- * define an entity that can have additional {@link Detail} information
- * attached. Mutable.
+ * A small {@link Detail} collection object. Should owned by only one
+ * {@link Entity} at a time. Mutable.
  */
-public abstract class Detailed<T> extends Described<T> {
+public class DetailSet {
 
     // --- Attributes ---
-    protected PriorityQueue<Detail> details;
+    private PriorityQueue<Detail> details;
+
+    /* ---------------------------- Constructors ---------------------------- */
 
     // Constructor
-    protected Detailed(String name, String description) {
-        super(name, description);
+    public DetailSet() {
         this.details = new PriorityQueue<Detail>();
     }
 
-    // Overloaded Constructor (optional description)
-    protected Detailed(String name) {
-        this(name, null);
+    // Overloaded Constructor (non-empty starting point)
+    public DetailSet(List<Detail> details) {
+        this.details = new PriorityQueue<Detail>(details);
     }
 
-    // Overloaded Constructor (copy a Detailed object)
-    protected Detailed(Detailed<T> old) {
-        // TODO: Check if getter needed here
-        super(old);
+    // Overloaded Constructor (copy a DetailSet object)
+    public DetailSet(DetailSet old) {
         this.details = new PriorityQueue<>(old.details);
     }
 
@@ -53,24 +53,40 @@ public abstract class Detailed<T> extends Described<T> {
     /**
      * Setter: Add a {@link Detail} to this object.
      *
-     * @param detail Detail added to this entity.
+     * @param detail Detail added to this detail set
      */
-    public void addDetail(Detail detail) { this.details.add(detail); }
+    public void add(Detail detail) { this.details.add(detail); }
 
     /**
      * Setter: Add a {@link List} of {@link Detail}s to this object.
      *
-     * @param details Details added to this entity.
+     * @param details Details added to this detail set
      */
-    public void setDetails(List<Detail> details) { this.details.addAll(details); }
+    public void addAll(List<Detail> details) { this.details.addAll(details); }
 
     /**
      * Setter: Replace current {@link Detail}s {@link PriorityQueue} with
      * supplied parameter.
      *
-     * @param details Details overwriting current entity details.
+     * @param details Details overwriting current detail set
      */
     public void setDetails(PriorityQueue<Detail> details) {
         this.details = new PriorityQueue<>(details);
+    }
+
+    /**
+     * Destructive action - wipe all stored details from this DetailSet.
+     */
+    public void clear() { this.details.clear(); }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
+    @Override
+    public String toString() {
+        return StringUtils.toStringJoiner("DetailSet")
+            .add("details=" + getDetails())
+            .toString();
     }
 }

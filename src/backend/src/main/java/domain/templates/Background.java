@@ -4,10 +4,12 @@ package domain.templates;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.builders.DetailedBuilder;
+import domain.builders.AbstractBuilder;
 import domain.character.Character;
 import domain.character.CharacterModifier;
-import domain.core.Detailed;
+import domain.core.Detail;
+import domain.core.DetailSet;
+import domain.core.Entity;
 import domain.modifiers.Language;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
@@ -19,9 +21,14 @@ import domain.utils.StringUtils;
  * TODO: Implement Choice<> mechanism from #2 for proficiencies and languages
  * TODO: Implement background variants (choice?)
  */
-public class Background extends Detailed<Background> implements CharacterModifier, ChoiceProvider {
+public class Background extends Entity<Background> implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
+    // Simple attributes
+    private final String name;
+    private final String description;
+    // Foreign associations
+    private final DetailSet details;
     // private final Background parentBackground;
     private final List<Language> languages;
     private final List<Proficiency> proficiencies;
@@ -37,9 +44,12 @@ public class Background extends Detailed<Background> implements CharacterModifie
      * methods upon it, then finalise the process with the {@link #build()}
      * method.
      */
-    public static class Builder extends DetailedBuilder<Background> {
+    public static class Builder extends AbstractBuilder<Background> {
 
         // --- Attributes ---
+        private String name;
+        private String description;
+        private DetailSet details;
         private List<Language> languages;
         private List<Proficiency> proficiencies;
         private List<Choice> choices;
@@ -48,7 +58,9 @@ public class Background extends Detailed<Background> implements CharacterModifie
 
         // Builder Constructor
         public Builder(String name, String description) {
-            super(name, description);
+            this.name = name;
+            this.description = description;
+            this.details = new DetailSet();
             this.languages = new ArrayList<>();
             this.proficiencies = new ArrayList<>();
             this.choices = new ArrayList<>();
@@ -77,6 +89,20 @@ public class Background extends Detailed<Background> implements CharacterModifie
         /* --------------------------- Dependants --------------------------- */
 
         /**
+         * Appends all {@link Detail}s from provided parameter to current list.
+         */
+        public Builder details(List<Detail> details) {
+            this.details.addAll(details); return this;
+        }
+
+        /**
+         * Appends a {@link Detail} to current list.
+         */
+        public Builder detail(Detail detail) {
+            this.details.add(detail); return this;
+        }
+
+        /**
          * Appends all {@link Choice}s from provided parameter to current list.
          */
         public Builder choices(List<Choice> choices) {
@@ -93,10 +119,10 @@ public class Background extends Detailed<Background> implements CharacterModifie
 
     // Local Constructor
     private Background(Builder builder) {
-        // name, description & details copied from DetailedBuilder
-        super(builder.getName(), builder.getDescription());
-        this.setDetails(builder.getDetails());
+        this.name = builder.name;
+        this.description = builder.description;
 
+        this.details = builder.details;
         this.languages = builder.languages;
         this.proficiencies = builder.proficiencies;
         this.choices = builder.choices;
@@ -118,6 +144,19 @@ public class Background extends Detailed<Background> implements CharacterModifie
 
     @Override
     public List<Choice> getChoices() { return List.copyOf(this.choices); }
+
+    /* ======================================================================
+     * ------------------------- Getters & Setters  -------------------------
+     * ====================================================================== */
+
+    // --- Getters ---
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
+    public List<Detail> getDetails() { return this.details.getDetails(); }
+
+    // --- Setters ---
+    // public void setName(String val) { this.name = val; }
+    // public void setDescription(String val) { this.description = val; }
 
     /* ======================================================================
      * --------------------------- Object Methods ---------------------------

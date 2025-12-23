@@ -2,7 +2,7 @@
 package domain.modifiers.proficiency;
 
 import domain.character.Character;
-import domain.core.Described;
+import domain.core.Entity;
 import domain.types.ToolType;
 import domain.utils.StringUtils;
 
@@ -13,14 +13,17 @@ import domain.utils.StringUtils;
  * <p> ToolProficiency {@code name} is the relevant tool's name,
  * {@code description} describes the tool.
  */
-public class ToolProficiency extends Described<ToolProficiency> implements Proficiency {
+public class ToolProficiency extends Entity<ToolProficiency> implements Proficiency {
 
     // --- Attributes ---
+    private final String name;
+    private final String description;
     private ToolType type;
 
     // Constructor
     public ToolProficiency(String name, String description, ToolType toolType) {
-        super(name, description);
+        this.name = name;
+        this.description = description;
         this.type = toolType;
     }
 
@@ -29,10 +32,23 @@ public class ToolProficiency extends Described<ToolProficiency> implements Profi
         this(name, description, ToolType.MISCELLANEOUS);
     }
 
-    // --- Getter ---
+    /* ======================================================================
+     * ------------------------- Getters & Setters  -------------------------
+     * ====================================================================== */
+
+    // --- Getters ---
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
     public ToolType getType() { return this.type; }
 
-    // To String
+    // --- Setters ---
+    // public void setName(String val) { this.name = val; }
+    // public void setDescription(String val) { this.description = val; }
+
+    /* ======================================================================
+     * --------------------------- Object Methods ---------------------------
+     * ====================================================================== */
+
     @Override
     public String toString() {
         return StringUtils.toStringJoiner("ToolProficiency")

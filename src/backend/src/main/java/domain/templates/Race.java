@@ -4,10 +4,12 @@ package domain.templates;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.builders.DetailedBuilder;
+import domain.builders.AbstractBuilder;
 import domain.character.Character;
 import domain.character.CharacterModifier;
-import domain.core.Detailed;
+import domain.core.Detail;
+import domain.core.DetailSet;
+import domain.core.Entity;
 import domain.modifiers.AbilityScoreModifier;
 import domain.modifiers.Feat;
 import domain.modifiers.Language;
@@ -19,15 +21,18 @@ import domain.utils.StringUtils;
 /**
  * The attributes a {@link Character} Race has and provides in D&D.
  */
-public class Race extends Detailed<Race> implements CharacterModifier, ChoiceProvider {
+public class Race extends Entity<Race> implements CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     // Simple attributes
+    private final String name;
+    private final String description;
     private final String age;
     private final String alignment;
     private final String size;
     private final int speed;
     // Foreign associations
+    private final DetailSet details;
     // TODO: Only one of the below attributes regarding subrace is necessary
     private final Race parentRace;
     private final List<Race> subraces;
@@ -47,18 +52,21 @@ public class Race extends Detailed<Race> implements CharacterModifier, ChoicePro
      * construction methods upon it, then finalise the process with the
      * {@link #build()} method.
      */
-    public static class Builder extends DetailedBuilder<Race> {
+    public static class Builder extends AbstractBuilder<Race> {
 
         // --- Constants ---
         private final static int DEFAULT_SPEED = 30;
 
         // --- Attributes ---
         // Simple attributes
+        private String name;
+        private String description;
         private String age;
         private String alignment;
         private String size;
         private int speed;
         // Foreign associations
+        private DetailSet details;
         private Race parentRace;
         private List<Race> subraces;
         private List<Language> languages;
@@ -71,13 +79,15 @@ public class Race extends Detailed<Race> implements CharacterModifier, ChoicePro
 
         // Builder Constructor
         public Builder(String name, String description) {
-            super(name, description);
+            this.name = name;
+            this.description = description;
 
             // Defaults
             this.age = UNDEFINED;
             this.alignment = UNDEFINED;
             this.size = UNDEFINED;
             this.speed = DEFAULT_SPEED;
+            this.details = new DetailSet();
             this.parentRace = null;
             this.subraces = new ArrayList<>();
             this.languages = new ArrayList<>();
@@ -143,6 +153,20 @@ public class Race extends Detailed<Race> implements CharacterModifier, ChoicePro
         /* --------------------------- Dependants --------------------------- */
 
         /**
+         * Appends all {@link Detail}s from provided parameter to current list.
+         */
+        public Builder details(List<Detail> details) {
+            this.details.addAll(details); return this;
+        }
+
+        /**
+         * Appends a {@link Detail} to current list.
+         */
+        public Builder detail(Detail detail) {
+            this.details.add(detail); return this;
+        }
+
+        /**
          * Appends all {@link Race} subraces from provided parameter to list.
          */
         public Builder subraces(List<Race> subraces) {
@@ -173,15 +197,15 @@ public class Race extends Detailed<Race> implements CharacterModifier, ChoicePro
 
     // Local Constructor
     private Race(Builder builder) {
-        // name, description & details copied from DetailedBuilder
-        super(builder.getName(), builder.getDescription());
-        this.setDetails(builder.getDetails());
+        this.name = builder.name;
+        this.description = builder.description;
 
         this.age = builder.age;
         this.alignment = builder.alignment;
         this.size = builder.size;
         this.speed = builder.speed;
 
+        this.details = builder.details;
         this.parentRace = builder.parentRace;
         this.subraces = builder.subraces;
         this.languages = builder.languages;
@@ -219,14 +243,19 @@ public class Race extends Detailed<Race> implements CharacterModifier, ChoicePro
      * ====================================================================== */
 
     // --- Getters ---
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
     public String getAge() { return this.age; }
     public String getAlignment() { return this.alignment; }
     public String getSize() { return this.size; }
     public int getSpeed() { return this.speed; }
+    public List<Detail> getDetails() { return this.details.getDetails(); }
     public Race getParentRace() { return this.parentRace; }
     public List<Race> getSubraces() { return this.subraces; }
 
     // --- Setters ---
+    // public void setName(String val) { this.name = val; }
+    // public void setDescription(String val) { this.description = val; }
     // public void setAge(String val) { this.age = val; }
     // public void setAlignment(String val) { this.alignment = val; }
     // public void setSize(String val) { this.size = val; }
