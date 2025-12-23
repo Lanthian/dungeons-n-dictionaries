@@ -5,7 +5,7 @@ import domain.core.Entity;
 import domain.utils.StringUtils;
 
 /**
- * Basic implementation of {@link Described} for a Language a Character knows.
+ * Basic implementation of {@link Entity} for a Language a Character knows.
  * A language can either be standard (not-exotic) or exotic.
  *
  * <p> Language {@code description} describes typical speakers of the language.

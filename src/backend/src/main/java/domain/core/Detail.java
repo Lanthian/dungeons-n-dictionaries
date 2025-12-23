@@ -5,8 +5,8 @@ import domain.utils.StringUtils;
 
 /**
  * Additional textual information that can be appended to any fixed entity.
- * Details are sorted by descending {@code order}, then default
- * {@link Described} sorting.
+ * Details are sorted by descending {@code order}, then alphabetically ascending
+ * title and body text.
  */
 public class Detail extends Entity<Detail> implements Comparable<Detail> {
 
