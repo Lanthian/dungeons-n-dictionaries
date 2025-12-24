@@ -126,7 +126,7 @@ public class FeatMapper extends AbstractMapper<Feat> {
 
         Mapper<Proficiency> profMapper = MapperRegistry.getMapper(Proficiency.class);
         List<Proficiency> proficiences = new ArrayList<>();
-        for (long i : supplyMapper.findAsmIds(tableName(), id, conn)) {
+        for (long i : supplyMapper.findProficiencyIds(tableName(), id, conn)) {
             profMapper.findById(i, conn).ifPresent(proficiences::add);
         }
 
