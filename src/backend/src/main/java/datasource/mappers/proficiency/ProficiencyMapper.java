@@ -5,10 +5,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import datasource.Database;
 import datasource.mappers.Mapper;
 import domain.core.EntityId;
 import domain.modifiers.proficiency.Proficiency;
@@ -54,8 +57,32 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
 
     @Override
     public List<Proficiency> findAll(Connection conn) throws SQLException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        List<Proficiency> list = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            // Instantiate objects from all entries in queried ResultSet
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                String typeString = rs.getString("kind");
+                ProficiencyType type = ProficiencyType.fromString(typeString);
+                mapper(type).findById(id, conn).ifPresent(list::add);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Reads and returns a fully instantiated {@link List} of all {@link
+     * Proficiency} database entries of a particular {@link ProficiencyType}.
+     *
+     * @param type particular kind of {@link ProficiencyType} returned
+     * @param conn an open {@link Database} connection to queue operations on
+     * @return list of all {@link ProficiencyType} proficiencies in the database
+     * @throws SQLException
+     */
+    public List<Proficiency> findAllByType(ProficiencyType type, Connection conn) throws SQLException {
+        return mapper(type).findAll(conn);
     }
 
     /* ----------------------- Insert, Update, Delete ----------------------- */
@@ -98,7 +125,9 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
 
     @SuppressWarnings("unchecked")
     private <T extends Proficiency> Mapper<T> mapper(ProficiencyType type) {
-        // TODO: throw more specific error if ProficiencyType doesn't have a corresponding type
-        return (Mapper<T>) mappers.get(type);
+        Mapper<?> mapper = mappers.get(type);
+        if (mapper == null)
+            throw new IllegalStateException("ProficiencyType " + type + " does not have an allocated Mapper");
+        return (Mapper<T>) mapper;
     }
 }
