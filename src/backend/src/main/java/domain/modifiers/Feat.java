@@ -5,18 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.builders.AbstractBuilder;
+import domain.character.CharacterModification;
 import domain.character.CharacterModifier;
 import domain.core.Entity;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
+import domain.types.ModificationType;
 import domain.utils.StringUtils;
 
 /**
  * Implementation of {@link Entity} for a Feat a Character posseses.
  * Can supply a character with AbilityScoreModifiers and Proficiencies.
  */
-public class Feat extends Entity<Feat> implements CharacterModifier, ChoiceProvider {
+public class Feat extends Entity<Feat> implements CharacterModification, CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
     private final String name;
@@ -122,6 +124,13 @@ public class Feat extends Entity<Feat> implements CharacterModifier, ChoiceProvi
         this.proficiencies = new ArrayList<>();
         this.choices = new ArrayList<>();
     }
+
+    /* ======================================================================
+     * ---------------- CharacterModification Implementation ----------------
+     * ====================================================================== */
+
+    @Override
+    public ModificationType modType() { return ModificationType.FEAT; }
 
     /* ======================================================================
      * ------------------ CharacterModifier Implementation ------------------

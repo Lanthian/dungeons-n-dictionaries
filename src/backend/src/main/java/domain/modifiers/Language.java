@@ -1,7 +1,9 @@
 // java/domain/modifiers/Language.java
 package domain.modifiers;
 
+import domain.character.CharacterModification;
 import domain.core.Entity;
+import domain.types.ModificationType;
 import domain.utils.StringUtils;
 
 /**
@@ -11,7 +13,7 @@ import domain.utils.StringUtils;
  * <p> Language {@code description} describes typical speakers of the language.
  * {@code script} defines the written script of the language.
  */
-public class Language extends Entity<Language> {
+public class Language extends Entity<Language> implements CharacterModification {
 
     // --- Attributes ---
     private final String name;
@@ -31,6 +33,13 @@ public class Language extends Entity<Language> {
     public Language(String name, String description, String script) {
         this(name, description, script, false);
     }
+
+    /* ======================================================================
+     * ---------------- CharacterModification Implementation ----------------
+     * ====================================================================== */
+
+    @Override
+    public ModificationType modType() { return ModificationType.LANGUAGE; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  -------------------------

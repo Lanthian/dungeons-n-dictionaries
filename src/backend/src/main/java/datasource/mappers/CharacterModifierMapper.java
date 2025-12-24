@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import datasource.Database;
+import domain.character.CharacterModification;
 import domain.character.CharacterModifier;
 import domain.core.Entity;
-import domain.modifiers.AbilityScoreModifier;
-import domain.modifiers.Feat;
-import domain.modifiers.Language;
-import domain.modifiers.proficiency.Proficiency;
+import domain.types.ModificationType;
 
 /**
  * Utility Class for {@link CharacterModifier} data mapping operations.
@@ -25,13 +23,13 @@ import domain.modifiers.proficiency.Proficiency;
 public class CharacterModifierMapper {
 
     // --- Constants ---
-    private final static Map<Class<?>, String> SUPPLY_TABLES = new HashMap<>();
+    private final static Map<ModificationType, String> SUPPLY_TABLES = new HashMap<>();
     static {
         // Register all supply tables here
-        SUPPLY_TABLES.put(AbilityScoreModifier.class, "supply_asm");
-        SUPPLY_TABLES.put(Feat.class, "supply_feat");
-        SUPPLY_TABLES.put(Language.class, "supply_language");
-        SUPPLY_TABLES.put(Proficiency.class, "supply_proficiency");
+        SUPPLY_TABLES.put(ModificationType.ASM, "supply_asm");
+        SUPPLY_TABLES.put(ModificationType.FEAT, "supply_feat");
+        SUPPLY_TABLES.put(ModificationType.LANGUAGE, "supply_language");
+        SUPPLY_TABLES.put(ModificationType.PROFICIENCY, "supply_proficiency");
     }
 
     /* ======================================================================
@@ -68,22 +66,22 @@ public class CharacterModifierMapper {
     /* -------------------- Thin Exposed  Supply Finders -------------------- */
 
     public List<Long> findAsmIds(String kind, long id, Connection conn) throws SQLException {
-        String tableName = SUPPLY_TABLES.get(AbilityScoreModifier.class);
+        String tableName = SUPPLY_TABLES.get(ModificationType.ASM);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
     public List<Long> findFeatIds(String kind, long id, Connection conn) throws SQLException {
-        String tableName = SUPPLY_TABLES.get(Feat.class);
+        String tableName = SUPPLY_TABLES.get(ModificationType.FEAT);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
     public List<Long> findLanguageIds(String kind, long id, Connection conn) throws SQLException {
-        String tableName = SUPPLY_TABLES.get(Language.class);
+        String tableName = SUPPLY_TABLES.get(ModificationType.LANGUAGE);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
     public List<Long> findProficiencyIds(String kind, long id, Connection conn) throws SQLException {
-        String tableName = SUPPLY_TABLES.get(Proficiency.class);
+        String tableName = SUPPLY_TABLES.get(ModificationType.PROFICIENCY);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
@@ -161,20 +159,20 @@ public class CharacterModifierMapper {
      * Typically done after wiping previously supplied modificat6ions, for a
      * clean replace.
      *
-     * @param <T> The class type of the modifications supplied
+     * @param <T> The class type of the {@link CharacterModification}s supplied
      * @param sourceId {@code modifier_source} table PFK
      * @param list A {@link List} of modifications to save all at once
      * @param conn An open {@link Database} connection to queue transactions on
      * @throws SQLException if an unexpected database SQL exception occurs
      */
-    private void insertSupplies(
-        long sourceId, List<? extends Entity<?>> list, Connection conn
+    private <T extends Entity<?> & CharacterModification> void insertSupplies(
+        long sourceId, List<T> list, Connection conn
     ) throws SQLException {
         // Exit early on an empty list
         if (list == null || list.isEmpty()) return;
 
         // Check type of objects being inserted (check first instance's type)
-        Class<?> type = list.get(0).getClass();
+        ModificationType type = list.get(0).modType();
         String tableName = SUPPLY_TABLES.get(type);
         if (tableName == null) throw new IllegalStateException("No supply_table is mapped for type " + type);
 
