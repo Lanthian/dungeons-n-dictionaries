@@ -1,0 +1,104 @@
+// java/datasource/mappers/proficiency/ProficiencyMapper.java
+package datasource.mappers.proficiency;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import datasource.mappers.Mapper;
+import domain.core.EntityId;
+import domain.modifiers.proficiency.Proficiency;
+import domain.types.ProficiencyType;
+
+/**
+ * Facade for {@link Proficiency} data mapping operations. Implementation of
+ * {@link Mapper} interface.
+ */
+public class ProficiencyMapper implements Mapper<Proficiency> {
+
+    // --- Constants ---
+    private final static String TABLE_NAME = "proficiency";
+
+    // --- Attributes ---
+    private final Map<ProficiencyType, Mapper<?>> mappers = Map.of(
+        ProficiencyType.ARMOUR, new ArmourProficiencyMapper(),
+        ProficiencyType.SKILL, new SkillProficiencyMapper(),
+        ProficiencyType.TOOL, new ToolProficiencyMapper()
+    );
+
+    /* ======================================================================
+     * ----------------------- Mapper  Implementation -----------------------
+     * ====================================================================== */
+
+    /* -------------------------- Read  Operations -------------------------- */
+
+    @Override
+    public Optional<Proficiency> findById(long id, Connection conn) throws SQLException {
+        String sql = "SELECT kind FROM " + TABLE_NAME + " WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (!(rs.next())) return Optional.empty();
+
+                // Delegate to correct proficiency mapper
+                String table = rs.getString("kind");
+                ProficiencyType type = ProficiencyType.fromString(table);
+                return mapper(type).findById(id, conn);
+            }
+        }
+    }
+
+    @Override
+    public List<Proficiency> findAll(Connection conn) throws SQLException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+
+    /* ----------------------- Insert, Update, Delete ----------------------- */
+
+    @Override
+    public boolean insert(Proficiency obj, Connection conn) throws SQLException {
+        String sql = "INSERT INTO " + TABLE_NAME + "(kind) VALUES (?) RETURNING id";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, obj.type().toString());
+
+            // Set ID of object from returned value
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Throw error if insertion failed (no ID returned)
+                if (!rs.next()) throw new SQLException("Table `" + TABLE_NAME + "` insertion failed");
+                obj.setId(new EntityId<>(rs.getLong(1)));
+
+                // Insert into proficiency subtype table
+                return mapper(obj.type()).insert(obj, conn);
+            }
+        }
+    }
+
+    @Override
+    public boolean update(Proficiency obj, Connection conn) throws SQLException {
+        return mapper(obj.type()).update(obj, conn);
+    }
+
+    @Override
+    public boolean delete(Proficiency obj, Connection conn) throws SQLException {
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, obj.getId().value());
+            return pstmt.executeUpdate() == 1;
+        }
+    }
+
+    /* ======================================================================
+     * -------------------------- Utility  Methods --------------------------
+     * ====================================================================== */
+
+    @SuppressWarnings("unchecked")
+    private <T extends Proficiency> Mapper<T> mapper(ProficiencyType type) {
+        // TODO: throw more specific error if ProficiencyType doesn't have a corresponding type
+        return (Mapper<T>) mappers.get(type);
+    }
+}

@@ -26,17 +26,17 @@ public enum ArmourType {
      * Converts a string to its matching ArmourType enum.
      *
      * @param value String representation of an ArmourType (case-insensitive).
-     * @return Skill enumeration matching {@code value}
-     * @throws IllegalArgumentException Throws exception if no match exists.
+     * @return ArmourType enumeration matching {@code value}
+     * @throws IllegalArgumentException if no match exists
      */
-    public static Skill fromString(String value) throws IllegalArgumentException {
+    public static ArmourType fromString(String value) throws IllegalArgumentException {
         // Check if input can even be converted
         if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("ArmourType value cannot be null or blank");
         }
         // Try conversion, throwing an exception if unrecognised
         try {
-            return Skill.valueOf(value.trim().toUpperCase());
+            return ArmourType.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Unknown ArmourType: " + value);
         }

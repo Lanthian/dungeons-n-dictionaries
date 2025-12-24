@@ -61,19 +61,15 @@ CREATE TABLE IF NOT EXISTS language (
 	description VARCHAR(255),
 	script VARCHAR(255),
 	exotic BOOLEAN NOT NULL DEFAULT false
-	-- UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS proficiency (
 	id SERIAL PRIMARY KEY,
-	kind TEXT NOT NULL CHECK (kind in (
-		'skill', 'tool', 'armour')),
-	ref_id INT NOT NULL, -- Tables referenced
-	UNIQUE (kind, ref_id)
+	kind TEXT NOT NULL CHECK (kind in ('SKILL', 'TOOL', 'ARMOUR'))
 );
 
-CREATE TABLE IF NOT EXISTS skill (
-	id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS skill_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
 	kind TEXT NOT NULL CHECK (kind in (
 		'ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION',
 		'HISTORY', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE',
@@ -82,15 +78,14 @@ CREATE TABLE IF NOT EXISTS skill (
 	UNIQUE (kind)
 );
 
-CREATE TABLE IF NOT EXISTS armour (
-	id SERIAL PRIMARY KEY,
-	kind TEXT NOT NULL CHECK (kind in (
-		'LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD')),
+CREATE TABLE IF NOT EXISTS armour_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
+	kind TEXT NOT NULL CHECK (kind in ('LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD')),
 	UNIQUE (kind)
 );
 
-CREATE TABLE IF NOT EXISTS tool (
-	id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tool_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255),
 	kind TEXT NOT NULL CHECK (kind in (
@@ -102,7 +97,6 @@ CREATE TABLE IF NOT EXISTS feat (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255) NOT NULL
-	-- TODO: abilityScoreModifiers, proficiencies, choices
 );
 
 CREATE TABLE IF NOT EXISTS asm (

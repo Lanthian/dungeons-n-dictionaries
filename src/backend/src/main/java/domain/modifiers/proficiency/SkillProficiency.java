@@ -2,6 +2,7 @@
 package domain.modifiers.proficiency;
 
 import domain.character.Character;
+import domain.types.ProficiencyType;
 import domain.types.Skill;
 import domain.utils.StringUtils;
 
@@ -18,6 +19,10 @@ public class SkillProficiency extends Proficiency {
     public SkillProficiency(Skill skill) {
         this.skill = skill;
     }
+
+    // Subtype specification
+    @Override
+    public ProficiencyType type() { return ProficiencyType.SKILL; }
 
     // TODO: Move this business logic to character level handling
     /**

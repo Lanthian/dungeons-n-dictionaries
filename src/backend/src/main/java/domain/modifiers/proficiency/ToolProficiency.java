@@ -2,6 +2,7 @@
 package domain.modifiers.proficiency;
 
 import domain.character.Character;
+import domain.types.ProficiencyType;
 import domain.types.ToolType;
 import domain.utils.StringUtils;
 
@@ -30,6 +31,10 @@ public class ToolProficiency extends Proficiency {
     public ToolProficiency(String name, String description) {
         this(name, description, ToolType.MISCELLANEOUS);
     }
+
+    // Subtype specification
+    @Override
+    public ProficiencyType type() { return ProficiencyType.TOOL; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  -------------------------

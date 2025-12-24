@@ -3,6 +3,7 @@ package domain.modifiers.proficiency;
 
 import domain.character.Character;
 import domain.types.ArmourType;
+import domain.types.ProficiencyType;
 import domain.utils.StringUtils;
 
 /**
@@ -18,6 +19,10 @@ public class ArmourProficiency extends Proficiency {
     public ArmourProficiency(ArmourType armourType) {
         this.type = armourType;
     }
+
+    // Subtype specification
+    @Override
+    public ProficiencyType type() { return ProficiencyType.ARMOUR; }
 
     // --- Getter ---
     public ArmourType getType() { return this.type; }
