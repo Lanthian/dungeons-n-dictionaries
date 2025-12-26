@@ -80,22 +80,22 @@ public class LevelReward extends Entity<LevelReward> implements CharacterModifie
      * ====================================================================== */
 
      @Override
-    public List<Language> getLanguages() {
+    public List<? extends Language> getLanguages() {
         return all(CharacterModifier::getLanguages);
     }
 
     @Override
-    public List<Proficiency> getProficiencies() {
+    public List<? extends Proficiency> getProficiencies() {
         return all(CharacterModifier::getProficiencies);
     }
 
     @Override
-    public List<Feat> getFeats() {
+    public List<? extends Feat> getFeats() {
         return all(CharacterModifier::getFeats);
     }
 
     @Override
-    public List<AbilityScoreModifier> getAbilityScoreModifiers() {
+    public List<? extends AbilityScoreModifier> getAbilityScoreModifiers() {
         return all(CharacterModifier::getAbilityScoreModifiers);
     }
 
@@ -107,7 +107,7 @@ public class LevelReward extends Entity<LevelReward> implements CharacterModifie
      * @param getter The relevant {@link CharacterModifier} getter
      * @return The list of type matching values in rewards
      */
-    private <X> List<X> all(Function<CharacterModifier, List<X>> getter) {
+    private <X> List<? extends X> all(Function<CharacterModifier, List<X>> getter) {
         return rewards.stream().flatMap(c -> getter.apply(c).stream()).toList();
     }
 

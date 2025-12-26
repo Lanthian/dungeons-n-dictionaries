@@ -3,23 +3,26 @@ package domain.modifiers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import domain.builders.DescribedBuilder;
+import domain.builders.AbstractBuilder;
+import domain.character.CharacterModification;
 import domain.character.CharacterModifier;
-import domain.core.Described;
+import domain.core.Entity;
 import domain.modifiers.choice.Choice;
 import domain.modifiers.choice.ChoiceProvider;
 import domain.modifiers.proficiency.Proficiency;
+import domain.types.ModificationType;
 import domain.utils.StringUtils;
 
 /**
- * Implementation of {@link Described} for a Feat a Character posseses.
+ * Implementation of {@link Entity} for a Feat a Character posseses.
  * Can supply a character with AbilityScoreModifiers and Proficiencies.
  */
-public class Feat extends Described<Feat> implements CharacterModifier, ChoiceProvider {
+public class Feat extends Entity<Feat> implements CharacterModification, CharacterModifier, ChoiceProvider {
 
     // --- Attributes ---
+    private final String name;
+    private final String description;
     private final List<AbilityScoreModifier> abilityScoreModifiers;
     private final List<Proficiency> proficiencies;
     private final List<Choice> choices;
@@ -34,9 +37,11 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
      * methods upon it, then finalise the process with the {@link #build()}
      * method.
      */
-    public static class Builder extends DescribedBuilder<Feat> {
+    public static class Builder extends AbstractBuilder<Feat> {
 
         // --- Attributes ---
+        private String name;
+        private String description;
         private List<AbilityScoreModifier> abilityScoreModifiers;
         private List<Proficiency> proficiencies;
         private List<Choice> choices;
@@ -45,7 +50,8 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
 
         // Builder Constructor
         public Builder(String name, String description) {
-            super(name, description);
+            this.name = name;
+            this.description = description;
             this.abilityScoreModifiers = new ArrayList<>();
             this.proficiencies = new ArrayList<>();
             this.choices = new ArrayList<>();
@@ -92,9 +98,8 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
 
     // Local Constructor
     private Feat(Builder builder)  {
-        // name & description copied from DescribedBuilder
-        super(builder.getName(), builder.getDescription());
-
+        this.name = builder.name;
+        this.description = builder.description;
         this.abilityScoreModifiers = builder.abilityScoreModifiers;
         this.proficiencies = builder.proficiencies;
         this.choices = builder.choices;
@@ -109,17 +114,23 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
      * @param description Description of the Feat - what it does
      */
     public Feat(String name, String description) {
+        this.name = name;
         // Validate that description is both not null and also not blank
-        super(name, Objects.requireNonNull(description,
-            "Constructed Feat must present a non-null description"));
-        if (description.isBlank()) {
+        if (description == null || description.isBlank())
             throw new IllegalArgumentException("Constructed Feat must present a non-blank description");
-        }
+        this.description = description;
 
         this.abilityScoreModifiers = new ArrayList<>();
         this.proficiencies = new ArrayList<>();
         this.choices = new ArrayList<>();
     }
+
+    /* ======================================================================
+     * ---------------- CharacterModification Implementation ----------------
+     * ====================================================================== */
+
+    @Override
+    public ModificationType modType() { return ModificationType.FEAT; }
 
     /* ======================================================================
      * ------------------ CharacterModifier Implementation ------------------
@@ -137,6 +148,18 @@ public class Feat extends Described<Feat> implements CharacterModifier, ChoicePr
 
     @Override
     public List<Choice> getChoices() { return List.copyOf(this.choices); }
+
+    /* ======================================================================
+     * ------------------------- Getters & Setters  -------------------------
+     * ====================================================================== */
+
+    // --- Getters ---
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
+
+    // --- Setters ---
+    // public void setName(String val) { this.name = val; }
+    // public void setDescription(String val) { this.description = val; }
 
     /* ======================================================================
      * --------------------------- Object Methods ---------------------------

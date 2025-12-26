@@ -1,3 +1,4 @@
+-- resources/database/setup.sql
 /* ================================ Clean up ================================ */
 
 DROP TABLE IF EXISTS background CASCADE;
@@ -6,9 +7,9 @@ DROP TABLE IF EXISTS race CASCADE;
 DROP TABLE IF EXISTS level_reward CASCADE;
 DROP TABLE IF EXISTS language CASCADE;
 DROP TABLE IF EXISTS proficiency CASCADE;
-DROP TABLE IF EXISTS skill CASCADE;
-DROP TABLE IF EXISTS armour CASCADE;
-DROP TABLE IF EXISTS tool CASCADE;
+DROP TABLE IF EXISTS skill_proficiency CASCADE;
+DROP TABLE IF EXISTS armour_proficiency CASCADE;
+DROP TABLE IF EXISTS tool_proficiency CASCADE;
 DROP TABLE IF EXISTS feat CASCADE;
 DROP TABLE IF EXISTS asm CASCADE;
 DROP TABLE IF EXISTS modifier_source CASCADE;
@@ -60,19 +61,15 @@ CREATE TABLE IF NOT EXISTS language (
 	description VARCHAR(255),
 	script VARCHAR(255),
 	exotic BOOLEAN NOT NULL DEFAULT false
-	-- UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS proficiency (
 	id SERIAL PRIMARY KEY,
-	kind TEXT NOT NULL CHECK (kind in (
-		'skill', 'tool', 'armour')),
-	ref_id INT NOT NULL, -- Tables referenced
-	UNIQUE (kind, ref_id)
+	kind TEXT NOT NULL CHECK (kind in ('SKILL', 'TOOL', 'ARMOUR'))
 );
 
-CREATE TABLE IF NOT EXISTS skill (
-	id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS skill_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
 	kind TEXT NOT NULL CHECK (kind in (
 		'ACROBATICS', 'ANIMAL_HANDLING', 'ARCANA', 'ATHLETICS', 'DECEPTION',
 		'HISTORY', 'INSIGHT', 'INTIMIDATION', 'INVESTIGATION', 'MEDICINE',
@@ -81,15 +78,14 @@ CREATE TABLE IF NOT EXISTS skill (
 	UNIQUE (kind)
 );
 
-CREATE TABLE IF NOT EXISTS armour (
-	id SERIAL PRIMARY KEY,
-	kind TEXT NOT NULL CHECK (kind in (
-		'LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD')),
+CREATE TABLE IF NOT EXISTS armour_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
+	kind TEXT NOT NULL CHECK (kind in ('LIGHT', 'MEDIUM', 'HEAVY', 'SHIELD')),
 	UNIQUE (kind)
 );
 
-CREATE TABLE IF NOT EXISTS tool (
-	id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tool_proficiency (
+	id INT PRIMARY KEY REFERENCES proficiency(id) ON DELETE CASCADE,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255),
 	kind TEXT NOT NULL CHECK (kind in (
@@ -101,7 +97,6 @@ CREATE TABLE IF NOT EXISTS feat (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255) NOT NULL
-	-- TODO: abilityScoreModifiers, proficiencies, choices
 );
 
 CREATE TABLE IF NOT EXISTS asm (
@@ -123,24 +118,24 @@ CREATE TABLE IF NOT EXISTS modifier_source (
 
 CREATE TABLE IF NOT EXISTS supply_language (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	language_id INT NOT NULL REFERENCES language(id),
-	PRIMARY KEY(source_id, language_id)
+	supply_id INT NOT NULL REFERENCES language(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_proficiency (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	proficiency_id INT NOT NULL REFERENCES proficiency(id),
-	PRIMARY KEY(source_id, proficiency_id)
+	supply_id INT NOT NULL REFERENCES proficiency(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_feat (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	feat_id INT NOT NULL REFERENCES feat(id),
-	PRIMARY KEY(source_id, feat_id)
+	supply_id INT NOT NULL REFERENCES feat(id),
+	PRIMARY KEY(source_id, supply_id)
 );
 
 CREATE TABLE IF NOT EXISTS supply_asm (
 	source_id INT NOT NULL REFERENCES modifier_source(id) ON DELETE CASCADE,
-	asm_id INT NOT NULL REFERENCES asm(id),
-	PRIMARY KEY(source_id, asm_id)
+	supply_id INT NOT NULL REFERENCES asm(id),
+	PRIMARY KEY(source_id, supply_id)
 );

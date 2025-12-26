@@ -26,7 +26,7 @@ public interface CharacterModifier {
      * @return A potentially empty {@code List} if implemented,
      *         {@code Collections.emptyList()} if unimplemented.
      */
-    default List<Language> getLanguages() { return Collections.emptyList(); }
+    default List<? extends Language> getLanguages() { return Collections.emptyList(); }
 
     /**
      * Getter for a CharacterModifier's supplied {@link Proficiency}s.
@@ -34,7 +34,7 @@ public interface CharacterModifier {
      * @return A potentially empty {@code List} if implemented,
      *         {@code Collections.emptyList()} if unimplemented.
      */
-    default List<Proficiency> getProficiencies() { return Collections.emptyList(); }
+    default List<? extends Proficiency> getProficiencies() { return Collections.emptyList(); }
 
     /**
      * Getter for a CharacterModifier's supplied {@link Feat}s.
@@ -42,7 +42,7 @@ public interface CharacterModifier {
      * @return A potentially empty {@code List} if implemented,
      *         {@code Collections.emptyList()} if unimplemented.
      */
-    default List<Feat> getFeats() { return Collections.emptyList(); }
+    default List<? extends Feat> getFeats() { return Collections.emptyList(); }
 
     /**
      * Getter for a CharacterModifier's supplied {@link AbilityScoreModifier}s.
@@ -50,5 +50,5 @@ public interface CharacterModifier {
      * @return A potentially empty {@code List} if implemented,
      *         {@code Collections.emptyList()} if unimplemented.
      */
-    default List<AbilityScoreModifier> getAbilityScoreModifiers() { return Collections.emptyList(); }
+    default List<? extends AbilityScoreModifier> getAbilityScoreModifiers() { return Collections.emptyList(); }
 }

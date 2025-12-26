@@ -4,7 +4,11 @@ package datasource.mappers;
 import java.util.HashMap;
 import java.util.Map;
 
+import datasource.mappers.proficiency.ProficiencyMapper;
+import domain.modifiers.AbilityScoreModifier;
+import domain.modifiers.Feat;
 import domain.modifiers.Language;
+import domain.modifiers.proficiency.Proficiency;
 
 /**
  * Utility class to identify and return a relevant datasource {@link Mapper} for
@@ -12,10 +16,17 @@ import domain.modifiers.Language;
  */
 public class MapperRegistry {
 
+    // --- Constants ---
+    // One singular mapper for supplier composition - do not offer public access
+    private final static CharacterModifierMapper SUPPLY_MAPPER = new CharacterModifierMapper();
+    // Registered, accessible mappers
     private final static Map<Class<?>, Mapper<?>> REGISTRY = new HashMap<>();
     static {
         // Register all Mappers here
+        REGISTRY.put(AbilityScoreModifier.class, new AsmMapper());
+        REGISTRY.put(Feat.class, new FeatMapper(SUPPLY_MAPPER));
         REGISTRY.put(Language.class, new LanguageMapper());
+        REGISTRY.put(Proficiency.class, new ProficiencyMapper());
     }
 
     /**
