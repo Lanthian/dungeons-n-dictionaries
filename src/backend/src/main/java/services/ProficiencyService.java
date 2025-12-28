@@ -48,7 +48,8 @@ public class ProficiencyService {
     /* ------------------------ Business  Operations ------------------------ */
 
     /**
-     * Returns a {@link Proficiency} persisted in the database with the passed ID.
+     * Returns a {@link Proficiency} persisted in the database with the passed
+     * ID.
      *
      * @param id uniquely identifying PK of proficiency in the database
      * @return {@link Proficiency} object if found, {@code null} if otherwise
@@ -64,6 +65,22 @@ public class ProficiencyService {
     }
 
     /* ........................... getAllByType() ........................... */
+
+    /**
+     * Returns a list of all proficiencies of the specified {@link
+     * ProficiencyType}.
+     *
+     * @param type {@link ProficiencyType} correlating to the specified class
+     * @return a deeply initiated {@link List} of proficiencies of queried type
+     * @throws SQLException if an unexpected database SQL exception occurs or
+     *         if {@link Database#getConnection()} is interupted
+     */
+    public static List<? extends Proficiency> getAllByType(ProficiencyType type) throws SQLException {
+        try (Connection conn = Database.getConnection()) {
+            ProficiencyMapper mapper = (ProficiencyMapper) MapperRegistry.getMapper(Proficiency.class);
+            return mapper.findAllByType(type, conn);
+        }
+    }
 
     /**
      * Private utility method to reduce duplicate code between `getAll*()` type

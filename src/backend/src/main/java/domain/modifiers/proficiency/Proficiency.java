@@ -19,7 +19,7 @@ public abstract class Proficiency extends Entity<Proficiency> implements Charact
      *
      * @return {@link ProficiencyType} enum determining kind of proficiency
      */
-    public abstract ProficiencyType type();
+    public abstract ProficiencyType getProficiencyType();
 
     /* ======================================================================
      * ---------------- CharacterModification Implementation ----------------

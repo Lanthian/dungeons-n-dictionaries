@@ -34,7 +34,7 @@ public class ToolProficiency extends Proficiency {
 
     // Subtype specification
     @Override
-    public ProficiencyType type() { return ProficiencyType.TOOL; }
+    public ProficiencyType getProficiencyType() { return ProficiencyType.TOOL; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  -------------------------

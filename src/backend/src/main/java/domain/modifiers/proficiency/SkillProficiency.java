@@ -22,7 +22,7 @@ public class SkillProficiency extends Proficiency {
 
     // Subtype specification
     @Override
-    public ProficiencyType type() { return ProficiencyType.SKILL; }
+    public ProficiencyType getProficiencyType() { return ProficiencyType.SKILL; }
 
     // TODO: Move this business logic to character level handling
     /**

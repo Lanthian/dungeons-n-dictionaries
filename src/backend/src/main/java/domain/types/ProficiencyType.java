@@ -1,15 +1,26 @@
 // java/domain/types/ProficiencyType.java
 package domain.types;
 
+import domain.modifiers.proficiency.ArmourProficiency;
+import domain.modifiers.proficiency.Proficiency;
+import domain.modifiers.proficiency.SkillProficiency;
+import domain.modifiers.proficiency.ToolProficiency;
+
 /**
  * An enum for the different proficiency subtypes available in D&D.
  */
 public enum ProficiencyType {
 
     // --- Enumerations ---
-    ARMOUR,
-    SKILL,
-    TOOL;
+    ARMOUR(ArmourProficiency.class),
+    SKILL(SkillProficiency.class),
+    TOOL(ToolProficiency.class);
+
+    // --- Attributes ---
+    private Class<? extends Proficiency> proficiencyClass;
+
+    // ProficiencyType constructor
+    ProficiencyType(Class<? extends Proficiency> c) { this.proficiencyClass = c; }
 
     /**
      * Converts a string to its matching ProficiencyType enum.
@@ -30,4 +41,7 @@ public enum ProficiencyType {
             throw new IllegalArgumentException("Unknown ProficiencyType: " + value);
         }
     }
+
+    // --- Getter ---
+    public Class<? extends Proficiency> getProficiencyClass() { return this.proficiencyClass; }
 }

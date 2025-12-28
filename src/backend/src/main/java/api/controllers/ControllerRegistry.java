@@ -13,6 +13,7 @@ public class ControllerRegistry {
     static {
         // Register all Controller routes here
         REGISTRY.put("language", new LanguageController());
+        REGISTRY.put("proficiency", new ProficiencyController());
     }
 
     /**

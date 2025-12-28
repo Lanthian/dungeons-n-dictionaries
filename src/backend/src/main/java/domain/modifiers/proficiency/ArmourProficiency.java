@@ -22,7 +22,7 @@ public class ArmourProficiency extends Proficiency {
 
     // Subtype specification
     @Override
-    public ProficiencyType type() { return ProficiencyType.ARMOUR; }
+    public ProficiencyType getProficiencyType() { return ProficiencyType.ARMOUR; }
 
     // --- Getter ---
     public ArmourType getType() { return this.type; }
