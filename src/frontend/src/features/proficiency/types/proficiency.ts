@@ -1,4 +1,9 @@
 // features/proficiency/types/proficiency.ts
+
+export const PROFICIENCY_TYPES = ["ARMOUR", "SKILL", "TOOL"] as const;
+
+export type ProficiencyType = typeof PROFICIENCY_TYPES[number];
+
 /**
  * Base interface extended by all concrete Proficiency types. `id` is optional
  * to allow the posting of new proficiencies. `proficiencyType` differentiates
@@ -7,7 +12,7 @@
  */
 interface BaseProficiency {
   id?: string;
-  proficiencyType: string;
+  proficiencyType: ProficiencyType;
 };
 
 /**

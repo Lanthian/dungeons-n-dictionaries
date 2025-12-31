@@ -10,7 +10,8 @@ export default function HomePage() {
 
   // Links to navigate to
   const links = [
-      { path: '/language', label: 'Languages' }
+      { path: '/language', label: 'Languages' },
+      { path: '/proficiency', label: 'Proficiencies' },
   ]
 
   // Test API Connection
