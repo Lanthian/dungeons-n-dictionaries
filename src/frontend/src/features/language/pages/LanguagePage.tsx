@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import LanguageAPI from '../../../api/language'
 import { getData } from '../../../api/apiResponse';
 import type { Language } from '../types/language';
-import LanguageItem from '../components/LanguageItem';
 import LanguageForm from '../components/LanguageForm';
 import Modal from '../../../components/Modal';
 import { toastApiResponse } from '../../../utils/toastApiResponse';
+import Table, { type Column } from '../../../components/Table';
+import { categoryFromLanguage } from '../types/languageCategory';
 
 export default function LanguagePage() {
   const [languages, setLanguages] = useState<Language[] | null>([]);
@@ -47,6 +48,20 @@ export default function LanguagePage() {
     }
   }
 
+  // Table columns
+  const cols: Column<Language>[] = [
+    { key: "name", header: "Name", cell: l => l.name },
+    { key: "description", header: "Description", cell: l => l.description ?? "N/A" },
+    { key: "script", header: "Script", cell: l => l.script ?? "N/A" },
+    { key: "exotic", header: "Category", cell: l => categoryFromLanguage(l) },
+    { key: "edit", header: "", cell: l => (
+      <button onClick={() => { setEditing(l); setShowModal(true); }}>Edit</button>
+    )},
+    { key: "delete", header: "", cell: l => (
+      <button onClick={() => { onDelete(l) }}>Delete</button>
+    )},
+  ];
+
   return (
     <div>
       {/* Header */}
@@ -57,18 +72,13 @@ export default function LanguagePage() {
         Add Language
       </button>
 
-      {/* Language List */}
+      {/* Language Table */}
       {Array.isArray(languages) && languages.length !== 0 ? (
-        languages?.map(it => (
-          <LanguageItem
-            key={it.id}
-            language={it}
-            onEdit={() => { setEditing(it); setShowModal(true); }}
-            onDelete={() => onDelete(it)}
-          />
-        ))
+        <Table
+          rows={languages}
+          columns={cols}
+        />
       ) : (
-        // Alternative text output if no languages returned
         <p>No languages found</p>
       )}
 
