@@ -195,7 +195,7 @@ public class ProficiencyService {
      *         if {@link Database#getConnection()} is interupted
      */
     public static OperationResult deleteProficiency(Proficiency proficiency) throws SQLException {
-        // Disallow proficiencies without set IDs - use createProficiency() instead
+        // Disallow proficiencies without set IDs
         if (!proficiency.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
         // TODO: Lightweight object is fine here, only ID is needed to delete
