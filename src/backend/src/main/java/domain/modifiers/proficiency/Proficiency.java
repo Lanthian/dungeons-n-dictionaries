@@ -9,17 +9,20 @@ import domain.types.ProficiencyType;
 /**
  * An abstract class to group different kinds of proficiencies together.
  *
- * <p> Requires the implementation of a {@link ProficiencyType} distinguishing
- * "{@link #type()}" method.
+ * <p> Subclass constructors must define which {@link ProficiencyType} they
+ * realise.
  */
 public abstract class Proficiency extends Entity<Proficiency> implements CharacterModification {
 
-    /**
-     * Subclasses must define what type of proficiency they offer.
-     *
-     * @return {@link ProficiencyType} enum determining kind of proficiency
-     */
-    public abstract ProficiencyType getProficiencyType();
+    // --- Attributes ---
+    // Subclasses must define what type of proficiency they offer
+    private final ProficiencyType proficiencyType;
+
+    // Abstract Constructor
+    protected Proficiency(ProficiencyType type) { this.proficiencyType = type; }
+
+    // --- Getter ---
+    public ProficiencyType getProficiencyType() { return this.proficiencyType; }
 
     /* ======================================================================
      * ---------------- CharacterModification Implementation ----------------

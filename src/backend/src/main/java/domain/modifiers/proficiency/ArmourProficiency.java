@@ -17,12 +17,9 @@ public class ArmourProficiency extends Proficiency {
 
     // Constructor
     public ArmourProficiency(ArmourType armourType) {
+        super(ProficiencyType.ARMOUR);
         this.type = armourType;
     }
-
-    // Subtype specification
-    @Override
-    public ProficiencyType getProficiencyType() { return ProficiencyType.ARMOUR; }
 
     // --- Getter ---
     public ArmourType getType() { return this.type; }
