@@ -1,65 +1,69 @@
 // features/proficiency/pages/ProficiencyPage.tsx
-import { useEffect, useState } from "react";
-import type { Proficiency, ProficiencyType } from "../types/proficiency";
-import { PROFICIENCY_REGISTRY } from "../proficiencyRegistry";
-import TabBar, { type TabItem } from "../../../components/TabBar";
-import { toastApiResponse } from "../../../utils/toastApiResponse";
-import { getData, type ApiResponse } from "../../../api/apiResponse";
-import Table from "../../../components/Table";
-// import type { ProficiencyType } from "../types/proficiency";
+import { useState } from 'react';
+import ProficiencyAPI from '../../../api/proficiency'
+import type { Column } from "../../../components/Table";
+import { toastApiResponse } from '../../../utils/toastApiResponse';
+import ProficiencyView from "../components/ProficiencyView";
+import type { Proficiency } from "../types/proficiency";
+import Modal from '../../../components/Modal';
 
 export default function ProficiencyPage() {
-  const [data, setData] = useState<Partial<Record<ProficiencyType, Proficiency[]>>>({});
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [editing, setEditing] = useState<Proficiency | null>(null);
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
-  // Fetch proficiencies upon navigating to this page
-  useEffect(() => {
-    PROFICIENCY_REGISTRY.forEach(async module => {
-      const res = await module.fetch();
-      if (toastApiResponse(res)) {
-        setData(prev => ({
-          ...prev,
-          [module.proficiencyType]: getData(res as ApiResponse<Proficiency[]>)
-        }))
-      };
-    });
-  }, []);
+  async function onDelete(proficiency: Proficiency) {
+    const res = await ProficiencyAPI.deleteProficiency(proficiency);
+    if (toastApiResponse(res)) { setReloadKey(k => k+1); }
+  }
 
-  // Construct tabs from known proficiency types registered
-  const tabs: TabItem[] = PROFICIENCY_REGISTRY.map(module => ({
-    key: module.proficiencyType,
-    label: module.label,
-  }));
+  async function onSubmit(proficiency: Proficiency) {
+    // POST or PUT depending on editing state
+    const res = editing
+      ? await ProficiencyAPI.updateProficiency(proficiency)
+      : await ProficiencyAPI.createProficiency(proficiency);
+    if (toastApiResponse(res)) {
+      setShowModal(false);
+      setEditing(null);
+      setReloadKey(k => k+1);
+    }
+  }
 
-  const [activeTab, setActiveTab] = useState<string>(tabs[0].key);
-
-  const activeModule = PROFICIENCY_REGISTRY.find(
-    m => m.proficiencyType === activeTab
-  );
-  // If no module found, bug here (safety check)
-  if (!activeModule) return null;
-
-  // Data to display
-  const rows = data[activeModule.proficiencyType];
+  // Extra table columns to enable editing
+  const cols: Column<Proficiency>[] = [
+    { key: "edit", header: "", cell: p => (
+      <button onClick={() => { setEditing(p); setShowModal(true); }}>Edit</button>
+    )},
+    { key: "delete", header: "", cell: p => (
+      <button onClick={() => { onDelete(p) }}>Delete</button>
+    )},
+  ];
 
   return (
     <div>
-      {/* Tabs */}
-      <TabBar
-        tabs={tabs}
-        activeKey={activeTab}
-        onChange={(key) => setActiveTab(key)}
+      {/* Header */}
+      <h1>Proficiencies</h1>
+
+      {/* Add Proficiency */}
+      <button onClick={() => { setEditing(null); setShowModal(true); }}>
+        Add Proficiency
+      </button>
+
+      {/* Editable Proficiency View */}
+      <ProficiencyView
+        extraColumns={cols}
+        reloadKey={reloadKey}
       />
 
-      {/* Table */}
-      {!rows ? (
-        // Display loading message if rows haven't loaded
-        <p>loading...</p>
-      ) : (
-        <Table
-          rows={rows}
-          columns={activeModule.columns}
-        />
-      )}
+      {/* ProficiencyForm Modal (on top of layout) */}
+      <Modal open={showModal} onClose={() => { setEditing(null); setShowModal(false); }}>
+        <p>WIP</p>
+        {/* <ProficiencyForm
+          initial={editing}
+          onSubmit={onSubmit}
+          onCancel={() => { setEditing(null); setShowModal(false); }}
+        /> */}
+      </Modal>
     </div>
   )
 }
