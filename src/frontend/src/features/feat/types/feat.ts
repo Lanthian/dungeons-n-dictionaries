@@ -7,9 +7,9 @@ import type { Proficiency } from "../../proficiency/types/proficiency";
  * Mimics backend data structure.
  */
 export type Feat = {
-  id?: string;
+  id?: number;
   name: string;
-  description?: string | null;
+  description: string;
   // Supplied character modifications
   abilityScoreModifiers: Asm[];
   proficiencies: Proficiency[];

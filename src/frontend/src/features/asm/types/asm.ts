@@ -10,7 +10,7 @@ export type Ability = typeof ABILITIES[number];
  * ability score modifiers.
  */
 export type Asm = {
-  id?: string;
+  id?: number;
   ability: Ability;
   value: number;
 };

@@ -11,7 +11,7 @@ export type ProficiencyType = typeof PROFICIENCY_TYPES[number];
  * proficiency it is handling.
  */
 interface BaseProficiency {
-  id?: string;
+  id?: number;
   proficiencyType: ProficiencyType;
 };
 
