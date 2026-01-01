@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Column } from "../../../components/Table";
 import type { Proficiency, ProficiencyType } from "../types/proficiency";
 import { toastApiResponse } from "../../../utils/toastApiResponse";
-import { getData, type ApiResponse } from "../../../api/apiResponse";
+import { getData, isSuccess, type ApiResponse } from "../../../api/apiResponse";
 import { PROFICIENCY_REGISTRY } from "../proficiencyRegistry";
 import type { TabItem } from "../../../components/TabBar";
 import TabBar from "../../../components/TabBar";
@@ -13,26 +13,31 @@ import Table from "../../../components/Table";
 type Props = {
   extraColumns?: Column<Proficiency>[];
   reloadKey?: number;
+  silentToast?: boolean;
 }
 
 /**
  * Reusable base view for Proficiencies. Add smart behaviour via extra columns.
  */
-export default function ProficiencyView({ extraColumns = [], reloadKey = 0 }: Props) {
+export default function ProficiencyView({
+  extraColumns = [],
+  reloadKey = 0,
+  silentToast = false,
+}: Props) {
   const [data, setData] = useState<Partial<Record<ProficiencyType, Proficiency[]>>>({});
 
   // Fetch proficiencies upon navigating to this page or signalling a reload
   useEffect(() => {
     PROFICIENCY_REGISTRY.forEach(async module => {
       const res = await module.fetch();
-      if (toastApiResponse(res)) {
+      if (silentToast ? isSuccess(res) : toastApiResponse(res)) {
         setData(prev => ({
           ...prev,
           [module.proficiencyType]: getData(res as ApiResponse<Proficiency[]>)
         }))
       };
     });
-  }, [reloadKey]);
+  }, [reloadKey, silentToast]);
 
   // Construct tabs from known proficiency types registered
   const tabs: TabItem[] = PROFICIENCY_REGISTRY.map(module => ({
