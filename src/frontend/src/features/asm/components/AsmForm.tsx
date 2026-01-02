@@ -19,7 +19,7 @@ export default function AsmForm({ initial, onSubmit, onCancel }: Props) {
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onSubmit({
-      id: initial?.id ?? -1,
+      ...(initial?.id != null && { id: initial.id }),
       ability,
       value
     });
