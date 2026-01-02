@@ -1,6 +1,7 @@
 // features/asm/types/asm.ts
 
-export const ABILITIES = ["STR", "DEX", "CON", "INT", "WIS", "CHA"] as const;
+export const ABILITIES = ["STRENGTH", "DEXTERITY", "CONSTITUTION",
+  "INTELLIGENCE", "WISDOM", "CHARISMA"] as const;
 
 export type Ability = typeof ABILITIES[number];
 

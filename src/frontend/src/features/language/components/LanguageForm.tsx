@@ -29,7 +29,7 @@ export default function LanguageForm({ initial, onSubmit, onCancel }: Props) {
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onSubmit({
-      id: initial?.id ?? "new",
+      id: initial?.id ?? -1,
       name,
       description: desc ?? null,
       script: script ?? null,
@@ -48,6 +48,7 @@ export default function LanguageForm({ initial, onSubmit, onCancel }: Props) {
         onChange={e => setName(e.target.value)}
         placeholder="Name..."
       />
+      <br />
 
       <label>Description</label>
       <input
@@ -55,6 +56,7 @@ export default function LanguageForm({ initial, onSubmit, onCancel }: Props) {
         onChange={e => setDesc(e.target.value || null)}
         placeholder="Description..."
       />
+      <br />
 
       <label>Script</label>
       <input
@@ -62,6 +64,7 @@ export default function LanguageForm({ initial, onSubmit, onCancel }: Props) {
         onChange={e => setScript(e.target.value || null)}
         placeholder="Script..."
       />
+      <br />
 
       <label>Category</label>
       <select
@@ -72,6 +75,7 @@ export default function LanguageForm({ initial, onSubmit, onCancel }: Props) {
           <option key={c} value={c}>{c}</option>
         )}
       </select>
+      <br />
 
       {/* Interaction options */}
       <div>
