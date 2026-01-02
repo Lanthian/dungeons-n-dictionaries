@@ -1,7 +1,7 @@
 // features/asm/components/AsmView.tsx
 import { useEffect, useState } from "react";
 import type { Column } from "../../../components/Table";
-import type { Asm } from "../types/asm";
+import { formatValue, type Asm } from "../types/asm";
 import { toastApiResponse } from "../../../utils/toastApiResponse";
 import { getData, isSuccess, type ApiResponse } from "../../../api/apiResponse";
 import AsmAPI from "../../../api/asm";
@@ -38,7 +38,7 @@ export default function AsmView({
   // Table columns
   const cols: Column<Asm>[] = [
     { key: "ability", header: "Ability", cell: asm => asm.ability },
-    { key: "value", header: "Value", cell: asm => asm.value.toString() },
+    { key: "value", header: "Value", cell: asm => formatValue(asm.value) },
     ...extraColumns
   ];
 

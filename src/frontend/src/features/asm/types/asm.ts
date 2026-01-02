@@ -15,3 +15,14 @@ export type Asm = {
   ability: Ability;
   value: number;
 };
+
+/**
+ * Utility method to format an ASM value to emphasise it is a modifier.
+ *
+ * @param value numeric value of an Ability Score Modifier
+ * @returns "+"/"-"{number} string format for value; no prefix if 0
+ */
+export function formatValue(value: number): string {
+  if (value > 0) return "+" + value.toString();
+  return value.toString();
+}
