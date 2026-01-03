@@ -4,6 +4,7 @@
  * way that allows keeping design away from use location.
  */
 import type { Column } from "../../../components/Table";
+import { formatUnderscore } from "../../../utils/stringFormatting";
 import type {
   ArmourProficiency,
   SkillProficiency,
@@ -11,15 +12,15 @@ import type {
 } from "../types/proficiency";
 
 export const armourColumns: Column<ArmourProficiency>[] = [
-  { key: "type", header: "Type", cell: p => p.type },
+  { key: "type", header: "Type", cell: p => formatUnderscore(p.type) },
 ];
 
 export const skillColumns: Column<SkillProficiency>[] = [
-  { key: "skill", header: "Skill", cell: p => p.skill },
+  { key: "skill", header: "Skill", cell: p => formatUnderscore(p.skill) },
 ];
 
 export const toolColumns: Column<ToolProficiency>[] = [
   { key: "name", header: "Name", cell: p => p.name },
   { key: "description", header: "Description", cell: p => p.description },
-  { key: "type", header: "Type", cell: p => p.type },
+  { key: "type", header: "Type", cell: p => formatUnderscore(p.type) },
 ];

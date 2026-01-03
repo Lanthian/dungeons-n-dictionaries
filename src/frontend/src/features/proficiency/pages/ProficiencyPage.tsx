@@ -4,13 +4,15 @@ import ProficiencyAPI from '../../../api/proficiency'
 import type { Column } from "../../../components/Table";
 import { toastApiResponse } from '../../../utils/toastApiResponse';
 import ProficiencyView from "../components/ProficiencyView";
-import type { Proficiency } from "../types/proficiency";
+import { PROFICIENCY_TYPES, type ProficiencyType, type Proficiency } from "../types/proficiency";
 import Modal from '../../../components/Modal';
+import ProficiencyForm from '../components/forms/ProficiencyForm';
 
 export default function ProficiencyPage() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editing, setEditing] = useState<Proficiency | null>(null);
   const [reloadKey, setReloadKey] = useState<number>(0);
+  const [addType, setAddType] = useState<ProficiencyType>("TOOL");
 
   async function onDelete(proficiency: Proficiency) {
     const res = await ProficiencyAPI.deleteProficiency(proficiency);
@@ -45,6 +47,14 @@ export default function ProficiencyPage() {
       <h1>Proficiencies</h1>
 
       {/* Add Proficiency */}
+      <select
+        value={addType}
+        onChange={e => setAddType(e.target.value as ProficiencyType)}
+      >
+        {PROFICIENCY_TYPES.map(p => (
+          <option key={p} value={p}>{p}</option>
+        ))}
+      </select>
       <button onClick={() => { setEditing(null); setShowModal(true); }}>
         Add Proficiency
       </button>
@@ -57,12 +67,12 @@ export default function ProficiencyPage() {
 
       {/* ProficiencyForm Modal (on top of layout) */}
       <Modal open={showModal} onClose={() => { setEditing(null); setShowModal(false); }}>
-        <p>WIP</p>
-        {/* <ProficiencyForm
+        <ProficiencyForm
           initial={editing}
+          createType={addType}
           onSubmit={onSubmit}
           onCancel={() => { setEditing(null); setShowModal(false); }}
-        /> */}
+        />
       </Modal>
     </div>
   )
