@@ -43,8 +43,7 @@ public abstract class Controller {
                 handleDelete(parts, req, resp);
                 break;
             default:
-                resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-                writeResponse(resp, false, "Unrecognised method");
+                writeStatus(resp, HttpServletResponse.SC_NOT_IMPLEMENTED, "Unrecognised method");
         }
     }
 
@@ -72,7 +71,7 @@ public abstract class Controller {
      * @param message response message written back
      * @throws IOException
      */
-    protected static void writeResponse(HttpServletResponse resp, boolean success, String message) throws IOException {
+    private static void writeResponse(HttpServletResponse resp, boolean success, String message) throws IOException {
         Gson gson = new Gson();
         JsonObject json = new JsonObject();
         json.addProperty("status", success ? "success" : "failure");
@@ -80,5 +79,18 @@ public abstract class Controller {
 
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(json));
+    }
+
+    /**
+     * Utility method to shorthand simple servlet responses.
+     *
+     * @param resp {@link HttpServletResponse} object configured for API report
+     * @param statusCode int HTTP status code; >400 is treated as a failure
+     * @param message response message written back
+     * @throws IOException
+     */
+    protected static void writeStatus(HttpServletResponse resp, int statusCode, String message) throws IOException {
+        resp.setStatus(statusCode);
+        writeResponse(resp, statusCode < 400, message);
     }
 }

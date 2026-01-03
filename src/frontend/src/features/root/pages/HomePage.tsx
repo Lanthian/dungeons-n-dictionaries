@@ -10,7 +10,10 @@ export default function HomePage() {
 
   // Links to navigate to
   const links = [
-      { path: '/language', label: 'Languages' }
+      { path: '/asm', label: 'Ability Score Modifiers' },
+      { path: '/feat', label: 'Feats' },
+      { path: '/language', label: 'Languages' },
+      { path: '/proficiency', label: 'Proficiencies' },
   ]
 
   // Test API Connection
@@ -33,6 +36,7 @@ export default function HomePage() {
 
   return (
     <div>
+      {/* Header */}
       <h1>Home Page</h1>
 
       {/* API connection test */}
@@ -52,12 +56,15 @@ export default function HomePage() {
 
       {/* Available navigation menu */}
       {links.map((link) => (
-        <Link
-          key={link.path}
-          to={link.path}
-        >
-          <span>{link.label}</span>
-        </Link>
+        <>
+          <Link
+            key={link.path}
+            to={link.path}
+          >
+            {link.label}
+          </Link>
+          <br />
+        </>
       ))}
     </div>
   );

@@ -17,12 +17,9 @@ public class SkillProficiency extends Proficiency {
 
     // Constructor
     public SkillProficiency(Skill skill) {
+        super(ProficiencyType.SKILL);
         this.skill = skill;
     }
-
-    // Subtype specification
-    @Override
-    public ProficiencyType type() { return ProficiencyType.SKILL; }
 
     // TODO: Move this business logic to character level handling
     /**

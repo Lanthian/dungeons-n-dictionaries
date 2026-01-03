@@ -9,6 +9,9 @@ import java.util.StringJoiner;
  */
 public class StringUtils {
 
+    // Private Constructor (disallow instantiation)
+    private StringUtils() {}
+
     /**
      * Surround a String with quotation marks. Returns the raw text {@code null}
      * if String input is null.

@@ -31,14 +31,27 @@ public class MapperRegistry {
 
     /**
      * Retrieve an instantiated {@link Mapper} registered to the supplied domain
-     * model class.
+     * model class. Returns a valid subtype mapper if no exact match registered.
      *
      * @param <T> type of the the object and Mapper generic type queried
      * @param c {@code .class} of the object to be mapped
-     * @return relevant Mapper or nul if unregistered/undefined
+     * @return relevant Mapper or null if unregistered/undefined
      */
     @SuppressWarnings("unchecked")
     public static <T> Mapper<T> getMapper(Class<T> c) {
-        return (Mapper<T>) REGISTRY.get(c);
+        // 1. Exact match
+        Mapper<?> mapper = REGISTRY.get(c);
+        if (mapper != null) return (Mapper<T>) mapper;
+
+        // 2. Polymorphic match
+        for (Map.Entry<Class<?>, Mapper<?>> entry : REGISTRY.entrySet()) {
+            // Check supertype / interface
+            if (entry.getKey().isAssignableFrom(c)) {
+                return (Mapper<T>) entry.getValue();
+            }
+        }
+
+        // 3. No match
+        return null;
     }
 }

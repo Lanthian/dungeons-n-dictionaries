@@ -23,7 +23,7 @@ public class FrontController extends HttpServlet {
 
         String path = req.getPathInfo();
         if (path == null || path.equals("/")) {
-            Controller.writeResponse(resp, false, "Please provide a valid path");
+            Controller.writeStatus(resp, HttpServletResponse.SC_BAD_REQUEST, "Please provide a valid path");
             return;
         }
 
@@ -35,8 +35,7 @@ public class FrontController extends HttpServlet {
         Controller controller = ControllerRegistry.getController(resource);
         if (controller == null) {
             // Unrecognised resource request
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            Controller.writeResponse(resp, false, "Unrecognised resource");
+            Controller.writeStatus(resp, HttpServletResponse.SC_NOT_FOUND, "Unrecognised resource");
             return;
         }
 

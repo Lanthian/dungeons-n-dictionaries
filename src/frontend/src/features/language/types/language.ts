@@ -4,7 +4,7 @@
  * system. Mimics backend data structure.
  */
 export type Language = {
-  id?: string;
+  id?: number;
   name: string;
   description?: string | null;
   script?: string | null;

@@ -91,7 +91,7 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
     public boolean insert(Proficiency obj, Connection conn) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + "(kind) VALUES (?) RETURNING id";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, obj.type().toString());
+            pstmt.setString(1, obj.getProficiencyType().toString());
 
             // Set ID of object from returned value
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -100,14 +100,14 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
                 obj.setId(new EntityId<>(rs.getLong(1)));
 
                 // Insert into proficiency subtype table
-                return mapper(obj.type()).insert(obj, conn);
+                return mapper(obj.getProficiencyType()).insert(obj, conn);
             }
         }
     }
 
     @Override
     public boolean update(Proficiency obj, Connection conn) throws SQLException {
-        return mapper(obj.type()).update(obj, conn);
+        return mapper(obj.getProficiencyType()).update(obj, conn);
     }
 
     @Override
