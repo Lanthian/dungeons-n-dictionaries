@@ -16,29 +16,7 @@ import domain.modifiers.Feat;
  * business level logic for Controller requests and facilitating access to the
  * datasource layer.
  */
-public class FeatService {
-
-    /* --------------------- Controller  Communication ---------------------- */
-
-    /**
-     * ENUM identifying {@link FeatService} operation success state.
-     * Used to pass data back to the Controller calling service methods.
-     */
-    public enum OperationResult {
-        // --- Enumerations ---
-        SUCCESS(true),
-        ILLEGAL_ENTITY(false),
-        DB_FAILURE(false);
-
-        // --- Attributes ---
-        private final boolean success;
-
-        // Constructor
-        OperationResult(boolean success) { this.success = success; }
-
-        // --- Getter ---
-        public boolean isSuccess() { return this.success; }
-    }
+public class FeatService extends AbstractService {
 
     /* ------------------------ Business  Operations ------------------------ */
 
@@ -92,7 +70,7 @@ public class FeatService {
         UnitOfWork.newCurrent();
         UnitOfWork.getCurrent().registerNew(feat);
         return UnitOfWork.getCurrent().commit()
-            ? OperationResult.SUCCESS
+            ? OperationResult.CREATED
             : OperationResult.DB_FAILURE;
     }
 

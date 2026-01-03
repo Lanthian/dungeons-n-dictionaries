@@ -21,29 +21,7 @@ import domain.types.ProficiencyType;
  * business level logic for Controller requests and facilitating access to the
  * datasource layer.
  */
-public class ProficiencyService {
-
-    /* --------------------- Controller  Communication ---------------------- */
-
-    /**
-     * ENUM identifying {@link ProficiencyService} operation success state.
-     * Used to pass data back to the Controller calling service methods.
-     */
-    public enum OperationResult {
-        // --- Enumerations ---
-        SUCCESS(true),
-        ILLEGAL_ENTITY(false),
-        DB_FAILURE(false);
-
-        // --- Attributes ---
-        private final boolean success;
-
-        // Constructor
-        OperationResult(boolean success) { this.success = success; }
-
-        // --- Getter ---
-        public boolean isSuccess() { return this.success; }
-    }
+public class ProficiencyService extends AbstractService {
 
     /* ------------------------ Business  Operations ------------------------ */
 
@@ -161,7 +139,7 @@ public class ProficiencyService {
         UnitOfWork.newCurrent();
         UnitOfWork.getCurrent().registerNew(proficiency);
         return UnitOfWork.getCurrent().commit()
-            ? OperationResult.SUCCESS
+            ? OperationResult.CREATED
             : OperationResult.DB_FAILURE;
     }
 

@@ -61,7 +61,7 @@ public class AsmController extends Controller {
             // Interpret service method result
             String msg = "Unknown operation result";
             switch (result) {
-                case SUCCESS:
+                case CREATED:
                     msg = "Inserted new ASM";
                     break;
                 case ILLEGAL_ENTITY:
@@ -69,8 +69,9 @@ public class AsmController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to insert new ASM";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -101,8 +102,9 @@ public class AsmController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to update ASM";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -133,8 +135,9 @@ public class AsmController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to delete ASM";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);

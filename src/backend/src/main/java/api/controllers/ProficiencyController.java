@@ -67,7 +67,7 @@ public class ProficiencyController extends Controller {
             // Interpret service method result
             String msg = "Unknown operation result";
             switch (result) {
-                case SUCCESS:
+                case CREATED:
                     msg = "Inserted new proficiency";
                     break;
                 case ILLEGAL_ENTITY:
@@ -75,8 +75,9 @@ public class ProficiencyController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to insert new proficiency";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -107,8 +108,9 @@ public class ProficiencyController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to update proficiency";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -139,8 +141,9 @@ public class ProficiencyController extends Controller {
                     break;
                 case DB_FAILURE:
                     msg = "Failed to delete proficiency";
+                default: break;
             }
-            writeResponse(resp, result.isSuccess(), msg);
+            writeStatus(resp, result.getStatus(), msg);
 
         } catch (SQLException e) {
             throw new ServletException("Database error", e);

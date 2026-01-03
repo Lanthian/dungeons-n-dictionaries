@@ -71,7 +71,7 @@ public abstract class Controller {
      * @param message response message written back
      * @throws IOException
      */
-    protected static void writeResponse(HttpServletResponse resp, boolean success, String message) throws IOException {
+    private static void writeResponse(HttpServletResponse resp, boolean success, String message) throws IOException {
         Gson gson = new Gson();
         JsonObject json = new JsonObject();
         json.addProperty("status", success ? "success" : "failure");
