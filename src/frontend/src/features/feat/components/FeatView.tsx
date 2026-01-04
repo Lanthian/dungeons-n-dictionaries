@@ -7,6 +7,7 @@ import Modal from '../../../components/Modal';
 import { getData, isSuccess, type ApiResponse } from '../../../api/apiResponse';
 import { toastApiResponse } from '../../../utils/toastApiResponse';
 import { getFeatFull } from '../utils/getFeatFull';
+import FeatDisplay from './FeatDisplay';
 
 // Input properties for FeatView
 type Props = {
@@ -68,8 +69,7 @@ export default function FeatView({
 
       {/* Full FeatDisplay Modal (on top of layout) */}
       <Modal open={showFull != null} onClose={() => setShowFull(null)}>
-        {/* <FeatDisplay data={showFull} /> */}
-        <p>WIP</p>
+        <FeatDisplay data={showFull as Feat} />
       </Modal>
     </div>
   )
