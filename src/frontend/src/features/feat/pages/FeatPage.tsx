@@ -1,49 +1,22 @@
 // features/feat/pages/FeatPage.tsx
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FeatAPI from '../../../api/feat'
 import type { Feat } from "../types/feat";
-import Table, { type Column } from "../../../components/Table";
 import Modal from '../../../components/Modal';
-import { getData } from '../../../api/apiResponse';
 import { toastApiResponse } from '../../../utils/toastApiResponse';
 import FeatForm from '../components/FeatForm';
+import FeatView from '../components/FeatView';
+import type { Column } from '../../../components/Table';
+import { getFeatFull } from '../utils/getFeatFull';
 
 export default function FeatPage() {
-  const [data, setData] = useState<Feat[] | null>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editing, setEditing] = useState<Feat | null>(null);
-
-  async function refreshData() {
-    // Fetch current data
-    const res = await FeatAPI.fetchFeats();
-    // If refresh fetch fails, set data to [] to avoid viewing stale data
-    setData(getData(res) || []);
-  }
-
-  // Fetch feats upon navigating to this page
-  useEffect(() => {
-    async function load() {
-      // Redeclared `refreshData()` to avoid cascading render warning
-      const res = await FeatAPI.fetchFeats();
-      if (toastApiResponse(res)) { setData(getData(res) || []) };
-    }
-    load();
-  }, [])
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   async function onDelete(feat: Feat) {
     const res = await FeatAPI.deleteFeat(feat);
-    if (toastApiResponse(res)) { await refreshData(); }
-  }
-
-  /**
-   * Retrieve a fully saturated Feat.
-   *
-   * @param proficiency A Feat object that has an ID set
-   */
-  async function getFull(feat: Feat) {
-    const res = await FeatAPI.fetchFeat(feat.id as number);
-    // TODO:
-    if (toastApiResponse(res)) return getData(res);
+    if (toastApiResponse(res)) { setReloadKey(k => k+1); }
   }
 
   async function onSubmit(feat: Feat) {
@@ -54,25 +27,18 @@ export default function FeatPage() {
     if (toastApiResponse(res)) {
       setShowModal(false);
       setEditing(null);
-      await refreshData();
+      setReloadKey(k => k+1);
     }
   }
 
-  // Table columns
+  // Extra table columns to enable editing
   const cols: Column<Feat>[] = [
-    { key: "name", header: "Name", cell: f => f.name },
-    { key: "description", header: "Description", cell: f => f.description },
-    // { key: "proficiencies", header: "Proficiencies", cell: f => f.proficiencies },
-
-    // TODO: Add a view button here
-
     { key: "edit", header: "", cell: f => (
       <button onClick={async () => {
         // Type assertions here for guarantees
-        const featFull = await getFull(f);
+        const featFull = await getFeatFull({feat: f, silentToast: true});
         if (featFull == undefined) return;
-        console.log(featFull);
-        setEditing(featFull as Feat);
+        setEditing(featFull);
         setShowModal(true);
       }}>
         Edit
@@ -94,14 +60,10 @@ export default function FeatPage() {
       </button>
 
       {/* Feat Table */}
-      {Array.isArray(data) && data.length !== 0 ? (
-        <Table
-          rows={data}
-          columns={cols}
-        />
-      ) : (
-        <p>No feats found</p>
-      )}
+      <FeatView
+        extraColumns={cols}
+        reloadKey={reloadKey}
+      />
 
       {/* FeatForm Modal (on top of layout) */}
       <Modal open={showModal} onClose={() => { setEditing(null); setShowModal(false); }}>
