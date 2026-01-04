@@ -1,4 +1,5 @@
 // features/asm/components/AsmList.tsx
+import { toTitleCase } from "../../../utils/formatString";
 import { formatValue, type Asm } from "../types/asm";
 
 // Input properties for display
@@ -15,7 +16,7 @@ export default function AsmList({ asms }: Props) {
     <ul>
       {asms.map((a,i) => (
         <li key={a.id ?? i}>
-          {a.ability} {formatValue(a.value)}
+          {toTitleCase(a.ability)} {formatValue(a.value)}
         </li>
       ))}
     </ul>

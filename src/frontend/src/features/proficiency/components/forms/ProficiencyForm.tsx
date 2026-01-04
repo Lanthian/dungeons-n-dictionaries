@@ -10,6 +10,7 @@ import type {
 import ArmourProficiencyForm from "./ArmourProficiencyForm";
 import SkillProficiencyForm from "./SkillProficiencyForm";
 import ToolProficiencyForm from "./ToolProficiencyForm";
+import { toTitleCase } from "../../../../utils/formatString";
 
 // Input parameters for form
 type Props = {
@@ -75,7 +76,7 @@ export default function ProficiencyForm({
 
   return (
     <form className="form" onSubmit={submit}>
-      <h1>{initial ? "Update" : "Add"} {proficiencyType} Proficiency</h1>
+      <h1>{initial ? "Update" : "Add"} {toTitleCase(proficiencyType)} Proficiency</h1>
 
       {/* Proficiency Type dependent form */}
       {subtypeForm}

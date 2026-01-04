@@ -1,6 +1,7 @@
 // features/proficiency/components/forms/ArmourProficiencyForm.tsx
 import { useEffect, useState } from "react";
 import { ARMOUR_TYPES, type ArmourProficiency, type ArmourType } from "../../types/proficiency";
+import { toTitleCase } from "../../../../utils/formatString";
 
 // Input parameters for form
 type Props = {
@@ -54,7 +55,7 @@ export default function ArmourProficiencyForm({ initial, onChange, onValidityCha
         }}
       >
         {ARMOUR_TYPES.map(a => (
-          <option key={a} value={a}>{a}</option>
+          <option key={a} value={a}>{toTitleCase(a)}</option>
         ))}
       </select>
       <br />

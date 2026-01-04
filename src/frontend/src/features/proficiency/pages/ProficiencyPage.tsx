@@ -7,6 +7,7 @@ import ProficiencyView from "../components/ProficiencyView";
 import { PROFICIENCY_TYPES, type ProficiencyType, type Proficiency } from "../types/proficiency";
 import Modal from '../../../components/Modal';
 import ProficiencyForm from '../components/forms/ProficiencyForm';
+import { toTitleCase } from '../../../utils/formatString';
 
 export default function ProficiencyPage() {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -52,7 +53,7 @@ export default function ProficiencyPage() {
         onChange={e => setAddType(e.target.value as ProficiencyType)}
       >
         {PROFICIENCY_TYPES.map(p => (
-          <option key={p} value={p}>{p}</option>
+          <option key={p} value={p}>{toTitleCase(p)}</option>
         ))}
       </select>
       <button onClick={() => { setEditing(null); setShowModal(true); }}>

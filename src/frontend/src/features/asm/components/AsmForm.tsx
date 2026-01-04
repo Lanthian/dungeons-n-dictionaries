@@ -1,6 +1,7 @@
 // features/asm/components/AsmForm.tsx
 import { useState } from "react";
 import { ABILITIES, type Ability, type Asm } from "../../asm/types/asm";
+import { toTitleCase } from "../../../utils/formatString";
 
 // Input parameters for form
 type Props = {
@@ -36,7 +37,7 @@ export default function AsmForm({ initial, onSubmit, onCancel }: Props) {
         onChange={e => setAbility(e.target.value as Ability)}
       >
         {ABILITIES.map(a => (
-          <option key={a} value={a}>{a}</option>
+          <option key={a} value={a}>{toTitleCase(a)}</option>
         ))}
       </select>
       <br />

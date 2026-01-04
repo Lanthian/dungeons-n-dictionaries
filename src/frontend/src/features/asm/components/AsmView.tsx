@@ -6,6 +6,7 @@ import { toastApiResponse } from "../../../utils/toastApiResponse";
 import { getData, isSuccess, type ApiResponse } from "../../../api/apiResponse";
 import AsmAPI from "../../../api/asm";
 import Table from "../../../components/Table";
+import { toTitleCase } from "../../../utils/formatString";
 
 // Input parameters for ASMView
 type Props = {
@@ -37,7 +38,7 @@ export default function AsmView({
 
   // Table columns
   const cols: Column<Asm>[] = [
-    { key: "ability", header: "Ability", cell: asm => asm.ability },
+    { key: "ability", header: "Ability", cell: asm => toTitleCase(asm.ability) },
     { key: "value", header: "Value", cell: asm => formatValue(asm.value) },
     ...extraColumns
   ];

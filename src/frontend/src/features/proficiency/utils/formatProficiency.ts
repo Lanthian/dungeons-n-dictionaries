@@ -1,5 +1,5 @@
 // features/proficiency/utils/formatProficiency.ts
-import { formatUnderscore } from "../../../utils/stringFormatting";
+import { toTitleCase } from "../../../utils/formatString";
 import type { ArmourProficiency, Proficiency, SkillProficiency, ToolProficiency } from "../types/proficiency";
 
 /**
@@ -9,13 +9,13 @@ export function formatProficiency(p: Proficiency): string {
   switch (p.proficiencyType) {
     case "ARMOUR": {
       const a = p as ArmourProficiency;
-      if (a.type === "SHIELD") return `${a.type}s`;
-      return `${a.type} Armour`;
+      if (a.type === "SHIELD") return `${toTitleCase(a.type)}s`;
+      return `${toTitleCase(a.type)} Armour`;
     }
 
     case "SKILL": {
       const s = p as SkillProficiency;
-      return formatUnderscore(s.skill);
+      return toTitleCase(s.skill);
     }
 
     case "TOOL": {

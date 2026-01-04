@@ -1,7 +1,7 @@
 // features/proficiency/components/forms/SkillProficiencyForm.tsx
 import { useEffect, useState } from "react";
 import { SKILLS, type SkillProficiency, type SkillType } from "../../types/proficiency";
-import { formatUnderscore } from "../../../../utils/stringFormatting";
+import { toTitleCase } from "../../../../utils/formatString";
 
 // Input parameters for form
 type Props = {
@@ -55,7 +55,7 @@ export default function SkillProficiencyForm({ initial, onChange, onValidityChan
         }}
       >
         {SKILLS.map(s => (
-          <option key={s} value={s}>{formatUnderscore(s)}</option>
+          <option key={s} value={s}>{toTitleCase(s)}</option>
         ))}
       </select>
       <br />

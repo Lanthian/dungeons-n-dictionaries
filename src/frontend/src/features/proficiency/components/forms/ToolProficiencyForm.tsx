@@ -1,7 +1,7 @@
 // features/proficiency/components/forms/ToolProficiencyForm.tsx
 import { useEffect, useState } from "react";
 import { TOOL_TYPES, type ToolProficiency, type ToolType } from "../../types/proficiency";
-import { formatUnderscore } from "../../../../utils/stringFormatting";
+import { toTitleCase } from "../../../../utils/formatString";
 
 // Input parameters for form
 type Props = {
@@ -82,7 +82,7 @@ export default function ToolProficiencyForm({ initial, onChange, onValidityChang
         }}
       >
         {TOOL_TYPES.map(t => (
-          <option key={t} value={t}>{formatUnderscore(t)}</option>
+          <option key={t} value={t}>{toTitleCase(t)}</option>
         ))}
       </select>
     </>
