@@ -1,38 +1,21 @@
 // features/language/pages/LanguagePage.tsx
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import LanguageAPI from '../../../api/language'
-import { getData } from '../../../api/apiResponse';
 import type { Language } from '../types/language';
-import LanguageItem from '../components/LanguageItem';
 import LanguageForm from '../components/LanguageForm';
 import Modal from '../../../components/Modal';
 import { toastApiResponse } from '../../../utils/toastApiResponse';
+import type { Column } from '../../../components/Table';
+import LanguageView from '../components/LanguageView';
 
 export default function LanguagePage() {
-  const [languages, setLanguages] = useState<Language[] | null>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editing, setEditing] = useState<Language | null>(null);
-
-  async function refreshLanguages() {
-    // Fetch current languages
-    const res = await LanguageAPI.fetchLanguages();
-    // If refresh fetch fails, set languages to [] to avoid viewing stale data
-    setLanguages(getData(res) || []);
-  }
-
-  // Fetch languages upon navigating to this page
-  useEffect(() => {
-    async function load() {
-      // Redeclared `refreshLanguages()` to avoid cascading render warning
-      const res = await LanguageAPI.fetchLanguages();
-      if (toastApiResponse(res)) { setLanguages(getData(res) || []) };
-    }
-    load();
-  }, [])
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   async function onDelete(language: Language) {
     const res = await LanguageAPI.deleteLanguage(language);
-    if (toastApiResponse(res)) { await refreshLanguages(); }
+    if (toastApiResponse(res)) { setReloadKey(k => k+1); }
   }
 
   async function onSubmit(language: Language) {
@@ -43,9 +26,19 @@ export default function LanguagePage() {
     if (toastApiResponse(res)) {
       setShowModal(false);
       setEditing(null);
-      await refreshLanguages();
+      setReloadKey(k => k+1);
     }
   }
+
+  // Extra table columns to enable editing
+  const cols: Column<Language>[] = [
+    { key: "edit", header: "", cell: l => (
+      <button onClick={() => { setEditing(l); setShowModal(true); }}>Edit</button>
+    )},
+    { key: "delete", header: "", cell: l => (
+      <button onClick={() => { onDelete(l) }}>Delete</button>
+    )},
+  ];
 
   return (
     <div>
@@ -57,20 +50,11 @@ export default function LanguagePage() {
         Add Language
       </button>
 
-      {/* Language List */}
-      {Array.isArray(languages) && languages.length !== 0 ? (
-        languages?.map(it => (
-          <LanguageItem
-            key={it.id}
-            language={it}
-            onEdit={() => { setEditing(it); setShowModal(true); }}
-            onDelete={() => onDelete(it)}
-          />
-        ))
-      ) : (
-        // Alternative text output if no languages returned
-        <p>No languages found</p>
-      )}
+      {/* Editable Language View */}
+      <LanguageView
+        extraColumns={cols}
+        reloadKey={reloadKey}
+      />
 
       {/* LanguageForm Modal (on top of layout) */}
       <Modal open={showModal} onClose={() => { setEditing(null); setShowModal(false); }}>

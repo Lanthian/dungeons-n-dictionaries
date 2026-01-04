@@ -22,6 +22,7 @@ public class ToolProficiency extends Proficiency {
 
     // Constructor
     public ToolProficiency(String name, String description, ToolType toolType) {
+        super(ProficiencyType.TOOL);
         this.name = name;
         this.description = description;
         this.type = toolType;
@@ -31,10 +32,6 @@ public class ToolProficiency extends Proficiency {
     public ToolProficiency(String name, String description) {
         this(name, description, ToolType.MISCELLANEOUS);
     }
-
-    // Subtype specification
-    @Override
-    public ProficiencyType type() { return ProficiencyType.TOOL; }
 
     /* ======================================================================
      * ------------------------- Getters & Setters  -------------------------

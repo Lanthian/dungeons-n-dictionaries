@@ -20,6 +20,15 @@ class LanguageAPI {
     });
   }
 
+  /** GET /lanugage/{id} */
+  async fetchLanguage(id: number): Promise<ApiResponse<Language>> {
+    return handleAPI({
+      request: () => axiosInstance.get(`${BASE_URL}/${id}`),
+      successMessage: "Language retrieved",
+      errorMessage: "Get language failed"
+    });
+  }
+
   /** POST /lanugage */
   async createLanguage(language: Language): Promise<ApiResponse> {
     return handleAPI({

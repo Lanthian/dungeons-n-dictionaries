@@ -6,6 +6,8 @@ import java.io.Reader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import domain.modifiers.proficiency.Proficiency;
+
 /**
  * Utility class to provide standardised transformation of domain objects to and
  * from Json String formatting.
@@ -15,6 +17,7 @@ public class JsonUtils {
     // --- Attributes ---
     private final static Gson gson = new GsonBuilder()
         .registerTypeAdapterFactory(new EntityIdAdapterFactory())
+        .registerTypeAdapter(Proficiency.class, new ProficiencyDeserializer())
         .create();
 
     // Private Constructor (disallow instantiation)

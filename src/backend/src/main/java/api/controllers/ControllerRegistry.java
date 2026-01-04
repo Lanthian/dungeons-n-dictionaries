@@ -12,7 +12,10 @@ public class ControllerRegistry {
     private final static Map<String, Controller> REGISTRY = new HashMap<>();
     static {
         // Register all Controller routes here
+        REGISTRY.put("asm", new AsmController());
+        REGISTRY.put("feat", new FeatController());
         REGISTRY.put("language", new LanguageController());
+        REGISTRY.put("proficiency", new ProficiencyController());
     }
 
     /**
