@@ -30,7 +30,8 @@ export default function ProficiencyView({
   useEffect(() => {
     PROFICIENCY_REGISTRY.forEach(async module => {
       const res = await module.fetch();
-      if (silentToast ? isSuccess(res) : toastApiResponse(res)) {
+      // Cast response to silence typescript concerns from union type
+      if (silentToast ? isSuccess(res as ApiResponse<Proficiency[]>) : toastApiResponse(res as ApiResponse<Proficiency[]>)) {
         setData(prev => ({
           ...prev,
           [module.proficiencyType]: getData(res as ApiResponse<Proficiency[]>)
@@ -57,10 +58,10 @@ export default function ProficiencyView({
   const rows = data[activeModule.proficiencyType];
 
   // Table columns
-  const cols: Column<Proficiency>[] = [
+  const cols = [
     ...activeModule.columns,
     ...extraColumns
-  ];
+  ] as Column<Proficiency>[];
 
   return (
     <div>
