@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import datasource.utils.SQLExceptionTranslator;
 import domain.core.EntityId;
 import domain.modifiers.AbilityScoreModifier;
 import domain.modifiers.Feat;
@@ -58,7 +59,7 @@ public class FeatMapper extends AbstractMapper<Feat> {
     /* -------------------------- Insert &  Update -------------------------- */
 
     @Override
-    public boolean insert(Feat obj, Connection conn) throws SQLException {
+    public boolean insert(Feat obj, Connection conn) {
         String sql = sql("""
             INSERT INTO %TABLE% (name, description)
             VALUES (?, ?)
@@ -79,11 +80,14 @@ public class FeatMapper extends AbstractMapper<Feat> {
                 supplyMapper.replaceAllForSource(tableName(), id, obj, conn);
                 return true;
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public boolean update(Feat obj, Connection conn) throws SQLException {
+    public boolean update(Feat obj, Connection conn) {
         String sql = sql("""
             UPDATE %TABLE%
             SET name = ?, description = ?
@@ -102,6 +106,9 @@ public class FeatMapper extends AbstractMapper<Feat> {
             // Delegate modifier persistence
             supplyMapper.replaceAllForSource(tableName(), id, obj, conn);
             return true;
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -110,7 +117,7 @@ public class FeatMapper extends AbstractMapper<Feat> {
      * ====================================================================== */
 
     @Override
-    public Optional<Feat> findById(long id, Connection conn) throws SQLException {
+    public Optional<Feat> findById(long id, Connection conn) {
         Optional<Feat> shallowOpt = super.findById(id, conn);
         if (shallowOpt.isEmpty()) return Optional.empty();
 

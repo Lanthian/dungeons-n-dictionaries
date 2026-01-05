@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import datasource.mappers.AbstractMapper;
 import datasource.mappers.Mapper;
+import datasource.utils.SQLExceptionTranslator;
 import domain.core.EntityId;
 import domain.modifiers.proficiency.ToolProficiency;
 import domain.types.ToolType;
@@ -43,7 +44,7 @@ public class ToolProficiencyMapper extends AbstractMapper<ToolProficiency> {
     /* -------------------------- Insert &  Update -------------------------- */
 
     @Override
-    public boolean insert(ToolProficiency obj, Connection conn) throws SQLException {
+    public boolean insert(ToolProficiency obj, Connection conn) {
         String sql = sql("""
             INSERT INTO %TABLE% (id, name, description, kind)
             VALUES (?, ?, ?, ?)
@@ -54,11 +55,13 @@ public class ToolProficiencyMapper extends AbstractMapper<ToolProficiency> {
             pstmt.setString(3, obj.getDescription());
             pstmt.setString(4, obj.getType().toString());
             return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public boolean update(ToolProficiency obj, Connection conn) throws SQLException {
+    public boolean update(ToolProficiency obj, Connection conn) {
         String sql = sql("""
             UPDATE %TABLE%
             SET name = ?, description = ?, kind = ?
@@ -70,6 +73,8 @@ public class ToolProficiencyMapper extends AbstractMapper<ToolProficiency> {
             pstmt.setString(3, obj.getType().toString());
             pstmt.setLong(4, getId(obj));
             return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 }

@@ -55,16 +55,15 @@ export default function HomePage() {
       <p></p>
 
       {/* Available navigation menu */}
-      {links.map((link) => (
-        <>
+      {links.map((link, i) => (
+        <li key={i}>
           <Link
             key={link.path}
             to={link.path}
           >
             {link.label}
           </Link>
-          <br />
-        </>
+        </li>
       ))}
     </div>
   );

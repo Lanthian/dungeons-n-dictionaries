@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import datasource.Database;
+import datasource.utils.SQLExceptionTranslator;
 import domain.character.CharacterModification;
 import domain.character.CharacterModifier;
 import domain.core.Entity;
@@ -45,11 +46,10 @@ public class CharacterModifierMapper {
      * @param refId the PK of the modifier in its own table
      * @param cm the source for which this replaceAll is called
      * @param conn An open {@link Database} connection to queue transactions on
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
     public void replaceAllForSource(
         String kind, long refId, CharacterModifier cm, Connection conn
-    ) throws SQLException {
+    ) {
         // Optionally create modifier_source instance / return PK ID
         long sourceId = resolveSourceId(kind, refId, conn);
 
@@ -65,22 +65,22 @@ public class CharacterModifierMapper {
 
     /* -------------------- Thin Exposed  Supply Finders -------------------- */
 
-    public List<Long> findAsmIds(String kind, long id, Connection conn) throws SQLException {
+    public List<Long> findAsmIds(String kind, long id, Connection conn) {
         String tableName = SUPPLY_TABLES.get(ModificationType.ASM);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
-    public List<Long> findFeatIds(String kind, long id, Connection conn) throws SQLException {
+    public List<Long> findFeatIds(String kind, long id, Connection conn) {
         String tableName = SUPPLY_TABLES.get(ModificationType.FEAT);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
-    public List<Long> findLanguageIds(String kind, long id, Connection conn) throws SQLException {
+    public List<Long> findLanguageIds(String kind, long id, Connection conn) {
         String tableName = SUPPLY_TABLES.get(ModificationType.LANGUAGE);
         return findSuppliedIds(kind, id, tableName, conn);
     }
 
-    public List<Long> findProficiencyIds(String kind, long id, Connection conn) throws SQLException {
+    public List<Long> findProficiencyIds(String kind, long id, Connection conn) {
         String tableName = SUPPLY_TABLES.get(ModificationType.PROFICIENCY);
         return findSuppliedIds(kind, id, tableName, conn);
     }
@@ -98,9 +98,8 @@ public class CharacterModifierMapper {
      * @param refId the PK of the modifier in its own table
      * @param conn An open {@link Database} connection to queue transactions on
      * @return PK of {@code modifier_source} table entry
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    private long resolveSourceId(String kind, long refId, Connection conn) throws SQLException {
+    private long resolveSourceId(String kind, long refId, Connection conn) {
         String sql = """
             INSERT INTO modifier_source (kind, ref_id)
             VALUES (?, ?)
@@ -118,6 +117,9 @@ public class CharacterModifierMapper {
                 if (!rs.next()) throw new SQLException("Table `modifier_source` ID retrieval failed");
                 return rs.getLong("id");
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -132,11 +134,10 @@ public class CharacterModifierMapper {
      * @param supplyTable the name of the supply table searched
      * @param conn An open {@link Database} connection to queue transactions on
      * @return a list of original modification table specific PKs
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
     private List<Long> findSuppliedIds(
         String kind, long refId, String supplyTable, Connection conn
-    ) throws SQLException {
+    ) {
         // Optionally create modifier_source instance / return PK ID
         long sourceId = resolveSourceId(kind, refId, conn);
 
@@ -148,6 +149,9 @@ public class CharacterModifierMapper {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) { list.add(rs.getLong("supply_id")); }
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
         return list;
     }
@@ -163,11 +167,10 @@ public class CharacterModifierMapper {
      * @param sourceId {@code modifier_source} table PFK
      * @param list A {@link List} of modifications to save all at once
      * @param conn An open {@link Database} connection to queue transactions on
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
     private <T extends Entity<?> & CharacterModification> void insertSupplies(
         long sourceId, List<T> list, Connection conn
-    ) throws SQLException {
+    ) {
         // Exit early on an empty list
         if (list == null || list.isEmpty()) return;
 
@@ -186,6 +189,9 @@ public class CharacterModifierMapper {
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -195,14 +201,15 @@ public class CharacterModifierMapper {
      *
      * @param sourceId {@code modifier_source} table PFK
      * @param conn An open {@link Database} connection to queue transactions on
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    private void deleteAllSupplies(long sourceId, Connection conn) throws SQLException {
+    private void deleteAllSupplies(long sourceId, Connection conn) {
         for (String tableName : SUPPLY_TABLES.values()) {
             String sql = "DELETE FROM " + tableName + " WHERE source_id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setLong(1, sourceId);
                 pstmt.executeUpdate();
+            } catch (SQLException e) {
+                throw SQLExceptionTranslator.translate(e);
             }
         }
     }

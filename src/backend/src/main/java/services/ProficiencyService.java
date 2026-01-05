@@ -10,6 +10,7 @@ import datasource.Database;
 import datasource.UnitOfWork;
 import datasource.mappers.MapperRegistry;
 import datasource.mappers.proficiency.ProficiencyMapper;
+import datasource.utils.SQLExceptionTranslator;
 import domain.modifiers.proficiency.ArmourProficiency;
 import domain.modifiers.proficiency.Proficiency;
 import domain.modifiers.proficiency.SkillProficiency;
@@ -31,14 +32,16 @@ public class ProficiencyService extends AbstractService {
      *
      * @param id uniquely identifying PK of proficiency in the database
      * @return {@link Proficiency} object if found, {@code null} if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static Proficiency getById(long id) throws SQLException {
+    public static Proficiency getById(long id) {
         // TODO: Delegate this operation to a repository
         try (Connection conn = Database.getConnection()) {
             Optional<Proficiency> found = MapperRegistry.getMapper(Proficiency.class).findById(id, conn);
             return found.orElse(null);
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -50,13 +53,15 @@ public class ProficiencyService extends AbstractService {
      *
      * @param type {@link ProficiencyType} correlating to the specified class
      * @return a deeply initiated {@link List} of proficiencies of queried type
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<? extends Proficiency> getAllByType(ProficiencyType type) throws SQLException {
+    public static List<? extends Proficiency> getAllByType(ProficiencyType type) {
         try (Connection conn = Database.getConnection()) {
             ProficiencyMapper mapper = (ProficiencyMapper) MapperRegistry.getMapper(Proficiency.class);
             return mapper.findAllByType(type, conn);
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -72,18 +77,20 @@ public class ProficiencyService extends AbstractService {
      * @param type {@link ProficiencyType} correlating to the specified class
      * @param classOfT {@code .class} of the proficiency queried
      * @return a deeply initiated {@link List} of proficiencies of queried type
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
     private static <T extends Proficiency> List<T> getAllByType(
         ProficiencyType type, Class<T> classOfT
-    ) throws SQLException {
+    ) {
         try (Connection conn = Database.getConnection()) {
             ProficiencyMapper mapper = (ProficiencyMapper) MapperRegistry.getMapper(Proficiency.class);
             return mapper.findAllByType(type, conn)
                 .stream()
                 .map(classOfT::cast)
                 .toList();
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -91,10 +98,8 @@ public class ProficiencyService extends AbstractService {
      * Return all {@link ArmourProficiency}s persisted in the database.
      *
      * @return {@link List} of proficiencies stored in the database
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<ArmourProficiency> getAllArmour() throws SQLException {
+    public static List<ArmourProficiency> getAllArmour() {
         return getAllByType(ProficiencyType.ARMOUR, ArmourProficiency.class);
     }
 
@@ -102,10 +107,8 @@ public class ProficiencyService extends AbstractService {
      * Return all {@link SkillProficiency}s persisted in the database.
      *
      * @return {@link List} of proficiencies stored in the database
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<SkillProficiency> getAllSkills() throws SQLException {
+    public static List<SkillProficiency> getAllSkills() {
         return getAllByType(ProficiencyType.SKILL, SkillProficiency.class);
     }
 
@@ -113,10 +116,8 @@ public class ProficiencyService extends AbstractService {
      * Return all {@link ToolProficiency}s persisted in the database.
      *
      * @return {@link List} of proficiencies stored in the database
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<ToolProficiency> getAllTools() throws SQLException {
+    public static List<ToolProficiency> getAllTools() {
         return getAllByType(ProficiencyType.TOOL, ToolProficiency.class);
     }
 
@@ -129,10 +130,8 @@ public class ProficiencyService extends AbstractService {
      *
      * @param proficiency Proficiency to insert
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult createProficiency(Proficiency proficiency) throws SQLException {
+    public static OperationResult createProficiency(Proficiency proficiency) {
         // Disallow entities with set IDs
         if (proficiency.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -150,10 +149,8 @@ public class ProficiencyService extends AbstractService {
      *
      * @param proficiency Proficiency to update
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult updateProficiency(Proficiency proficiency) throws SQLException {
+    public static OperationResult updateProficiency(Proficiency proficiency) {
         // Disallow entities without set IDs - use createProficiency() instead
         if (!proficiency.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -169,10 +166,8 @@ public class ProficiencyService extends AbstractService {
      *
      * @param proficiency Proficiency to delete
      * @return true if delete operation was successful, false otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult deleteProficiency(Proficiency proficiency) throws SQLException {
+    public static OperationResult deleteProficiency(Proficiency proficiency) {
         // Disallow proficiencies without set IDs
         if (!proficiency.hasId()) return OperationResult.ILLEGAL_ENTITY;
 

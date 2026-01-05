@@ -9,6 +9,7 @@ import java.util.Optional;
 import datasource.Database;
 import datasource.UnitOfWork;
 import datasource.mappers.MapperRegistry;
+import datasource.utils.SQLExceptionTranslator;
 import domain.modifiers.AbilityScoreModifier;
 
 /**
@@ -26,15 +27,17 @@ public class AsmService extends AbstractService {
      *
      * @param id uniquely identifying PK of ASM in the database
      * @return {@link AbilityScoreModifier} if found, {@code null} if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static AbilityScoreModifier getById(long id) throws SQLException {
+    public static AbilityScoreModifier getById(long id) {
         // TODO: Delegate this operation to a repository
         try (Connection conn = Database.getConnection()) {
             Optional<AbilityScoreModifier> found =
                 MapperRegistry.getMapper(AbilityScoreModifier.class).findById(id, conn);
             return found.orElse(null);
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -42,13 +45,14 @@ public class AsmService extends AbstractService {
      * Return all {@link AbilityScoreModifier}s persisted in the database.
      *
      * @return {@link List} of AbilityScoreModifiers stored in the database
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<AbilityScoreModifier> getAll() throws SQLException {
+    public static List<AbilityScoreModifier> getAll() {
         // TODO: Delegate this operation to a repository
         try (Connection conn = Database.getConnection()) {
             return MapperRegistry.getMapper(AbilityScoreModifier.class).findAll(conn);
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -59,10 +63,8 @@ public class AsmService extends AbstractService {
      *
      * @param asm AbilityScoreModifier to insert
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult createAsm(AbilityScoreModifier asm) throws SQLException {
+    public static OperationResult createAsm(AbilityScoreModifier asm) {
         // Disallow entities with set IDs
         if (asm.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -80,10 +82,8 @@ public class AsmService extends AbstractService {
      *
      * @param asm AbilityScoreModifier to update
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult updateAsm(AbilityScoreModifier asm) throws SQLException {
+    public static OperationResult updateAsm(AbilityScoreModifier asm) {
         // Disallow entities without set IDs - use createAsm() instead
         if (!asm.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -99,10 +99,8 @@ public class AsmService extends AbstractService {
      *
      * @param asm AbilityScoreModifier to delete
      * @return true if delete operation was successful, false otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult deleteAsm(AbilityScoreModifier asm) throws SQLException {
+    public static OperationResult deleteAsm(AbilityScoreModifier asm) {
         // Disallow entities without set IDs
         if (!asm.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
