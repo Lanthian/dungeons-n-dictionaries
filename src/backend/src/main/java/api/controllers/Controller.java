@@ -6,7 +6,6 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,7 +26,7 @@ public abstract class Controller {
      * @param resp {@link HttpServletResponse} object configured for API report
      * @throws IOException
      */
-    public void handle(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void handle(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // The below methods are to be implemented by relevant Controller
         switch (req.getMethod()) {
             case "GET":
@@ -47,19 +46,19 @@ public abstract class Controller {
         }
     }
 
-    protected void handleGet(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleGet(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
     }
 
-    protected void handlePost(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handlePost(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
     }
 
-    protected void handlePut(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handlePut(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
     }
 
-    protected void handleDelete(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleDelete(String[] parts, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
     }
 
