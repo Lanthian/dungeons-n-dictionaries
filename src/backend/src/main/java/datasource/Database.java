@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import config.Env;
+import datasource.exceptions.PersistenceException;
 
 /**
  * A class to manage the formation of database connections, connection pool
@@ -181,13 +182,13 @@ public class Database {
      * {@link #releaseConnection(Connection)} does not have to be called.
      *
      * @return Connection to database
-     * @throws SQLException if interrupted while waiting for a connection
+     * @throws PersistenceException if interrupted while waiting for a connection
      */
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
         try { return autoReleaseConnection(pool.take()); }
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new SQLException("Interrupted while waiting for a database connection", e);
+            throw new PersistenceException("Interrupted while waiting for a database connection", e);
         }
     }
 

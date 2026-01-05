@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import datasource.mappers.AbstractMapper;
+import datasource.utils.SQLExceptionTranslator;
 import domain.core.EntityId;
 import domain.modifiers.proficiency.SkillProficiency;
 import domain.types.Skill;
@@ -40,7 +41,7 @@ public class SkillProficiencyMapper extends AbstractMapper<SkillProficiency> {
     /* -------------------------- Insert &  Update -------------------------- */
 
     @Override
-    public boolean insert(SkillProficiency obj, Connection conn) throws SQLException {
+    public boolean insert(SkillProficiency obj, Connection conn) {
         String sql = sql("""
             INSERT INTO %TABLE% (id, kind)
             VALUES (?, ?)
@@ -49,11 +50,13 @@ public class SkillProficiencyMapper extends AbstractMapper<SkillProficiency> {
             pstmt.setLong(1, getId(obj));
             pstmt.setString(2, obj.getSkill().toString());
             return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public boolean update(SkillProficiency obj, Connection conn) throws SQLException {
+    public boolean update(SkillProficiency obj, Connection conn) {
         String sql = sql("""
             UPDATE %TABLE%
             SET kind = ?
@@ -63,6 +66,8 @@ public class SkillProficiencyMapper extends AbstractMapper<SkillProficiency> {
             pstmt.setString(1, obj.getSkill().toString());
             pstmt.setLong(2, getId(obj));
             return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 }

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import datasource.utils.SQLExceptionTranslator;
 import domain.core.EntityId;
 import domain.modifiers.Language;
 
@@ -39,7 +40,7 @@ public class LanguageMapper extends AbstractMapper<Language> {
     /* -------------------------- Insert &  Update -------------------------- */
 
     @Override
-    public boolean insert(Language obj, Connection conn) throws SQLException {
+    public boolean insert(Language obj, Connection conn) {
         String sql = sql("""
             INSERT INTO %TABLE% (name, description, script, exotic)
             VALUES (?, ?, ?, ?)
@@ -58,11 +59,14 @@ public class LanguageMapper extends AbstractMapper<Language> {
                 obj.setId(new EntityId<>(rs.getLong(1)));
             }
             return true;
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public boolean update(Language obj, Connection conn) throws SQLException {
+    public boolean update(Language obj, Connection conn) {
         String sql = sql("""
             UPDATE %TABLE%
             SET name = ?, description = ?, script = ?, exotic = ?
@@ -75,6 +79,9 @@ public class LanguageMapper extends AbstractMapper<Language> {
             pstmt.setBoolean(4, obj.isExotic());
             pstmt.setLong(5, getId(obj));
             return pstmt.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 }

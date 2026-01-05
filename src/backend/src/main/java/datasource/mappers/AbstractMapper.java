@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import datasource.utils.SQLExceptionTranslator;
+
 /**
  * Abstract Datamapper - mappers implementing this connect domain model objects
  * to database persistence. Type parameter {@code T} denotes the type of domain
@@ -69,24 +71,28 @@ public abstract class AbstractMapper<T> implements Mapper<T> {
     /* -------------------------- Read  Operations -------------------------- */
 
     @Override
-    public Optional<T> findById(long id, Connection conn) throws SQLException {
+    public Optional<T> findById(long id, Connection conn) {
         String sql = "SELECT * FROM " + tableName() + " WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 return rs.next() ? Optional.of(mapRow(rs)) : Optional.empty();
             }
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public List<T> findAll(Connection conn) throws SQLException {
+    public List<T> findAll(Connection conn) {
         List<T> list = new ArrayList<>();
         String sql = "SELECT * FROM " + tableName();
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             // Instantiate objects from all entries in queried ResultSet
             while (rs.next()) { list.add(mapRow(rs)); }
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
         return list;
     }
@@ -94,11 +100,13 @@ public abstract class AbstractMapper<T> implements Mapper<T> {
     /* ------------------------------- Delete ------------------------------- */
 
     @Override
-    public boolean delete(T obj, Connection conn) throws SQLException {
+    public boolean delete(T obj, Connection conn) {
         String sql = "DELETE FROM " + tableName() + " WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, getId(obj));
             return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 

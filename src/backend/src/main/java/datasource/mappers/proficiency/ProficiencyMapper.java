@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import datasource.Database;
 import datasource.mappers.Mapper;
+import datasource.utils.SQLExceptionTranslator;
 import domain.core.EntityId;
 import domain.modifiers.proficiency.Proficiency;
 import domain.types.ProficiencyType;
@@ -40,7 +41,7 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
     /* -------------------------- Read  Operations -------------------------- */
 
     @Override
-    public Optional<Proficiency> findById(long id, Connection conn) throws SQLException {
+    public Optional<Proficiency> findById(long id, Connection conn) {
         String sql = "SELECT kind FROM " + TABLE_NAME + " WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, id);
@@ -52,11 +53,14 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
                 ProficiencyType type = ProficiencyType.fromString(table);
                 return mapper(type).findById(id, conn);
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public List<Proficiency> findAll(Connection conn) throws SQLException {
+    public List<Proficiency> findAll(Connection conn) {
         List<Proficiency> list = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_NAME;
         try (Statement stmt = conn.createStatement();
@@ -68,6 +72,9 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
                 ProficiencyType type = ProficiencyType.fromString(typeString);
                 mapper(type).findById(id, conn).ifPresent(list::add);
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
         return list;
     }
@@ -79,16 +86,15 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
      * @param type particular kind of {@link ProficiencyType} returned
      * @param conn an open {@link Database} connection to queue operations on
      * @return list of all {@link ProficiencyType} proficiencies in the database
-     * @throws SQLException
      */
-    public List<Proficiency> findAllByType(ProficiencyType type, Connection conn) throws SQLException {
+    public List<Proficiency> findAllByType(ProficiencyType type, Connection conn) {
         return mapper(type).findAll(conn);
     }
 
     /* ----------------------- Insert, Update, Delete ----------------------- */
 
     @Override
-    public boolean insert(Proficiency obj, Connection conn) throws SQLException {
+    public boolean insert(Proficiency obj, Connection conn) {
         String sql = "INSERT INTO " + TABLE_NAME + "(kind) VALUES (?) RETURNING id";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, obj.getProficiencyType().toString());
@@ -102,20 +108,26 @@ public class ProficiencyMapper implements Mapper<Proficiency> {
                 // Insert into proficiency subtype table
                 return mapper(obj.getProficiencyType()).insert(obj, conn);
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
     @Override
-    public boolean update(Proficiency obj, Connection conn) throws SQLException {
+    public boolean update(Proficiency obj, Connection conn) {
         return mapper(obj.getProficiencyType()).update(obj, conn);
     }
 
     @Override
-    public boolean delete(Proficiency obj, Connection conn) throws SQLException {
+    public boolean delete(Proficiency obj, Connection conn) {
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, obj.getId().value());
             return pstmt.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 

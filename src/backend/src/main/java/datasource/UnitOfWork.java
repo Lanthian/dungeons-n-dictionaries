@@ -8,6 +8,7 @@ import java.util.List;
 
 import datasource.mappers.Mapper;
 import datasource.mappers.MapperRegistry;
+import datasource.utils.SQLExceptionTranslator;
 
 /**
  * Unit Of Work design pattern to improve database transaction efficiency.
@@ -85,7 +86,7 @@ public class UnitOfWork {
      *
      * @return true if all database commits succeed, false if any failures
      */
-    public boolean commit() throws SQLException {
+    public boolean commit() {
         try (Connection conn = Database.getConnection()) {
             boolean autoCommitDefault = conn.getAutoCommit();
             try {
@@ -115,6 +116,9 @@ public class UnitOfWork {
                 // Cleanup to protect against stale/duplicate state
                 UnitOfWork.clearCurrent();
             }
+
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 

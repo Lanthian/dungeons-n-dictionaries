@@ -2,7 +2,6 @@
 package datasource.mappers;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,18 +37,16 @@ public interface Mapper<T> {
      * @param id ID of the entity to be searched
      * @param conn An open {@link Database} connection to queue operations on
      * @return Optional wrapped {@code T} depending on presence in database
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    Optional<T> findById(long id, Connection conn) throws SQLException;
+    Optional<T> findById(long id, Connection conn);
 
     /**
      * Reads and returns a {@link List} of all {@code T} database entries.
      *
      * @param conn An open {@link Database} connection to queue operations on
      * @return List of all {@code T}s in the database
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    List<T> findAll(Connection conn) throws SQLException;
+    List<T> findAll(Connection conn);
 
     /* ======================================================================
      * ----------------------- Insert, Update, Delete -----------------------
@@ -61,9 +58,8 @@ public interface Mapper<T> {
      * @param obj Domain object of type {@code T} to insert into the database
      * @param conn An open {@link Database} connection to queue transactions on
      * @return true if transaction was successful, false if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    boolean insert(T obj, Connection conn) throws SQLException;
+    boolean insert(T obj, Connection conn);
 
     /**
      * Updates a {@code T} entry in the database.
@@ -71,9 +67,8 @@ public interface Mapper<T> {
      * @param obj Domain object of type {@code T} to be updated
      * @param conn An open {@link Database} connection to queue transactions on
      * @return true if transaction was successful, false if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    boolean update(T obj, Connection conn) throws SQLException;
+    boolean update(T obj, Connection conn);
 
     /**
      * Deletes a {@code T} entry from the database.
@@ -81,7 +76,6 @@ public interface Mapper<T> {
      * @param obj Domain object of type {@code T} to be deleted
      * @param conn An open {@link Database} connection to queue transactions on
      * @return true if transaction was successful, false if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs
      */
-    boolean delete(T obj, Connection conn) throws SQLException;
+    boolean delete(T obj, Connection conn);
 }
