@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import datasource.exceptions.IllegalPersistException;
+import datasource.exceptions.PersistenceException;
+
 @WebServlet(name = "FrontController", value = "/api/*")
 public class FrontController extends HttpServlet {
 
@@ -39,6 +42,21 @@ public class FrontController extends HttpServlet {
             return;
         }
 
-        controller.handle(parts, req, resp);
+        // Wrap the handle call to catch and manage common exceptions globally
+        try {
+            controller.handle(parts, req, resp);
+
+        } catch (IllegalPersistException e) {
+            // Database constraint violation
+            Controller.writeStatus(resp, HttpServletResponse.SC_CONFLICT, e.getDetail());
+
+        } catch (PersistenceException e) {
+            // Other database failure
+            Controller.writeStatus(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+
+        } catch (Exception e) {
+            // Unaccounted for exception - patch all these occurrences
+            throw new ServletException("Unexpected error", e);
+        }
     }
 }
