@@ -9,6 +9,7 @@ import java.util.Optional;
 import datasource.Database;
 import datasource.UnitOfWork;
 import datasource.mappers.MapperRegistry;
+import datasource.utils.SQLExceptionTranslator;
 import domain.modifiers.Feat;
 
 /**
@@ -26,15 +27,17 @@ public class FeatService extends AbstractService {
      *
      * @param id uniquely identifying PK of feat in the database
      * @return {@link Feat} object if found, {@code null} if otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static Feat getById(long id) throws SQLException {
+    public static Feat getById(long id) {
         // TODO: Delegate this operation to a repository
         try (Connection conn = Database.getConnection()) {
             Optional<Feat> found =
                 MapperRegistry.getMapper(Feat.class).findById(id, conn);
             return found.orElse(null);
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -43,13 +46,15 @@ public class FeatService extends AbstractService {
      * the database. Does not include any supplied CharacterModifications.
      *
      * @return {@link List} of Feats stored in the database
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static List<Feat> getAll() throws SQLException {
+    public static List<Feat> getAll() {
         // TODO: Delegate this operation to a repository
         try (Connection conn = Database.getConnection()) {
             return MapperRegistry.getMapper(Feat.class).findAll(conn);
+
+        } catch (SQLException e) {
+            // Catch unexpected SQLException thrown by Connection on .close()
+            throw SQLExceptionTranslator.translate(e);
         }
     }
 
@@ -60,10 +65,8 @@ public class FeatService extends AbstractService {
      *
      * @param feat Feat to insert
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult createFeat(Feat feat) throws SQLException {
+    public static OperationResult createFeat(Feat feat) {
         // Disallow entities with set IDs
         if (feat.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -81,10 +84,8 @@ public class FeatService extends AbstractService {
      *
      * @param feat Feat to update
      * @return {@link OperationResult} defining the success state of this action
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult updateFeat(Feat feat) throws SQLException {
+    public static OperationResult updateFeat(Feat feat) {
         // Disallow entities without set IDs - use createFeat() instead
         if (!feat.hasId()) return OperationResult.ILLEGAL_ENTITY;
 
@@ -100,10 +101,8 @@ public class FeatService extends AbstractService {
      *
      * @param feat Feat to delete
      * @return true if delete operation was successful, false otherwise
-     * @throws SQLException if an unexpected database SQL exception occurs or
-     *         if {@link Database#getConnection()} is interupted
      */
-    public static OperationResult deleteFeat(Feat feat) throws SQLException {
+    public static OperationResult deleteFeat(Feat feat) {
         // Disallow entities without set IDs
         if (!feat.hasId()) return OperationResult.ILLEGAL_ENTITY;
 

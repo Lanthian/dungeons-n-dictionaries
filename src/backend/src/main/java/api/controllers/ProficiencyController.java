@@ -2,7 +2,6 @@
 package api.controllers;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import api.json.JsonUtils;
@@ -46,8 +45,6 @@ public class ProficiencyController extends Controller {
             }
 
             resp.getWriter().write(json);
-        } catch (SQLException e) {
-            throw new ServletException("Database error", e);
         } catch (Exception e) {
             // Catch potential IllegalState or NumberFormat exceptions from id
             throw new ServletException("Unexpected error", e);
@@ -79,8 +76,6 @@ public class ProficiencyController extends Controller {
             }
             writeStatus(resp, result.getStatus(), msg);
 
-        } catch (SQLException e) {
-            throw new ServletException("Database error", e);
         } catch (Exception e) {
             // Catch potential input IllegalState or NumberFormat exceptions
             throw new ServletException("Unexpected error", e);
@@ -112,8 +107,6 @@ public class ProficiencyController extends Controller {
             }
             writeStatus(resp, result.getStatus(), msg);
 
-        } catch (SQLException e) {
-            throw new ServletException("Database error", e);
         } catch (Exception e) {
             // Catch potential input IllegalState or NumberFormat exceptions
             throw new ServletException("Unexpected error", e);
@@ -145,8 +138,6 @@ public class ProficiencyController extends Controller {
             }
             writeStatus(resp, result.getStatus(), msg);
 
-        } catch (SQLException e) {
-            throw new ServletException("Database error", e);
         } catch (Exception e) {
             // Catch potential IllegalState or NumberFormat exceptions from id
             throw new ServletException("Unexpected error", e);
