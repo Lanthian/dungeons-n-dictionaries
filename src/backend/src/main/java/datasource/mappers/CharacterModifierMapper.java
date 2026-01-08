@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import datasource.Database;
 import datasource.utils.SQLExceptionTranslator;
@@ -63,6 +64,35 @@ public class CharacterModifierMapper {
         insertSupplies(sourceId, cm.getProficiencies(), conn);
     }
 
+    /**
+     * Delete all supplied modifications for a particular {@link
+     * CharacterModifier} source, plus the source table entry itself.
+     *
+     * @param kind the table name of the modifier source
+     * @param refId the PK of the modifier in its own table
+     * @param cm the source for which this replaceAll is called
+     * @param conn An open {@link Database} connection to queue transactions on
+     * @return true if transaction was successful / occurred, false if otherwise
+     */
+    public boolean deleteAllForSource(
+        String kind, long refId, CharacterModifier cm, Connection conn
+    ) {
+        // Find modifier_source PK ID
+        Optional<Long> sourceIdOpt = findSourceId(kind, refId, conn);
+        if (sourceIdOpt.isPresent()) {
+            long sourceId = sourceIdOpt.get();
+
+            // Clear supplies
+            deleteAllSupplies(sourceId, conn);
+
+            // Remove source
+            return deleteSource(sourceId, conn);
+        }
+
+        // Fail to deleteAllForSource if ID doesn't exist
+        return false;
+    }
+
     /* -------------------- Thin Exposed  Supply Finders -------------------- */
 
     public List<Long> findAsmIds(String kind, long id, Connection conn) {
@@ -88,6 +118,8 @@ public class CharacterModifierMapper {
     /* ======================================================================
      * -------------------------- Private  Methods --------------------------
      * ====================================================================== */
+
+    /* -------------------- Create, Find & Delete Source -------------------- */
 
     /**
      * Tries to insert a new {@code modifier_source} table entry, touching
@@ -118,6 +150,49 @@ public class CharacterModifierMapper {
                 return rs.getLong("id");
             }
 
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
+        }
+    }
+
+    /**
+     * Searches for an existing {@code modifier_source} table entry, returning
+     * this entries PK if found - used as {@code source_id} in supply tables.
+     *
+     * @param kind the table name of the modifier source
+     * @param refId the PK of the modifier in its own table
+     * @param conn An open {@link Database} connection to queue transactions on
+     * @return {@link Optional} wrapped PK of {@code modifier_source} entry
+     */
+    private Optional<Long> findSourceId(String kind, long refId, Connection conn) {
+        String sql = """
+            SELECT id
+            FROM modifier_source
+            WHERE kind = ? AND ref_id = ?
+            """;
+         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, kind);
+            pstmt.setLong(2, refId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? Optional.of(rs.getLong("id")) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
+        }
+    }
+
+    /**
+     * Delete a {@code modifier_source} table entry from the database.
+     *
+     * @param sourceId PK ID of the source to be removed
+     * @param conn An open {@link Database} connection to queue transactions on
+     * @return true if transaction was successful, false if otherwise
+     */
+    private boolean deleteSource(long sourceId, Connection conn) {
+        String sql = "DELETE FROM modifier_source WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, sourceId);
+            return pstmt.executeUpdate() == 1;
         } catch (SQLException e) {
             throw SQLExceptionTranslator.translate(e);
         }

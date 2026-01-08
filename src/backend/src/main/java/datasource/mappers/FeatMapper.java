@@ -113,7 +113,7 @@ public class FeatMapper extends AbstractMapper<Feat> {
     }
 
     /* ======================================================================
-     * --------------------- Overridden Read Operations ---------------------
+     * ----------------------- Overridden  Operations -----------------------
      * ====================================================================== */
 
     @Override
@@ -146,5 +146,12 @@ public class FeatMapper extends AbstractMapper<Feat> {
         full.setId(shallow.getId());
 
         return Optional.of(full);
+    }
+
+    @Override
+    public boolean delete(Feat obj, Connection conn) {
+        // Delete supplied CharacterModifications if self delete is successful
+        return super.delete(obj, conn) &&
+            supplyMapper.deleteAllForSource(tableName(), getId(obj), obj, conn);
     }
 }

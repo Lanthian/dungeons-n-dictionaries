@@ -49,6 +49,7 @@ public class SQLExceptionTranslator {
                 );
             }
         }
+        System.err.println("Database error: " + e.getMessage());
         return new PersistenceException("Database error", e);
     }
 }
