@@ -93,6 +93,33 @@ public class CharacterModifierMapper {
         return false;
     }
 
+    /**
+     * Delete all supplied instances for a particular {@link
+     * CharacterModification}.
+     *
+     * @param <T> The class type of the {@link CharacterModification} supplied
+     * @param type the supplied {@link CharacterModification} {@link
+     *         ModificationType}
+     * @param cm the supplied resource for which this deleteAll is called
+     * @param conn An open {@link Database} connection to queue transactions on
+     * @return true if transaction was successful / occurred, false if otherwise
+     */
+    public <T extends Entity<?> & CharacterModification> boolean deleteAllForSupply(
+        ModificationType type, T cm, Connection conn
+    ) {
+        // Check type of object being cleared
+        String tableName = SUPPLY_TABLES.get(type);
+        if (tableName == null) throw new IllegalStateException("No supply_table is mapped for type " + type);
+
+        String sql = "DELETE FROM " + tableName + " WHERE supply_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, cm.getId().value());
+            return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw SQLExceptionTranslator.translate(e);
+        }
+    }
+
     /* -------------------- Thin Exposed  Supply Finders -------------------- */
 
     public List<Long> findAsmIds(String kind, long id, Connection conn) {
