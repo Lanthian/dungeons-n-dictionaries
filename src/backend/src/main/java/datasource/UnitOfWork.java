@@ -30,6 +30,7 @@ public class UnitOfWork {
     // --- Attributes: Object Lists ---
     private List<Object> newObjects = new ArrayList<>();
     private List<Object> dirtyObjects = new ArrayList<>();
+    private List<Work> additionalWork = new ArrayList<>();
     private List<Object> deletedObjects = new ArrayList<>();
 
     // UnitOfWork initialisation, retrieval and management methods
@@ -97,9 +98,11 @@ public class UnitOfWork {
                  * to it.
                 */
                 boolean failure = false;
+                // Stop transaction early if failure detected
                 if (!processList(newObjects, (m, o) -> m.insert(o, conn), conn)) failure = true;
-                if (!processList(dirtyObjects, (m, o) -> m.update(o, conn), conn)) failure = true;
-                if (!processList(deletedObjects, (m, o) -> m.delete(o, conn), conn)) failure = true;
+                else if (!processList(dirtyObjects, (m, o) -> m.update(o, conn), conn)) failure = true;
+                else if (!executeWork(conn)) failure = true;
+                else if (!processList(deletedObjects, (m, o) -> m.delete(o, conn), conn)) failure = true;
 
                 // On DB update failure, rollback before returning
                 if (failure) { conn.rollback(); return false; }
@@ -120,6 +123,35 @@ public class UnitOfWork {
         } catch (SQLException e) {
             throw SQLExceptionTranslator.translate(e);
         }
+    }
+
+    /* ======================================================================
+     * -------------------- Additional Work Registration --------------------
+     * ====================================================================== */
+
+    /**
+     * A {@link FunctionalInterface} defining the contract additional UnitOfWork
+     * transaction 'work' must fulfil to be included in the UoW flow.
+     *
+     * <p> Take a {@link Connection} object and perform a user defined operation
+     * with it.
+     */
+    @FunctionalInterface
+    public interface Work {
+        /**
+         * @param conn database Connection object
+         * @return true if operation was successful, false otherwise
+         */
+        boolean execute(Connection conn);
+    }
+
+    /**
+     * Register additional transaction locked work.
+     *
+     * @param work new work to queue performance of
+     */
+    public void registerWork(Work work) {
+        additionalWork.add(work);
     }
 
     /* ======================================================================
@@ -145,7 +177,7 @@ public class UnitOfWork {
      * @param objects List of objects over which action will be applied
      * @param action BiFunction taking a Mapper m, Object o, and then applying
      *               specified MapperAction to it.
-     * @param conn database Connection object
+     * @param conn database {@link Connection} object
      * @return true if action applied succeeds on all objects, false otherwise
      * @throws SQLException
      */
@@ -159,6 +191,27 @@ public class UnitOfWork {
             Mapper<Object> mapper = (Mapper<Object>) MapperRegistry.getMapper(obj.getClass());
             // Apply insert/update/delete action
             if (!action.apply(mapper, obj)) {
+                // If action fails, rollback database changes
+                conn.rollback();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Private helper function to enact all additional work registered in order,
+     * returning success/failure status of batch operations. Rollbacks changes
+     * if action fails.
+     *
+     * @param conn database {@link Connection} object
+     * @return true if all work performed succeeds, false otherwise
+     * @throws SQLException
+     */
+    private boolean executeWork(Connection conn) throws SQLException {
+        for (Work work : additionalWork) {
+            // Perform additional work
+            if (!work.execute(conn)) {
                 // If action fails, rollback database changes
                 conn.rollback();
                 return false;
