@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import datasource.Database;
 import datasource.UnitOfWork;
+import datasource.mappers.CharacterModifierMapper;
 import datasource.mappers.MapperRegistry;
 import datasource.mappers.proficiency.ProficiencyMapper;
 import datasource.utils.SQLExceptionTranslator;
@@ -15,6 +16,7 @@ import domain.modifiers.proficiency.ArmourProficiency;
 import domain.modifiers.proficiency.Proficiency;
 import domain.modifiers.proficiency.SkillProficiency;
 import domain.modifiers.proficiency.ToolProficiency;
+import domain.types.ModificationType;
 import domain.types.ProficiencyType;
 
 /**
@@ -173,6 +175,13 @@ public class ProficiencyService extends AbstractService {
 
         // TODO: Lightweight object is fine here, only ID is needed to delete
         UnitOfWork.newCurrent();
+
+        // Deleted supplied instances of CharacterModification first
+        CharacterModifierMapper supplyMapper = new CharacterModifierMapper();
+        UnitOfWork.getCurrent().registerWork(conn ->
+            supplyMapper.deleteAllForSupply(ModificationType.PROFICIENCY, proficiency, conn)
+        );
+
         UnitOfWork.getCurrent().registerDeleted(proficiency);
         return UnitOfWork.getCurrent().commit()
             ? OperationResult.SUCCESS

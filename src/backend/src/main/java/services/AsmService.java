@@ -8,9 +8,11 @@ import java.util.Optional;
 
 import datasource.Database;
 import datasource.UnitOfWork;
+import datasource.mappers.CharacterModifierMapper;
 import datasource.mappers.MapperRegistry;
 import datasource.utils.SQLExceptionTranslator;
 import domain.modifiers.AbilityScoreModifier;
+import domain.types.ModificationType;
 
 /**
  * Service layer component for {@link AbilityScoreModifier}, containing all
@@ -106,6 +108,13 @@ public class AsmService extends AbstractService {
 
         // TODO: Lightweight object is fine here, only ID is needed to delete
         UnitOfWork.newCurrent();
+
+        // Deleted supplied instances of CharacterModification first
+        CharacterModifierMapper supplyMapper = new CharacterModifierMapper();
+        UnitOfWork.getCurrent().registerWork(conn ->
+            supplyMapper.deleteAllForSupply(ModificationType.ASM, asm, conn)
+        );
+
         UnitOfWork.getCurrent().registerDeleted(asm);
         return UnitOfWork.getCurrent().commit()
             ? OperationResult.SUCCESS

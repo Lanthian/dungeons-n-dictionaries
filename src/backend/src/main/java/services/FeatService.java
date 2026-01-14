@@ -8,9 +8,11 @@ import java.util.Optional;
 
 import datasource.Database;
 import datasource.UnitOfWork;
+import datasource.mappers.CharacterModifierMapper;
 import datasource.mappers.MapperRegistry;
 import datasource.utils.SQLExceptionTranslator;
 import domain.modifiers.Feat;
+import domain.types.ModificationType;
 
 /**
  * Service layer component for {@link Feat}, containing all
@@ -108,6 +110,13 @@ public class FeatService extends AbstractService {
 
         // TODO: Lightweight object is fine here, only ID is needed to delete
         UnitOfWork.newCurrent();
+
+        // Deleted supplied instances of CharacterModification first
+        CharacterModifierMapper supplyMapper = new CharacterModifierMapper();
+        UnitOfWork.getCurrent().registerWork(conn ->
+            supplyMapper.deleteAllForSupply(ModificationType.FEAT, feat, conn)
+        );
+
         UnitOfWork.getCurrent().registerDeleted(feat);
         return UnitOfWork.getCurrent().commit()
             ? OperationResult.SUCCESS
